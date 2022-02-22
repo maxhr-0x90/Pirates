@@ -1,31 +1,35 @@
 package corp.redacted.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.Screen;
+import corp.redacted.game.views.MainScreen;
 
-public class Game extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+import java.util.HashMap;
+
+/**
+ * Classe principale du jeu
+ */
+public class Game extends com.badlogic.gdx.Game {
+	// Liste des identifiant des differents écrans de jeu
+	private static final String MAIN = "main";
+
+	private HashMap<String, Screen> screens;
+
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		screens = new HashMap<>();
+		screens.put(MAIN, new MainScreen(this));
+
+		setScreen(screens.get(MAIN));
 	}
 
-	@Override
-	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
+	/**
+	 * Change l'écran de jeu
+	 *
+	 * @param id identifiant de l'écran
+	 */
+	public void switchScreen(String id){
+		Screen screen = screens.get(id);
+		if (screen == null){ System.err.println("Écran de jeu inconnu: Changement impossible."); }
+		else { setScreen(screen); }
 	}
 }
