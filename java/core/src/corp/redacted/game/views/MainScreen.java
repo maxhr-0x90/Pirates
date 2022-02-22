@@ -1,7 +1,11 @@
 package corp.redacted.game.views;
 
+import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import corp.redacted.game.Game;
+import corp.redacted.game.entity.systems.RenderingSystem;
 
 /**
  * Écran principal de jeu. Là où le jeu, à proprement parlé se déroule
@@ -9,10 +13,15 @@ import corp.redacted.game.Game;
 public class MainScreen implements Screen {
     private final Game PARENT;
 
+    private PooledEngine engine;
+
     public MainScreen(Game parent){
         super();
 
         PARENT = parent;
+        engine = new PooledEngine();
+
+        engine.addSystem(new RenderingSystem());
     }
 
     @Override
@@ -22,7 +31,10 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.15f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        engine.update(delta);
     }
 
     @Override
@@ -47,6 +59,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        engine.clearPools();
     }
 }
