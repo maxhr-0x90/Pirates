@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import corp.redacted.game.Game;
+import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
 /**
@@ -14,12 +15,16 @@ public class MainScreen implements Screen {
     private final Game PARENT;
 
     private PooledEngine engine;
+    private WorldBuilder worldBuilder;
 
     public MainScreen(Game parent){
         super();
 
         PARENT = parent;
         engine = new PooledEngine();
+
+        worldBuilder = new WorldBuilder(engine);
+        worldBuilder.generateWorld();
 
         engine.addSystem(new RenderingSystem());
     }
