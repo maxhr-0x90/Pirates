@@ -54,7 +54,11 @@ public class RenderingSystem extends IteratingSystem {
         modelBatch.begin(cam);
         for (Entity entity: renderQueue) {
             ModelComponent modelComp = modelMap.get(entity);
-            modelBatch.render(modelComp.model, environment);
+            try {
+                modelBatch.render(modelComp.model, environment);
+            } catch (NullPointerException ex){
+                System.err.println("Modèle non chargé");
+            }
         }
         modelBatch.end();
 
