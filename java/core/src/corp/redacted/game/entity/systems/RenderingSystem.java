@@ -6,12 +6,16 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.entity.components.ModelComponent;
 
@@ -22,6 +26,14 @@ public class RenderingSystem extends IteratingSystem {
     private PerspectiveCamera cam;
     private Environment environment;
     private ModelBatch modelBatch;
+
+    private Model axisDebug, gridDebug;
+    private ModelInstance axisInstance, gridInstance;
+
+    private boolean debugging = false;
+
+    private SpriteBatch spriteBatch;
+    private BitmapFont font;
 
     public RenderingSystem() {
         super(Family.all(ModelComponent.class).get());
@@ -34,14 +46,30 @@ public class RenderingSystem extends IteratingSystem {
 
         modelBatch = new ModelBatch();
 
-        cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(10f, 10f, 10f);
+        cam = new PerspectiveCamera(80, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cam.position.set(0f, 10f, 0f);
         cam.lookAt(0,0,0);
         cam.near = 1f;
         cam.far = 300f;
         cam.update();
 
         renderQueue = new Array<>();
+
+        ModelBuilder modBuild = new ModelBuilder();
+
+        axisDebug = modBuild.createXYZCoordinates(1f,
+                new Material(ColorAttribute.createDiffuse(Color.LIGHT_GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        gridDebug = modBuild.createLineGrid(20, 20, 20, 20,
+                new Material(ColorAttribute.createDiffuse(Color.VIOLET)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        axisInstance = new ModelInstance(axisDebug);
+        gridInstance = new ModelInstance(gridDebug);
+
+        spriteBatch = new SpriteBatch();
+        font = new BitmapFont();
     }
 
     @Override
@@ -60,13 +88,43 @@ public class RenderingSystem extends IteratingSystem {
                 System.err.println("Modèle non chargé");
             }
         }
+
+        if (debugging) {debugRender();}
         modelBatch.end();
 
+        spriteBatch.begin();
+        font.draw(spriteBatch, "FPS=" + Gdx.graphics.getFramesPerSecond(), 0, font.getLineHeight());
+        spriteBatch.end();
+
         renderQueue.clear();
+    }
+
+    /**
+     * Ajoute le rendu de debug
+     */
+    private void debugRender(){
+        modelBatch.render(axisInstance, environment);
+        modelBatch.render(gridInstance);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         renderQueue.add(entity);
+    }
+
+    /**
+     *
+     * @return La camera de rendu
+     */
+    public PerspectiveCamera getCam() {
+        return cam;
+    }
+
+    /**
+     *
+     * @param debugging le mode de rendu (debug ou non)
+     */
+    public void setDebugging(boolean debugging) {
+        this.debugging = debugging;
     }
 }
