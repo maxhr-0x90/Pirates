@@ -1,6 +1,7 @@
 package corp.redacted.game;
 
 import com.badlogic.gdx.Screen;
+import corp.redacted.game.views.DebugScreen;
 import corp.redacted.game.views.MainScreen;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 public class Game extends com.badlogic.gdx.Game {
 	// Liste des identifiant des differents écrans de jeu
 	private static final String MAIN = "main";
+	private static final String DEBUG = "debug";
 
 	private HashMap<String, Screen> screens;
 
@@ -18,6 +20,7 @@ public class Game extends com.badlogic.gdx.Game {
 	public void create () {
 		screens = new HashMap<>();
 		screens.put(MAIN, new MainScreen(this));
+		screens.put(DEBUG, new DebugScreen(this));
 
 		setScreen(screens.get(MAIN));
 	}

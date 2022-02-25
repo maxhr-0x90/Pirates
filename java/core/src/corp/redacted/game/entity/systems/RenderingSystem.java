@@ -69,4 +69,8 @@ public class RenderingSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         renderQueue.add(entity);
     }
+
+    public PerspectiveCamera getCam() {
+        return cam;
+    }
 }

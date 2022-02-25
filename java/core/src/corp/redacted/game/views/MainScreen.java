@@ -9,7 +9,7 @@ import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
 /**
- * Écran principal de jeu. Là où le jeu, à proprement parlé se déroule
+ * Écran principal de jeu. Là où le jeu, à proprement parlé, se déroule
  */
 public class MainScreen implements Screen {
     private final Game PARENT;
