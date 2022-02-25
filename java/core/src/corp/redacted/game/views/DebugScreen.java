@@ -30,6 +30,7 @@ public class DebugScreen implements Screen {
         worldBuilder.generateWorld();
 
         RenderingSystem renderSys = new RenderingSystem();
+        renderSys.setDebugging(true);
         engine.addSystem(renderSys);
 
         camController = new CameraInputController(renderSys.getCam());
