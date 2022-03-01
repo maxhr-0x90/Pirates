@@ -1,0 +1,12 @@
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/reseau/timer/timer.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/Game.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/reseau/server/Socket.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/WorldBuilder.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/reseau/Switch.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/entity/systems/RenderingSystem.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/entity/components/ModelComponent.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/entity/systems/ZComparator.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/views/MainScreen.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/ModelGenerator.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/core/views/DebugScreen.java
+/home/schizoboy/Programmation/PROJET_TUT/Pirates/src/main/java/game/desktop/DesktopLauncher.java
