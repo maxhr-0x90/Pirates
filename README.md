@@ -3,23 +3,21 @@
 ## Partie Java
 
 ### Compilation
-
+Dans le dossier `java`:
 ```
-mvn compile
+./gradlew compileJava
 ```
 
 ### Execution
+Dans le dossier `java` (cette commande compile automatiquement):     
+```
+./gradlew run
+```
 
 ### Nettoyage
-Dans le dossier `java`:     
+Dans le dossier `java`:  
 ```
-mvn clean
+./gradlew clean
 ```
 
-## Partie Réseau
-
-### Démarrage
-
-```
-mvn jetty:run
-```
+Un jeu du turfu. Sponsorisé par Tipiak
