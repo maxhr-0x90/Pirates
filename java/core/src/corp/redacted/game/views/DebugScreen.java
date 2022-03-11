@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import corp.redacted.game.Game;
 import corp.redacted.game.WorldBuilder;
+import corp.redacted.game.entity.systems.PhysicsDebugSystem;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
 /**
@@ -29,9 +30,10 @@ public class DebugScreen implements Screen {
         worldBuilder = new WorldBuilder(engine);
         worldBuilder.generateWorld();
 
-        RenderingSystem renderSys = new RenderingSystem();
+        RenderingSystem renderSys = new RenderingSystem(false);
         renderSys.setDebugging(true);
         engine.addSystem(renderSys);
+        engine.addSystem(new PhysicsDebugSystem(worldBuilder.getWorld(), renderSys.getCam()));
 
         camController = new CameraInputController(renderSys.getCam());
         Gdx.input.setInputProcessor(camController);
@@ -48,6 +50,7 @@ public class DebugScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         engine.update(delta);
+        worldBuilder.getWorld().step(delta, 6, 2);
     }
 
     @Override
