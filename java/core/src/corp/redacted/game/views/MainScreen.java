@@ -26,7 +26,7 @@ public class MainScreen implements Screen {
         worldBuilder = new WorldBuilder(engine);
         worldBuilder.generateWorld();
 
-        engine.addSystem(new RenderingSystem());
+        engine.addSystem(new RenderingSystem(true));
     }
 
     @Override
