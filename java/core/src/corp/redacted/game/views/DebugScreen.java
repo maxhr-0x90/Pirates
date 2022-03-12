@@ -4,20 +4,24 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import corp.redacted.game.Game;
 import corp.redacted.game.WorldBuilder;
+import corp.redacted.game.entity.systems.PhysicsDebugSystem;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
 /**
- * Écran principal de jeu. Là où le jeu, à proprement parlé, se déroule
+ * Écran de debug
  */
-public class MainScreen implements Screen {
+public class DebugScreen implements Screen {
     private final Game PARENT;
 
     private PooledEngine engine;
     private WorldBuilder worldBuilder;
 
-    public MainScreen(Game parent){
+    private CameraInputController camController;
+
+    public DebugScreen(Game parent){
         super();
 
         PARENT = parent;
@@ -26,7 +30,13 @@ public class MainScreen implements Screen {
         worldBuilder = new WorldBuilder(engine);
         worldBuilder.generateWorld();
 
-        engine.addSystem(new RenderingSystem(true));
+        RenderingSystem renderSys = new RenderingSystem(false);
+        renderSys.setDebugging(true);
+        engine.addSystem(renderSys);
+        engine.addSystem(new PhysicsDebugSystem(worldBuilder.getWorld(), renderSys.getCam()));
+
+        camController = new CameraInputController(renderSys.getCam());
+        Gdx.input.setInputProcessor(camController);
     }
 
     @Override
@@ -40,6 +50,7 @@ public class MainScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         engine.update(delta);
+        worldBuilder.getWorld().step(delta, 6, 2);
     }
 
     @Override
@@ -63,7 +74,5 @@ public class MainScreen implements Screen {
     }
 
     @Override
-    public void dispose() {
-        engine.clearPools();
-    }
+    public void dispose() { engine.clearPools(); }
 }
