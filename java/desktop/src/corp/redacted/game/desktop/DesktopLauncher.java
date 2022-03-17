@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import corp.redacted.game.Game;
 import corp.redacted.game.serveur.Socket;
 import corp.redacted.game.serveur.GestionHttp;
+import corp.redacted.game.serveur.Metronome;
 
 public class DesktopLauncher {
 
@@ -22,11 +23,15 @@ public class DesktopLauncher {
 			server.start();
 			System.out.println("WebSocket démarrée sur le port " + Socket.PORT);
 
+			//Lancement tu systeme de thread
+			Metronome.launchTimer(2000);
+
 			// DEMARRAGE DU JEU
 			config = new Lwjgl3ApplicationConfiguration();
 			new Lwjgl3Application(new Game(), config);
 			System.out.println("Jeu terminé");
 
+			
 			// ARRET DU SERVEUR HTTP
 			GestionHttp.stop();
 
