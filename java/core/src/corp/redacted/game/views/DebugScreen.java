@@ -10,6 +10,9 @@ import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.entity.systems.PhysicsDebugSystem;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
+import corp.redacted.game.entity.systems.BoatSystem;
+import corp.redacted.game.controller.KeyboardController;
+
 /**
  * Écran de debug
  */
@@ -20,6 +23,8 @@ public class DebugScreen implements Screen {
     private WorldBuilder worldBuilder;
 
     private CameraInputController camController;
+
+    private KeyboardController clavier = new KeyboardController();
 
     public DebugScreen(Game parent){
         super();
@@ -34,6 +39,7 @@ public class DebugScreen implements Screen {
         renderSys.setDebugging(true);
         engine.addSystem(renderSys);
         engine.addSystem(new PhysicsDebugSystem(worldBuilder.getWorld(), renderSys.getCam()));
+        engine.addSystem(new BoatSystem(clavier, worldBuilder));
 
         camController = new CameraInputController(renderSys.getCam());
         Gdx.input.setInputProcessor(camController);
@@ -41,7 +47,7 @@ public class DebugScreen implements Screen {
 
     @Override
     public void show() {
-
+      Gdx.input.setInputProcessor(clavier);
     }
 
     @Override
