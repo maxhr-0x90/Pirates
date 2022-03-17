@@ -9,5 +9,8 @@ public interface IConfig{
   int LARGEUR_BATEAU = 10;
   int LONGUEUR_BATEAU = 25;
 
+  int DELAIS_TIR = 50; //ms
+
+
 
 }
