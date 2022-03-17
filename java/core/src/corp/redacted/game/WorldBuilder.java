@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -71,6 +72,11 @@ public class WorldBuilder {
 
       bodyC.body.createFixture(fixDef);
       poly.dispose(); //On libère l'enveloppe.
+
+      //On précise les capteurs pour les mouvements.
+		  for(Fixture fix : bodyC.body.getFixtureList()){
+			   fix.setSensor(true);
+      }
 
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);
