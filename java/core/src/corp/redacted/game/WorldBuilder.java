@@ -45,7 +45,6 @@ public class WorldBuilder {
       StatComponent bateauC = new StatComponent();
       BodyComponent bodyC = new BodyComponent();
       BodyDef bodyD = new BodyDef();
-      PolygonShape poly = new PolygonShape();
       FixtureDef fixDef = new FixtureDef();
 
       /* Définition du corps de l'enité */
@@ -55,7 +54,15 @@ public class WorldBuilder {
       bodyC.body = world.createBody(bodyD);
 
       /* Création de l'enveloppe du bateau */
-      poly.setAsBox(IConfig.LONGUEUR_BATEAU, IConfig.LARGEUR_BATEAU);
+      Vector2[] vect = new Vector2[5];
+      PolygonShape poly = new PolygonShape();
+      vect[0] = new Vector2(posx, posy);
+      vect[1] = new Vector2(IConfig.LARGEUR_BATEAU,0);
+      vect[2] = new Vector2(IConfig.LARGEUR_BATEAU, 4*IConfig.LONGUEUR_BATEAU/5);
+      vect[3] =  new Vector2(IConfig.LARGEUR_BATEAU/2, IConfig.LONGUEUR_BATEAU);
+      vect[4] = new Vector2(0, 4*IConfig.LONGUEUR_BATEAU/5);
+
+      poly.set(vect);
 
       /* Création de la fixture */
       fixDef.density = IConfig.DENSITE_BATEAU;
