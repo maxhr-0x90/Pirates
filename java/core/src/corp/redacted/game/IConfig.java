@@ -11,6 +11,9 @@ public interface IConfig{
 
   int DELAIS_TIR = 50; //ms
 
+  int DENSITE_BATEAU = 0;
+  int FRICTION_BATEAU = 0;
+
 
 
 }
