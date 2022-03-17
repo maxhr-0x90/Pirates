@@ -6,8 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class KeyboardController  implements InputProcessor {
 	public boolean left,right,up,down;
-	public boolean isMouse1Down, isMouse2Down,isMouse3Down;
-	public boolean isDragged;
+	public boolean isMouseDown;
 	public Vector2 mouseLocation = new Vector2(0,0);
 
 	@Override
@@ -70,11 +69,7 @@ public class KeyboardController  implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if(button == 0){
-			isMouse1Down = true;
-		}else if(button == 1){
-			isMouse2Down = true;
-		}else if(button == 2){
-			isMouse3Down = true;
+			isMouseDown = true;
 		}
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
@@ -82,36 +77,22 @@ public class KeyboardController  implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		isDragged = false;
-		//System.out.println(button);
+	public boolean touchUp(int screenX, int screenY, int pointer, int button){
 		if(button == 0){
-			isMouse1Down = false;
-		}else if(button == 1){
-			isMouse2Down = false;
-		}else if(button == 2){
-			isMouse3Down = false;
+			isMouseDown = false;
 		}
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		isDragged = true;
-		mouseLocation.x = screenX;
-		mouseLocation.y = screenY;
-		// TODO Auto-generated method stub
+	public boolean touchDragged(int screenX, int screenY, int pointer){
 		return false;
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		mouseLocation.x = screenX;
-		mouseLocation.y = screenY;
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -120,7 +101,5 @@ public class KeyboardController  implements InputProcessor {
 		return false;
 	}
 
-	public boolean scrolled(int amount) {
-		return false;
-	}
+
 }
