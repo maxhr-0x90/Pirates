@@ -29,13 +29,13 @@ public class CollisionSystem extends IteratingSystem{
   @Override
   protected void processEntity(Entity entite, float temps){
     CollisionComponent colC = colM.get(entite); //On recupere une collision
-    BodyComponent bodyC = bodyMap.get(entite);
     Entity entiteEnCollision = colC.collisionEntite; //On recupere l'entite en collision
 
     TypeComponent typeEntite = entite.getComponent(TypeComponent.class); // On recupere son type
 
     /*Consernant les collisions des joueurs (bateau)*/
     if(typeEntite.type == TypeComponent.BATEAU_A){
+      BodyComponent bodyA = bodyMap.get(entite);
       StatComponent boat = boatM.get(entite);
 
       if(entiteEnCollision != null){
@@ -43,12 +43,24 @@ public class CollisionSystem extends IteratingSystem{
         if(typeEnCollsion != null){
           switch(typeEnCollsion.type){
             case TypeComponent.BATEAU_B :
-            //On applique une force sur le bateau.
-            bodyC.body.setLinearVelocity(MathUtils.lerp(bodyC.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyC.body.getLinearVelocity().y, 10, 3f));
-            System.out.println("cc"+bodyC.body.getLinearVelocity().x);
+            //On applique une force sur les bateaux.
+            BodyComponent bodyB= bodyMap.get(entiteEnCollision);
+
+            if(bodyA.body.getPosition().x > bodyB.body.getPosition().x && bodyA.body.getPosition().y > bodyB.body.getPosition().y){
+              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, -10, 3f));
+              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, 10, 3f));
+            }else if(bodyA.body.getPosition().x < bodyB.body.getPosition().x && bodyA.body.getPosition().y < bodyB.body.getPosition().y ){
+              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, 10, 3f));
+              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, -10, 3f));
+            }else if(bodyA.body.getPosition().x > bodyB.body.getPosition().x && bodyA.body.getPosition().y < bodyB.body.getPosition().y ){
+              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, 10, 3f));
+              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, -10, 3f));
+            }else if(bodyA.body.getPosition().x < bodyB.body.getPosition().x && bodyA.body.getPosition().y > bodyB.body.getPosition().y ){
+              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, -10, 3f));
+              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, 10, 3f));
+            }
 
             boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
-            System.out.println(boat.barreVie);
 
             colC.collisionEntite = null;
             break;
@@ -71,14 +83,13 @@ public class CollisionSystem extends IteratingSystem{
     /*Consernant les collisions des joueurs (bateau)*/
     else if(typeEntite.type == TypeComponent.BATEAU_B){
       StatComponent boat = boatM.get(entite);
+      BodyComponent bodyB = bodyMap.get(entite);
 
       if(entiteEnCollision != null){
         TypeComponent typeEnCollsion = entiteEnCollision.getComponent(TypeComponent.class);
         if(typeEnCollsion != null){
           switch(typeEnCollsion.type){
             case TypeComponent.BATEAU_A:
-            //On applique une force sur le bateau.
-            bodyC.body.setLinearVelocity(MathUtils.lerp(bodyC.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyC.body.getLinearVelocity().y, 10, 3f));
 
             boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
             colC.collisionEntite = null;
