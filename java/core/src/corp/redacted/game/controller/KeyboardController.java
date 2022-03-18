@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class KeyboardController  implements InputProcessor {
 	public boolean left,right,up,down;
+	public boolean leftB,rightB,upB,downB;
 	public boolean isMouseDown;
 	public Vector2 mouseLocation = new Vector2(0,0);
 
@@ -29,6 +30,22 @@ public class KeyboardController  implements InputProcessor {
 			    case Keys.DOWN: 	// if keycode is the same as Keys.LEFT a.k.a 20
 			            down = true;	// do this
 			            keyProcessed = true;	// we have reacted to a keypress
+									break;
+				  case Keys.A:  	// if keycode is the same as Keys.LEFT a.k.a 21
+				  				leftB = true;	// do this
+				  				keyProcessed = true;	// we have reacted to a keypress
+									break;
+				   case Keys.D: 	// if keycode is the same as Keys.LEFT a.k.a 22
+									rightB = true;	// do this
+									keyProcessed = true;	// we have reacted to a keypress
+									break;
+					  case Keys.W: 		// if keycode is the same as Keys.LEFT a.k.a 19
+									upB = true;		// do this
+									keyProcessed = true;	// we have reacted to a keypress
+									break;
+						case Keys.S: 	// if keycode is the same as Keys.LEFT a.k.a 20
+									downB = true;	// do this
+									keyProcessed = true;	// we have reacted to a keypress
 					default:
 					break;
         }
@@ -55,6 +72,22 @@ public class KeyboardController  implements InputProcessor {
 			   case Keys.DOWN: 	// if keycode is the same as Keys.LEFT a.k.a 20
 			            down = false;	// do this
 			            keyProcessed = true;	// we have reacted to a keypress
+					break;
+					case Keys.A:  	// if keycode is the same as Keys.LEFT a.k.a 21
+	            leftB = false;	// do this
+	            keyProcessed = true;	// we have reacted to a keypress
+	            break;
+	        case Keys.D: 	// if keycode is the same as Keys.LEFT a.k.a 22
+	            rightB = false;	// do this
+	            keyProcessed = true;	// we have reacted to a keypress
+	            break;
+				 case Keys.W: 		// if keycode is the same as Keys.LEFT a.k.a 19
+			        upB = false;		// do this
+			        keyProcessed = true;	// we have reacted to a keypress
+			        break;
+			   case Keys.S: 	// if keycode is the same as Keys.LEFT a.k.a 20
+			        downB = false;	// do this
+			        keyProcessed = true;	// we have reacted to a keypress
 	        default:
 					break;
         }
