@@ -46,20 +46,6 @@ public class CollisionSystem extends IteratingSystem{
             //On applique une force sur les bateaux.
             BodyComponent bodyB= bodyMap.get(entiteEnCollision);
 
-            if(bodyA.body.getPosition().x > bodyB.body.getPosition().x && bodyA.body.getPosition().y > bodyB.body.getPosition().y){
-              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, -10, 3f));
-              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, 10, 3f));
-            }else if(bodyA.body.getPosition().x < bodyB.body.getPosition().x && bodyA.body.getPosition().y < bodyB.body.getPosition().y ){
-              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, 10, 3f));
-              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, -10, 3f));
-            }else if(bodyA.body.getPosition().x > bodyB.body.getPosition().x && bodyA.body.getPosition().y < bodyB.body.getPosition().y ){
-              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, 10, 3f));
-              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, -10, 3f));
-            }else if(bodyA.body.getPosition().x < bodyB.body.getPosition().x && bodyA.body.getPosition().y > bodyB.body.getPosition().y ){
-              bodyB.body.setLinearVelocity(MathUtils.lerp(bodyB.body.getLinearVelocity().x, 10, 3f),MathUtils.lerp(bodyB.body.getLinearVelocity().y, -10, 3f));
-              bodyA.body.setLinearVelocity(MathUtils.lerp(bodyA.body.getLinearVelocity().x, -10, 3f),MathUtils.lerp(bodyA.body.getLinearVelocity().y, 10, 3f));
-            }
-
             boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
 
             colC.collisionEntite = null;
@@ -69,6 +55,7 @@ public class CollisionSystem extends IteratingSystem{
             //La marchandise disparait de la map
             // Mise à jour des scores
             // Manche finie
+
             break;
             case TypeComponent.BOULET:
             //Mise à jour de la bar de vie

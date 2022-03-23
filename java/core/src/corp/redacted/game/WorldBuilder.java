@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 
 import corp.redacted.game.entity.components.StatComponent;
 import corp.redacted.game.entity.components.BodyComponent;
@@ -26,7 +27,7 @@ public class WorldBuilder {
     public Entity bateauB;
 
     public WorldBuilder(Engine engine){
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(-10, -10), true);
         this.engine = engine;
         world.setContactListener(new MyContactListener());
 
@@ -42,11 +43,14 @@ public class WorldBuilder {
         Entity batB = creeBateau(7,7,'B');
         this.bateauB = batB;
         engine.addEntity(bateauB);
+
+      
     }
 
     /** Renvoie une entité bateau
     * @param int posx : position initiale sur l'axe des x
     * @param int posy : position initiale sur l'axe des y
+    * @param char camps : donne son nom d'équipe('A', ..)
     */
     public Entity creeBateau(int posx, int posy, char camps){
       Entity bateau = new Entity(); //Création de l'entité
@@ -78,28 +82,21 @@ public class WorldBuilder {
       fixDef.density = IConfig.DENSITE_BATEAU;
       fixDef.friction = IConfig.FRICTION_BATEAU;
       fixDef.shape = poly;
-      fixDef.restitution = 0;
-
-      bodyC.body.createFixture(fixDef);
-      poly.dispose(); //On libère l'enveloppe.
+      fixDef.restitution = 1f;
 
 
-      /* Assignation du type */
+      /* Assignation du type/categorie */
       if(camps == 'A'){
         typeC.type = TypeComponent.BATEAU_A;
       }else if(camps == 'B'){
         typeC.type = TypeComponent.BATEAU_B;
       }
 
+      bodyC.body.createFixture(fixDef);
+      poly.dispose(); //On libère l'enveloppe.
 
-      //On précise les capteurs pour les mouvements.
-		  for(Fixture fix : bodyC.body.getFixtureList()){
-			   fix.setSensor(true);
-      }
 
       bodyC.body.setUserData(bateau);
-
-
 
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);
@@ -109,7 +106,6 @@ public class WorldBuilder {
 
       return bateau;
     }
-
 
 
     public World getWorld() {

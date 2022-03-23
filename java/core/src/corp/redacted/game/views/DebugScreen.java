@@ -11,6 +11,7 @@ import corp.redacted.game.entity.systems.PhysicsDebugSystem;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
 import corp.redacted.game.entity.systems.BoatSystem;
+import corp.redacted.game.entity.systems.CollisionSystem;
 import corp.redacted.game.controller.KeyboardController;
 
 /**
@@ -40,6 +41,7 @@ public class DebugScreen implements Screen {
         engine.addSystem(renderSys);
         engine.addSystem(new PhysicsDebugSystem(worldBuilder.getWorld(), renderSys.getCam()));
         engine.addSystem(new BoatSystem(clavier, worldBuilder));
+        engine.addSystem(new CollisionSystem());
 
         camController = new CameraInputController(renderSys.getCam());
         Gdx.input.setInputProcessor(camController);
