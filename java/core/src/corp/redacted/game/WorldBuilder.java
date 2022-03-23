@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 
 import corp.redacted.game.entity.components.StatComponent;
+import corp.redacted.game.entity.components.MerchendiseComponent;
 import corp.redacted.game.entity.components.BodyComponent;
 import corp.redacted.game.entity.components.TypeComponent;
 import corp.redacted.game.entity.components.CollisionComponent;
@@ -44,7 +45,8 @@ public class WorldBuilder {
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
-
+        Entity marchandise = creeMarchandise(-20,20,10,5, 5);
+        engine.addEntity(marchandise);
     }
 
     /** Renvoie une entité bateau
@@ -113,14 +115,29 @@ public class WorldBuilder {
     * @param float taillex : taille sur l'axe Ox de la marchandise
     * @param float tailley : taille sur l'axe Oy de la marchandise
     */
-    public Entity creeMarchandise(int posx, int posy, float taillex, float tailley){
-      Entity marchandise = new Entity(); //Création de l'entité
-      StatComponent marchandiseC = new StatComponent();
+    public Entity creeMarchandise(int posx, int posy, float taillex, float tailley, float weight){
+      Entity merchendise = new Entity(); //Création de l'entité
+      MerchendiseComponent merchendiseC = new MerchendiseComponent();
       BodyComponent bodyC = new BodyComponent();
       BodyDef bodyD = new BodyDef();
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
+
+
+      /*Définition de ses caractéristique*/
+      merchendiseC.weight = weight;
+
+      if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
+        merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
+      }else if(weight < MerchendiseComponent.LIMIT_CLASSIC_M){
+        merchendiseC.merchendiseType = MerchendiseComponent.CLASSIC_MERCHENDISE;
+      }else{
+        merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
+      }
+
+      merchendiseC.worldB = this;
+
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
       bodyD.position.x = posx;
@@ -142,15 +159,15 @@ public class WorldBuilder {
       bodyC.body.createFixture(fixDef);
       poly.dispose(); //On libère l'enveloppe.
 
-      bodyC.body.setUserData(marchandise);
+      bodyC.body.setUserData(merchendise);
 
       /*On ajoute les components à l'entité*/
-      marchandise.add(marchandiseC);
-      marchandise.add(bodyC);
-      marchandise.add(typeC);
-      marchandise.add(colC);
+      merchendise.add(merchendiseC);
+      merchendise.add(bodyC);
+      merchendise.add(typeC);
+      merchendise.add(colC);
 
-      return marchandise;
+      return merchendise;
     }
 
     public World getWorld() {
@@ -159,7 +176,7 @@ public class WorldBuilder {
 
     /** Supprime une entité
     */
-    public void supprimerEntite(Entity ent){
+    public void removeEntite(Entity ent){
       engine.removeEntity(ent);
     }
 
