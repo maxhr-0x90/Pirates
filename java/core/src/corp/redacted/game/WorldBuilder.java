@@ -44,7 +44,7 @@ public class WorldBuilder {
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
-      
+
     }
 
     /** Renvoie une entité bateau
@@ -107,6 +107,51 @@ public class WorldBuilder {
       return bateau;
     }
 
+    /** Renvoie une entité marchandise
+    * @param int posx : position initiale sur l'axe des x
+    * @param int posy : position initiale sur l'axe des y
+    * @param float taillex : taille sur l'axe Ox de la marchandise
+    * @param float tailley : taille sur l'axe Oy de la marchandise
+    */
+    public Entity creeMarchandise(int posx, int posy, float taillex, float tailley){
+      Entity marchandise = new Entity(); //Création de l'entité
+      StatComponent marchandiseC = new StatComponent();
+      BodyComponent bodyC = new BodyComponent();
+      BodyDef bodyD = new BodyDef();
+      FixtureDef fixDef = new FixtureDef();
+      TypeComponent typeC =  new TypeComponent();
+      CollisionComponent colC = new CollisionComponent();
+      /* Définition du corps de l'enité */
+      bodyD.type = BodyDef.BodyType.StaticBody;
+      bodyD.position.x = posx;
+      bodyD.position.y = posy;
+      bodyC.body = world.createBody(bodyD);
+
+      /* Création de l'enveloppe du bateau */
+      PolygonShape poly = new PolygonShape();
+      poly.setAsBox(taillex, tailley);
+
+      /* Création de la fixture/ envrionnement */
+      fixDef.density = IConfig.DENSITE_MARCHANDISE;
+      fixDef.friction = IConfig.FRICTION_MARCHANDISE;
+      fixDef.restitution = 0f;
+      fixDef.shape = poly;
+
+      /* Assignation du type/categorie */
+      typeC.type = TypeComponent.MARCHANDISE;
+      bodyC.body.createFixture(fixDef);
+      poly.dispose(); //On libère l'enveloppe.
+
+      bodyC.body.setUserData(marchandise);
+
+      /*On ajoute les components à l'entité*/
+      marchandise.add(marchandiseC);
+      marchandise.add(bodyC);
+      marchandise.add(typeC);
+      marchandise.add(colC);
+
+      return marchandise;
+    }
 
     public World getWorld() {
         return world;

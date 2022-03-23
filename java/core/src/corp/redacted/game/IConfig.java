@@ -16,6 +16,8 @@ public interface IConfig{
 
   int DEGAT_B_B = 10; //Nb de dégat infliger dans une collision bateau-bateau
 
+  float DENSITE_MARCHANDISE = 100f;
+  int FRICTION_MARCHANDISE = 1000;
 
 
 }
