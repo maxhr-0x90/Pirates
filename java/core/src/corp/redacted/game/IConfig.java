@@ -11,8 +11,10 @@ public interface IConfig{
 
   int DELAIS_TIR = 50; //ms
 
-  int DENSITE_BATEAU = 0;
-  int FRICTION_BATEAU = 0;
+  int DENSITE_BATEAU = 10;
+  int FRICTION_BATEAU = 10;
+
+  int DEGAT_B_B = 10; //Nb de dégat infliger dans une collision bateau-bateau
 
 
 
