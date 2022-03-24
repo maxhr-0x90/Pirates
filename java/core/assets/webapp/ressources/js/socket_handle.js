@@ -1,4 +1,4 @@
-var IP = "161.3.34.43";
+var IP = "192.168.0.2";
 var webSocket = new WebSocket("ws://" + IP + ":8081");;
 
 webSocket.onopen = function(event) {
