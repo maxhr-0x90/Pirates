@@ -23,7 +23,7 @@ public class DesktopLauncher {
 			server.start();
 			System.out.println("WebSocket démarrée sur le port " + Socket.PORT);
 
-			//Lancement tu systeme de thread
+			// DEMARRAGE DU TIMER
 			Metronome.launchTimer(2000);
 
 			// DEMARRAGE DU JEU
@@ -31,13 +31,16 @@ public class DesktopLauncher {
 			new Lwjgl3Application(new Game(), config);
 			System.out.println("Jeu terminé");
 
-			
 			// ARRET DU SERVEUR HTTP
 			GestionHttp.stop();
 
 			// ARRET DE LA WEBSOCKET
 			server.stop();
 			System.out.println("Websocket éteinte");
+
+			// ARRET DU TIMER
+			Metronome.timer.cancel();
+			Metronome.timer.purge();
 		}
 		catch(Exception e){
 			e.printStackTrace();
