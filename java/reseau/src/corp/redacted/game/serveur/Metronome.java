@@ -8,11 +8,10 @@ import java.util.Timer;
 
 //CLASSE
 public class Metronome {
-    //Fonction qui lance le systeme de timer le parametre frequence represente la frequence de lancement du timer en ms
-    public static void launchTimer(int frequence){
-      Timer t;
-        t = new Timer();
+  public static Timer timer = new Timer();
 
-        t.scheduleAtFixedRate(new Task(), 0, frequence);
-    }
+  // Fonction qui lance le systeme de timer le parametre frequence represente la frequence de lancement du timer en ms
+  public static void launchTimer(int frequence){
+    timer.scheduleAtFixedRate(new Task(), 0, frequence);
+  }
 }
