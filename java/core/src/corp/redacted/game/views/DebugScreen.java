@@ -41,7 +41,7 @@ public class DebugScreen implements Screen {
         engine.addSystem(renderSys);
         engine.addSystem(new PhysicsDebugSystem(worldBuilder.getWorld(), renderSys.getCam()));
         engine.addSystem(new BoatSystem(clavier, worldBuilder));
-        engine.addSystem(new CollisionSystem());
+        engine.addSystem(new CollisionSystem(worldBuilder));
 
         camController = new CameraInputController(renderSys.getCam());
         Gdx.input.setInputProcessor(camController);
