@@ -2,8 +2,6 @@ package corp.redacted.game.entity.components;
 
 import com.badlogic.ashley.core.Component;
 
-import corp.redacted.game.WorldBuilder;
-
 public class MerchendiseComponent implements Component {
     /*Catégories de marchandises*/
     public static int BIG_MERCHENDISE = 1;
@@ -16,7 +14,5 @@ public class MerchendiseComponent implements Component {
 
     public float weight; //poids de la marchandise
     public int merchendiseType; //catégorie de la marchandise
-
-    public WorldBuilder worldB;
 
 }

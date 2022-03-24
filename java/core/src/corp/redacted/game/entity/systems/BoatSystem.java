@@ -18,16 +18,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class BoatSystem extends IteratingSystem{
-  private WorldBuilder monde;
+  private WorldBuilder world;
   private ComponentMapper<BodyComponent> bodyMap;
   private ComponentMapper<StatComponent> statMap;
   private ComponentMapper<TypeComponent> typeMap;
   private KeyboardController controller;
   private static final float VITESSE = 50f;
 
-	public BoatSystem(KeyboardController keyControl, WorldBuilder monde) {
+	public BoatSystem(KeyboardController keyControl, WorldBuilder world) {
 		super(Family.all(StatComponent.class).get());
-		this.monde = monde;
+		this.world = world;
     this.bodyMap = ComponentMapper.getFor(BodyComponent.class);
     this.statMap = ComponentMapper.getFor(StatComponent.class);
     this.typeMap = ComponentMapper.getFor(TypeComponent.class);
@@ -110,8 +110,7 @@ public class BoatSystem extends IteratingSystem{
       if(boat.dernierTir <=0){  //On vérifie si le temps avant le dernier tir est suffisant
         Vector2 posSouris = new Vector2(controller.mouseLocation.x,controller.mouseLocation.y); // On récupère la position de la souris
         boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
-
-        //ACTION DE TIR
+        this.world.createCannonball(posSouris);
       }
     }
 
