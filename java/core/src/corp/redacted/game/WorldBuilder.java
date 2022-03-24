@@ -136,7 +136,6 @@ public class WorldBuilder {
         merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
       }
 
-      merchendiseC.worldB = this;
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
@@ -168,6 +167,52 @@ public class WorldBuilder {
       merchendise.add(colC);
 
       return merchendise;
+    }
+
+
+    /** Crée et place une entité boulet de canon
+    * @param Vector2 pos : vecteur de position d'arrivé.
+    */
+    public void createCannonball(Vector2 pos){
+      Entity cannonball = new Entity(); //Création de l'entité
+      MerchendiseComponent cannonballC = new MerchendiseComponent();
+      BodyComponent bodyC = new BodyComponent();
+      BodyDef bodyD = new BodyDef();
+      FixtureDef fixDef = new FixtureDef();
+      TypeComponent typeC =  new TypeComponent();
+      CollisionComponent colC = new CollisionComponent();
+
+
+      /* Définition du corps de l'enité */
+      bodyD.type = BodyDef.BodyType.StaticBody;
+      bodyD.position.x = pos.x/10; //A VOIR AVEC SOAM
+      bodyD.position.y = pos.y/10;
+      bodyC.body = world.createBody(bodyD);
+
+      /* Création de l'enveloppe du bateau */
+      PolygonShape poly = new PolygonShape();
+      poly.setAsBox(IConfig.TAILLE_CANNONBALL, IConfig.TAILLE_CANNONBALL);
+
+      /* Création de la fixture/ envrionnement */
+      fixDef.density = IConfig.DENSITE_CANNONBALL;
+      fixDef.friction = IConfig.FRICTION_CANNONBALL;
+      fixDef.restitution = 0f;
+      fixDef.shape = poly;
+
+      /* Assignation du type/categorie */
+      typeC.type = TypeComponent.CANNONBALL;
+      bodyC.body.createFixture(fixDef);
+      poly.dispose(); //On libère l'enveloppe.
+
+      bodyC.body.setUserData(cannonball);
+
+      /*On ajoute les components à l'entité*/
+      cannonball.add(cannonballC);
+      cannonball.add(bodyC);
+      cannonball.add(typeC);
+      cannonball.add(colC);
+
+      engine.addEntity(cannonball);
     }
 
     public World getWorld() {
