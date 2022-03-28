@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import java.util.Collections;
+import java.util.Hashtable;
 
 public class Socket extends WebSocketServer {
 	public final static int PORT = 8081;
@@ -26,21 +27,53 @@ public class Socket extends WebSocketServer {
 	public static int numberLeftShot = 0;
 	public static int numberRightShot = 0;
 
+	public static Boolean whiteListed = false;
+
+	// Sert à filtrer les gens présent au moment du lancement du jeu
+	public static Hashtable<String, WebSocket> whiteListIn;
+
+	// Sert uniquement à enlever des personnes de la white list quand la connexion
+	// est ouverte
+	public static Hashtable<WebSocket, String> whiteListOut;
+
 	public Socket() throws UnknownHostException{
 		// On Instancie la WebSocket sur le port PORT
 		super(new InetSocketAddress(PORT));
+
 		// Pour éviter le problème d'addresse déjà prise si nouveau lancement
 		this.setReuseAddr(true);
+
+		whiteListIn = new Hashtable<String, WebSocket>();
+		whiteListOut = new Hashtable<WebSocket, String>();
 	}
 
   @Override
   public void onOpen(WebSocket session, ClientHandshake hs){
 		// Un utilisateur vient de se connecter à la session
-    session.send("Connexion réussie");
+		WebSocket ws;
+		String ip = session.getRemoteSocketAddress().getAddress().getHostAddress();
+
+		if(!whiteListed){	// Connexion ouverte à tous
+			whiteListIn.put(ip, session);
+			whiteListOut.put(session, ip);
+			System.out.println(whiteListIn);
+			System.out.println(whiteListOut);
+		}
+		else{	// Connexion fermée
+			ws = whiteListIn.get(ip);
+			if(ws == null){	// Personne non présente dans la white list
+				session.send("redirect");
+			}
+			else{
+				whiteListIn.put(ip, session);
+			}
+		}
+
 		if(DEBUG){
-	    System.out.println(
-				"Nouveau joueur" +
-	    	session.getRemoteSocketAddress().getAddress().getHostAddress()
+			System.out.println(
+				"Nouveau joueur : IP " +
+				session.getRemoteSocketAddress().getAddress().getHostAddress()
+				+ " " + session
 			);
 		}
   }
@@ -48,8 +81,15 @@ public class Socket extends WebSocketServer {
   @Override
   public void onClose(WebSocket session, int code, String cause, boolean r){
 		// Fermeture de la connexion d'un joueur avec la WebSocket
+
+		String ip = whiteListOut.get(session);
+		if(!whiteListed){
+			whiteListOut.remove(session);
+			whiteListIn.remove(ip);
+		}
+
 		if(DEBUG){
-	    System.out.println(session + " quitte le jeu à cause de : " + cause);
+			System.out.println(session + " quitte le jeu à cause de : " + cause);
 		}
   }
 

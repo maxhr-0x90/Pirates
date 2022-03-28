@@ -2,16 +2,24 @@ var IP = "192.168.0.2";
 var webSocket = new WebSocket("ws://" + IP + ":8081");;
 
 webSocket.onopen = function(event) {
-  updateOutput("Connexion etablie");
 };
 
 webSocket.onmessage = function(event) {
-  updateOutput(event.data);
+  if(event.data === "redirect"){
+    document.location.href = "erreur.html";
+  }
+  else{
+    updateOutput(event.data);
+  }
 };
 
 webSocket.onclose = function(event) {
   updateOutput("Connexion terminee");
 };
+
+function connect(){
+  webSocket.send("5");
+}
 
 function left() {
   webSocket.send("0");
