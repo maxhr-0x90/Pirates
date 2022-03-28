@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="./ressources/css/main_style.css">
+    <link rel="icon" href="./ressources/img/favicon.ico"/>
+		<script src="./ressources/js/socket_handle.js"></script>
+	</head>
+	<body>
+		<div>
+			<table>
+					<tr>
+						<td>
+							<div class="image rame_gauche" onclick="left()"></div>
+						</td>
+						<td>
+							<div class="image rame_droite" onclick="right()"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="image canon_gauche" onclick="leftShot()"></div>
+						</td>
+						<td>
+							<div class="image canon_droite" onclick="rightShot()"></div>
+						</td>
+					</tr>
+			</table>
+		</div>
+
+		<div id="msgbox">
+			<div id="opacity"></div>
+			<div id="text">
+				<u>Infos :</u>
+				<p id="sens"></p>
+			</div>
+		</div>
+	</body>
+</html>
