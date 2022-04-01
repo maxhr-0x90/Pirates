@@ -29,8 +29,11 @@ public class Socket extends WebSocketServer {
 
 	public static Boolean whiteListed = false;
 
-	// Sert à filtrer les gens présent au moment du lancement du jeu
-	public static Hashtable<String, WebSocket> whiteListIn;
+	// Liste bateau bleu
+	public static Hashtable<String, WebSocket> whiteListInBleue;
+
+	// Liste bateau rouge
+	public static Hashtable<String, WebSocket> whiteListInRouge;
 
 	// Sert uniquement à enlever des personnes de la white list quand la connexion
 	// est ouverte
@@ -43,29 +46,42 @@ public class Socket extends WebSocketServer {
 		// Pour éviter le problème d'addresse déjà prise si nouveau lancement
 		this.setReuseAddr(true);
 
-		whiteListIn = new Hashtable<String, WebSocket>();
+		whiteListInBleue = new Hashtable<String, WebSocket>();
+		whiteListInRouge = new Hashtable<String, WebSocket>();
 		whiteListOut = new Hashtable<WebSocket, String>();
 	}
 
   @Override
   public void onOpen(WebSocket session, ClientHandshake hs){
 		// Un utilisateur vient de se connecter à la session
-		WebSocket ws;
+		WebSocket wsb, wsr;
 		String ip = session.getRemoteSocketAddress().getAddress().getHostAddress();
 
 		if(!whiteListed){	// Connexion ouverte à tous
-			whiteListIn.put(ip, session);
+			if(ip.charAt(ip.length()-1) % 2 == 0){
+				whiteListInBleue.put(ip, session);
+			}
+			else{
+				whiteListInRouge.put(ip, session);
+			}
 			whiteListOut.put(session, ip);
-			System.out.println(whiteListIn);
+			System.out.println("bleue : " + whiteListInBleue);
+			System.out.println("rouge : " + whiteListInRouge);
 			System.out.println(whiteListOut);
 		}
 		else{	// Connexion fermée
-			ws = whiteListIn.get(ip);
-			if(ws == null){	// Personne non présente dans la white list
+			wsb = whiteListInBleue.get(ip);
+			wsr = whiteListInRouge.get(ip);
+			if(wsb == null && wsr == null){	// Personne non présente dans la white list
 				session.send("redirect");
 			}
 			else{
-				whiteListIn.put(ip, session);
+				if(wsb == null){
+					whiteListInRouge.put(ip, session);
+				}
+				else{
+					whiteListInBleue.put(ip, session);
+				}
 			}
 		}
 
@@ -85,7 +101,12 @@ public class Socket extends WebSocketServer {
 		String ip = whiteListOut.get(session);
 		if(!whiteListed){
 			whiteListOut.remove(session);
-			whiteListIn.remove(ip);
+			if(whiteListInBleue.get(ip) != null){
+				whiteListInBleue.remove(ip);
+			}
+			else{
+				whiteListInRouge.remove(ip);
+			}
 		}
 
 		if(DEBUG){
@@ -111,6 +132,11 @@ public class Socket extends WebSocketServer {
 			session.send("Tir droit !");
 			numberRightShot++;
 		}
+		if(message.equals("iswhitelisted")){
+			if(!whiteListed){
+				session.send("redirect");
+			}
+		}
 
 		if(DEBUG){
 			System.out.println("Nouveau message de " + session + " : " + message);
@@ -124,7 +150,7 @@ public class Socket extends WebSocketServer {
     e.printStackTrace();
   }
 
-  @Override
+	@Override
   public void onStart(){
   }
 }

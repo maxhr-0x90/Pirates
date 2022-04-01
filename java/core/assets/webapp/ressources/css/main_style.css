@@ -72,3 +72,7 @@ body{
 .canon_droite:active{
   background-image: url("../img/canon_droit_active.png");
 }
+
+.lobby_center{
+  align-content: center;
+}

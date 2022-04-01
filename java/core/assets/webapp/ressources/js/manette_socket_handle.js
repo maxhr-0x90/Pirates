@@ -1,7 +1,8 @@
-var IP = "192.168.0.2";
+var IP = "localhost";
 var webSocket = new WebSocket("ws://" + IP + ":8081");;
 
 webSocket.onopen = function(event) {
+  webSocket.send("iswhitelisted")
 };
 
 webSocket.onmessage = function(event) {
@@ -18,7 +19,6 @@ webSocket.onclose = function(event) {
 };
 
 function connect(){
-  webSocket.send("5");
 }
 
 function left() {
