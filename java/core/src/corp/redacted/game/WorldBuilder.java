@@ -1,6 +1,8 @@
 package corp.redacted.game;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -11,11 +13,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 
-import corp.redacted.game.entity.components.StatComponent;
-import corp.redacted.game.entity.components.MerchendiseComponent;
-import corp.redacted.game.entity.components.BodyComponent;
-import corp.redacted.game.entity.components.TypeComponent;
-import corp.redacted.game.entity.components.CollisionComponent;
+import com.badlogic.gdx.utils.Array;
+import corp.redacted.game.entity.components.*;
+import corp.redacted.game.loader.Assets;
 
 /**
  * Permet la mise en place des entités dans le jeu
@@ -27,11 +27,16 @@ public class WorldBuilder {
     public Entity bateauA;
     public Entity bateauB;
 
-    public WorldBuilder(Engine engine){
+    private Assets assets;
+
+    public WorldBuilder(Engine engine, Assets assets){
         world = new World(new Vector2(-10, -10), true);
         this.engine = engine;
         world.setContactListener(new MyContactListener());
+        this.assets = assets;
 
+        assets.queueAdd3DModels();
+        assets.manager.finishLoading();
     }
 
     /** Genère un monde
@@ -50,9 +55,9 @@ public class WorldBuilder {
     }
 
     /** Renvoie une entité bateau
-    * @param int posx : position initiale sur l'axe des x
-    * @param int posy : position initiale sur l'axe des y
-    * @param char camps : donne son nom d'équipe('A', ..)
+    * @param posx : position initiale sur l'axe des x
+    * @param posy : position initiale sur l'axe des y
+    * @param camps : donne son nom d'équipe('A', ..)
     */
     public Entity creeBateau(int posx, int posy, char camps){
       Entity bateau = new Entity(); //Création de l'entité
