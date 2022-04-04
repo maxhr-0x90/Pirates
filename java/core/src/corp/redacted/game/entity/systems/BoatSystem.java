@@ -8,14 +8,22 @@ import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.controller.KeyboardController;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.MassData;
 
 import corp.redacted.game.IConfig;
+
+import corp.redacted.game.serveur.Task;
 
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import java.lang.Math;
+import java.util.ArrayList;
 
 public class BoatSystem extends IteratingSystem{
   private WorldBuilder world;
@@ -23,7 +31,6 @@ public class BoatSystem extends IteratingSystem{
   private ComponentMapper<StatComponent> statMap;
   private ComponentMapper<TypeComponent> typeMap;
   private KeyboardController controller;
-  private static final float VITESSE = 50f;
 
 	public BoatSystem(KeyboardController keyControl, WorldBuilder world) {
 		super(Family.all(StatComponent.class).get());
@@ -43,14 +50,16 @@ public class BoatSystem extends IteratingSystem{
 
     if(typeC.type == TypeComponent.BATEAU_A){
 
+      // mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
+
       /* CONTROLEUR CLAVIER */
-      float angle = 0.1f;
+
       if(controller.left){
-        pousseDroite(bodyC);
+        pousseGauche(bodyC);
 		    }
 
 		   if(controller.right){
-         pousseGauche(bodyC);
+         pousseDroite(bodyC);
 		    }
 
         if(controller.up){
@@ -64,21 +73,19 @@ public class BoatSystem extends IteratingSystem{
         //Permet d'arreter le bateau
         if(!controller.left && ! controller.right){
           bodyC.body.setAngularVelocity(0);
-          bodyC.body.setLinearVelocity(MathUtils.lerp(bodyC.body.getLinearVelocity().x, 0, 0.1f),bodyC.body.getLinearVelocity().y);
         }
         if(!controller.up && !controller.down){
-          bodyC.body.setAngularVelocity(0);
-          bodyC.body.setLinearVelocity(bodyC.body.getLinearVelocity().x,MathUtils.lerp(bodyC.body.getLinearVelocity().y, 0f, 0.1f));
+          bodyC.body.setLinearVelocity(0,0);
         }
+
     }else if(typeC.type == TypeComponent.BATEAU_B){
       /* CONTROLEUR CLAVIER */
-      float angle = 0.1f;
       if(controller.leftB){
-        pousseDroite(bodyC);
+        pousseGauche(bodyC);
 		    }
 
 		   if(controller.rightB){
-         pousseGauche(bodyC);
+         pousseDroite(bodyC);
 		    }
 
         if(controller.upB){
@@ -91,13 +98,13 @@ public class BoatSystem extends IteratingSystem{
 
         //Permet d'arreter le bateau
         if(!controller.leftB && ! controller.rightB){
-          bodyC.body.setAngularVelocity(0);
-          bodyC.body.setLinearVelocity(MathUtils.lerp(bodyC.body.getLinearVelocity().x, 0, 0.1f),bodyC.body.getLinearVelocity().y);
+          // bodyC.body.setAngularVelocity(0);
+          // bodyC.body.setLinearVelocity(0,0);
         }
         if(!controller.upB && !controller.downB){
-          bodyC.body.setAngularVelocity(0);
-          bodyC.body.setLinearVelocity(bodyC.body.getLinearVelocity().x,MathUtils.lerp(bodyC.body.getLinearVelocity().y, 0f, 0.1f));
-        }
+          // bodyC.body.setAngularVelocity(0);
+          // bodyC.body.setLinearVelocity(0,0);
+      }
     }
 
     //Gestion du temps entre 2 tires
@@ -113,25 +120,80 @@ public class BoatSystem extends IteratingSystem{
         this.world.createCannonball(posSouris);
       }
     }
-
-
-
 	}
 
+  /** Renvoie la mesure principale d'un angle donnée
+  * @param angle en question
+  * @return angle entre 0 et 2pi
+  */
+  private float mainMeasure(float angle){
+    float mainM;
+    int k;
+    k = Math.round(((float)Math.PI - angle)/(2.0f*(float)Math.PI));
+    mainM = angle + (float)k * 2.0f *(float)Math.PI;
+    return mainM;
+  }
+
   private void pousseDroite(BodyComponent bodyC){
-    bodyC.body.setLinearVelocity(MathUtils.lerp(bodyC.body.getLinearVelocity().x, -VITESSE, 0.2f),bodyC.body.getLinearVelocity().y);
+    bodyC.body.applyTorque(IConfig.MISE_A_NIVEAU, true);
   }
 
   private void pousseGauche(BodyComponent bodyC){
-    bodyC.body.setLinearVelocity(MathUtils.lerp(bodyC.body.getLinearVelocity().x, VITESSE, 0.2f),bodyC.body.getLinearVelocity().y);
+    bodyC.body.applyTorque(-IConfig.MISE_A_NIVEAU, true);
   }
 
   private void pousseHaut(BodyComponent bodyC){
-    bodyC.body.setLinearVelocity(bodyC.body.getLinearVelocity().x,MathUtils.lerp(bodyC.body.getLinearVelocity().y, VITESSE, 0.2f));
+    Vector2 pos = bodyC.body.getPosition();
+    Vector2 posP = new Vector2();
+    float mainM = mainMeasure(bodyC.body.getAngle());
+    float velocity = 9000f;
+
+    float velX = MathUtils.cos(mainM)*velocity;
+    float velY = MathUtils.sin(mainM)*velocity;
+
+    Vector2 vel = new Vector2(velX, velY);
+    vel.rotate90(1);
+
+    bodyC.body.setLinearVelocity(vel.x, vel.y);
+
+
+    posP.x = (float)Math.cos(mainM+(float)Math.PI/2.0f);
+    posP.y = (float)Math.sin(mainM+(float)Math.PI/2.0f);
+
+    // bodyC.body.applyLinearImpulse(IConfig.VITESSE*pos.x,IConfig.VITESSE*pos.y, pos.x, pos.y, true);
   }
 
   private void pousseBas(BodyComponent bodyC){
-    bodyC.body.setLinearVelocity(bodyC.body.getLinearVelocity().x,MathUtils.lerp(bodyC.body.getLinearVelocity().y, -VITESSE, 0.2f));
+    pousseHaut(bodyC);
   }
+
+/*  private void mouvBoat(BodyComponent bodyC, int left, int right){
+    Vector2 pos = bodyC.body.getPosition();
+    Vector2 posP = new Vector2();
+    int diff = left - right;
+
+    if( diff < 0 && diff > -0){
+      bodyC.body.applyTorque(0, true);
+      bodyC.body.applyLinearImpulse(0,IConfig.VITESSE, pos.x, pos.y, true);
+
+    }else if(diff > 0){
+      float mainM = mainMeasure(bodyC.body.getAngle());
+
+      posP.x = (float)Math.cos(mainM+(float)Math.PI/2.0f);
+      posP.y = (float)Math.sin(mainM+(float)Math.PI/2.0f);
+
+      bodyC.body.applyTorque(1000000*IConfig.MISE_A_NIVEAU, true);
+      bodyC.body.applyLinearImpulse(IConfig.VITESSE*posP.y,IConfig.VITESSE*posP.x, pos.x, pos.y, true);
+    }else if(diff < 0){
+      float mainM = mainMeasure(bodyC.body.getAngle());
+
+      posP.x = (float)Math.cos(mainM+(float)Math.PI/2.0f);
+      posP.y = (float)Math.sin(mainM+(float)Math.PI/2.0f);
+
+      bodyC.body.applyTorque(-1000000*IConfig.MISE_A_NIVEAU, true);
+      bodyC.body.applyLinearImpulse(IConfig.VITESSE*posP.y,IConfig.VITESSE*posP.x, pos.x, pos.y, true);
+    }
+  }
+  */
 
 }
