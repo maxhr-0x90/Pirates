@@ -57,6 +57,7 @@ project(":core") {
 
 
     dependencies {
+        implementation project(":reseau")
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"

@@ -2,6 +2,7 @@ package corp.redacted.game.entity.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.math.Vector2;
 
 
 /*
@@ -18,7 +19,6 @@ public class StatComponent implements Component, Poolable {
       barreVie = 100;
       point = 0;
       dernierTir = 0;
-
   }
 
 }
