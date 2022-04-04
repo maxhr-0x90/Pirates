@@ -67,6 +67,7 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
+      ModelComponent modelC = new ModelComponent();
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.DynamicBody;
@@ -105,20 +106,26 @@ public class WorldBuilder {
 
       bodyC.body.setUserData(bateau);
 
+      Model boat = assets.manager.get(assets.cubeModel, Model.class);
+      ModelInstance boatInstance = new ModelInstance(boat);
+
+      modelC.model = boatInstance;
+
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);
       bateau.add(bodyC);
       bateau.add(typeC);
       bateau.add(colC);
+      bateau.add(modelC);
 
       return bateau;
     }
 
     /** Renvoie une entité marchandise
-    * @param int posx : position initiale sur l'axe des x
-    * @param int posy : position initiale sur l'axe des y
-    * @param float taillex : taille sur l'axe Ox de la marchandise
-    * @param float tailley : taille sur l'axe Oy de la marchandise
+    * @param posx : position initiale sur l'axe des x
+    * @param posy : position initiale sur l'axe des y
+    * @param taillex : taille sur l'axe Ox de la marchandise
+    * @param tailley : taille sur l'axe Oy de la marchandise
     */
     public Entity creeMarchandise(int posx, int posy, float taillex, float tailley, float weight){
       Entity merchendise = new Entity(); //Création de l'entité
@@ -176,7 +183,7 @@ public class WorldBuilder {
 
 
     /** Crée et place une entité boulet de canon
-    * @param Vector2 pos : vecteur de position d'arrivé.
+    * @param pos : vecteur de position d'arrivé.
     */
     public void createCannonball(Vector2 pos){
       Entity cannonball = new Entity(); //Création de l'entité
