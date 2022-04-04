@@ -23,7 +23,7 @@ public class MainScreen implements Screen {
         PARENT = parent;
         engine = new PooledEngine();
 
-        worldBuilder = new WorldBuilder(engine);
+        worldBuilder = new WorldBuilder(engine, Game.assets);
         worldBuilder.generateWorld();
 
         engine.addSystem(new RenderingSystem(true));
