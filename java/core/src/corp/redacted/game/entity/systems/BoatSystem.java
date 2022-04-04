@@ -8,10 +8,6 @@ import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.controller.KeyboardController;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.MassData;
 
 import corp.redacted.game.IConfig;
 
@@ -48,6 +44,7 @@ public class BoatSystem extends IteratingSystem{
     StatComponent boat = statMap.get(entite);
     TypeComponent typeC = typeMap.get(entite);
 
+    mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
     if(typeC.type == TypeComponent.BATEAU_A){
 
       // mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
@@ -72,10 +69,10 @@ public class BoatSystem extends IteratingSystem{
 
         //Permet d'arreter le bateau
         if(!controller.left && ! controller.right){
-          bodyC.body.setAngularVelocity(0);
+          // bodyC.body.setAngularVelocity(0);
         }
         if(!controller.up && !controller.down){
-          bodyC.body.setLinearVelocity(0,0);
+          // bodyC.body.setLinearVelocity(0,0);
         }
 
     }else if(typeC.type == TypeComponent.BATEAU_B){
@@ -135,11 +132,14 @@ public class BoatSystem extends IteratingSystem{
   }
 
   private void pousseDroite(BodyComponent bodyC){
-    bodyC.body.applyTorque(IConfig.MISE_A_NIVEAU, true);
+    bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
+    // bodyC.body.applyTorque(IConfig.MISE_A_NIVEAU, true);
   }
 
+
   private void pousseGauche(BodyComponent bodyC){
-    bodyC.body.applyTorque(-IConfig.MISE_A_NIVEAU, true);
+    bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
+    // bodyC.body.applyTorque(-IConfig.MISE_A_NIVEAU, true);
   }
 
   private void pousseHaut(BodyComponent bodyC){
@@ -155,45 +155,43 @@ public class BoatSystem extends IteratingSystem{
     vel.rotate90(1);
 
     bodyC.body.setLinearVelocity(vel.x, vel.y);
-
-
-    posP.x = (float)Math.cos(mainM+(float)Math.PI/2.0f);
-    posP.y = (float)Math.sin(mainM+(float)Math.PI/2.0f);
-
-    // bodyC.body.applyLinearImpulse(IConfig.VITESSE*pos.x,IConfig.VITESSE*pos.y, pos.x, pos.y, true);
-  }
+    }
 
   private void pousseBas(BodyComponent bodyC){
     pousseHaut(bodyC);
   }
 
-/*  private void mouvBoat(BodyComponent bodyC, int left, int right){
-    Vector2 pos = bodyC.body.getPosition();
-    Vector2 posP = new Vector2();
+ private void mouvBoat(BodyComponent bodyC, int left, int right){
     int diff = left - right;
 
-    if( diff < 0 && diff > -0){
-      bodyC.body.applyTorque(0, true);
-      bodyC.body.applyLinearImpulse(0,IConfig.VITESSE, pos.x, pos.y, true);
+    Vector2 pos = bodyC.body.getPosition();
+    Vector2 posP = new Vector2();
+    float mainM = mainMeasure(bodyC.body.getAngle());
+    float velocity = (left+right+1)*10f ; /// VITESSE A DETERMINER
 
-    }else if(diff > 0){
-      float mainM = mainMeasure(bodyC.body.getAngle());
+    /*On détermine la direction dans laquelle aller*/
+    float velY = MathUtils.sin(mainM)*velocity;
+    float velX = MathUtils.cos(mainM)*velocity;
 
-      posP.x = (float)Math.cos(mainM+(float)Math.PI/2.0f);
-      posP.y = (float)Math.sin(mainM+(float)Math.PI/2.0f);
+    Vector2 vel = new Vector2(velX, velY);
+    vel.rotate90(1);
+    System.out.println(velocity);
 
-      bodyC.body.applyTorque(1000000*IConfig.MISE_A_NIVEAU, true);
-      bodyC.body.applyLinearImpulse(IConfig.VITESSE*posP.y,IConfig.VITESSE*posP.x, pos.x, pos.y, true);
+    /*On défini l'angle pour la rotation*/
+    float angle = MathUtils.acos(diff);
+
+    bodyC.body.setLinearVelocity(vel.x, vel.y);
+   if(diff > 0){
+     bodyC.body.setAngularVelocity(-angle);
+     bodyC.body.setAngularVelocity(-IConfig.MISE_A_NIVEAU/1000000);
+      // bodyC.body.applyTorque(-angle/100, true);
     }else if(diff < 0){
-      float mainM = mainMeasure(bodyC.body.getAngle());
-
-      posP.x = (float)Math.cos(mainM+(float)Math.PI/2.0f);
-      posP.y = (float)Math.sin(mainM+(float)Math.PI/2.0f);
-
-      bodyC.body.applyTorque(-1000000*IConfig.MISE_A_NIVEAU, true);
-      bodyC.body.applyLinearImpulse(IConfig.VITESSE*posP.y,IConfig.VITESSE*posP.x, pos.x, pos.y, true);
+      bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/1000000);
+      // bodyC.body.setAngularVelocity(angle);
+    }else{
+      bodyC.body.setAngularVelocity(0);
     }
   }
-  */
+
 
 }
