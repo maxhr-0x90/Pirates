@@ -33,7 +33,7 @@ public class DebugScreen implements Screen {
         PARENT = parent;
         engine = new PooledEngine();
 
-        worldBuilder = new WorldBuilder(engine);
+        worldBuilder = new WorldBuilder(engine, Game.assets);
         worldBuilder.generateWorld();
 
         RenderingSystem renderSys = new RenderingSystem(false);
