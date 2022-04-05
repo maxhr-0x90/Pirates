@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.ashley.core.Entity;
@@ -52,6 +53,8 @@ public class WorldBuilder {
 
         Entity marchandise = creeMarchandise(-20,20,10,5, 5);
         engine.addEntity(marchandise);
+
+        createOcean();
     }
 
     /** Renvoie une entité bateau
@@ -67,7 +70,6 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
-      ModelComponent modelC = new ModelComponent();
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.DynamicBody;
@@ -106,17 +108,11 @@ public class WorldBuilder {
 
       bodyC.body.setUserData(bateau);
 
-      Model boat = assets.manager.get(assets.cubeModel, Model.class);
-      ModelInstance boatInstance = new ModelInstance(boat);
-
-      modelC.model = boatInstance;
-
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);
       bateau.add(bodyC);
       bateau.add(typeC);
       bateau.add(colC);
-      bateau.add(modelC);
 
       return bateau;
     }
@@ -226,6 +222,56 @@ public class WorldBuilder {
 
       engine.addEntity(cannonball);
     }
+
+    /** Crée et place une entité correspondant à l'océan
+    */
+    public void createOcean(){
+      Entity ocean = new Entity(); //Création de l'entité
+      BodyComponent bodyC = new BodyComponent();
+      BodyDef bodyD = new BodyDef();
+      FixtureDef fixDef = new FixtureDef();
+      TypeComponent typeC =  new TypeComponent();
+      CollisionComponent colC = new CollisionComponent();
+
+      /* Définition du corps de l'enité */
+      bodyD.type = BodyDef.BodyType.StaticBody;
+      bodyD.position.x = 0;
+      bodyD.position.y = 0;
+      bodyC.body = world.createBody(bodyD);
+
+      /* Création de l'enveloppe du bateau */
+      Vector2[] vect = new Vector2[5];
+      ChainShape chain = new ChainShape();
+      vect[0] =  new Vector2(-IConfig.LARGEUR_CARTE/2, -IConfig.HAUTEUR_CARTE/2);
+      vect[1] = new Vector2(IConfig.LARGEUR_CARTE/2, -IConfig.HAUTEUR_CARTE/2);
+      vect[2] =  new Vector2(IConfig.LARGEUR_CARTE/2, IConfig.HAUTEUR_CARTE/2);
+      vect[3] =   new Vector2(-IConfig.LARGEUR_CARTE/2, IConfig.HAUTEUR_CARTE/2);
+      vect[4] =  new Vector2(-IConfig.LARGEUR_CARTE/2, -IConfig.HAUTEUR_CARTE/2);
+
+      chain.createChain(vect);
+
+      /* Création de la fixture/ envrionnement */
+      fixDef.density = IConfig.DENSITE_EAU;
+      fixDef.friction = 0;
+      fixDef.shape = chain;
+      fixDef.restitution = 1f;
+
+      bodyC.body.createFixture(fixDef);
+      chain.dispose(); //On libère l'enveloppe.
+
+      bodyC.body.setUserData(ocean);
+
+
+      typeC.type = TypeComponent.OCEAN;
+
+      /* On ajoute les components à l'entité */
+      ocean.add(bodyC);
+      ocean.add(typeC);
+      ocean.add(colC);
+
+      engine.addEntity(ocean);
+    }
+
 
     public World getWorld() {
         return world;

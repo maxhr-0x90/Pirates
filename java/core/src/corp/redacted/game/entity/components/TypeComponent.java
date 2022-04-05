@@ -11,7 +11,8 @@ public class TypeComponent implements Component, Poolable {
  public static final int BATEAU_B = 2;
  public static final int MARCHANDISE = 3;
  public static final int CANNONBALL = 4;
- public static final int OTHER = 5;
+ public static final int OCEAN = 5;
+ public static final int OTHER = 6;
 
  public int type = OTHER;
 

@@ -175,7 +175,6 @@ public class BoatSystem extends IteratingSystem{
 
     Vector2 vel = new Vector2(velX, velY);
     vel.rotate90(1);
-    System.out.println(velocity);
 
     /*On défini l'angle pour la rotation*/
     float angle = MathUtils.acos(diff);
