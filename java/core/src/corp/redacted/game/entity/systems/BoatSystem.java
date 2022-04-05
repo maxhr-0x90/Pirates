@@ -2,6 +2,7 @@ package corp.redacted.game.entity.systems;
 import com.badlogic.ashley.core.ComponentMapper;
 
 import corp.redacted.game.entity.components.BodyComponent;
+import corp.redacted.game.entity.components.CannonballComponent;
 import corp.redacted.game.entity.components.StatComponent;
 import corp.redacted.game.entity.components.TypeComponent;
 import corp.redacted.game.WorldBuilder;
@@ -14,6 +15,7 @@ import corp.redacted.game.IConfig;
 import corp.redacted.game.serveur.Task;
 
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -112,9 +114,22 @@ public class BoatSystem extends IteratingSystem{
     //Gestion quant au tire
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
       if(boat.dernierTir <=0){  //On vérifie si le temps avant le dernier tir est suffisant
-        Vector2 posSouris = new Vector2(controller.mouseLocation.x,controller.mouseLocation.y); // On récupère la position de la souris
+        float mainM = mainMeasure(bodyC.body.getAngle());
+        float velocity = 50f ; /// VITESSE A DETERMINER
+
+        /*On détermine la direction dans laquelle aller*/
+        float velY = MathUtils.sin(mainM)*velocity;
+        float velX = MathUtils.cos(mainM)*velocity;
+
+        Vector2 vel = new Vector2(velX, velY);
+
         boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
-        this.world.createCannonball(posSouris);
+        /*On place le boulet de cannon*/
+        if(typeC.type == TypeComponent.BATEAU_A){
+          System.out.println(bodyC.body.getPosition());
+          BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getPosition(), CannonballComponent.BATEAU_A);
+          bodyCB.body.setLinearVelocity(vel.x, vel.y);
+        }
       }
     }
 	}

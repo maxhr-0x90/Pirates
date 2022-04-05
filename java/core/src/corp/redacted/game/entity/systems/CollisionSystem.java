@@ -78,24 +78,28 @@ public class CollisionSystem extends IteratingSystem{
             case TypeComponent.CANNONBALL:
             CannonballComponent cannonball = cannonballM.get(entiteEnCollision);
             BodyComponent cannonballB = bodyMap.get(entiteEnCollision);
-            //Mise à jour de la bar de vie
-            boat.barreVie -= IConfig.DEGAT_CB_B;
-            //Verif si pas de morts
-            if(boat.barreVie <= 0){
-              //fin de la manche
-              world.removeEntite(entite);
-              for(Fixture fix : bodyA.body.getFixtureList()){
-                bodyA.body.destroyFixture(fix);
+
+            if(cannonball.camps != CannonballComponent.BATEAU_A){
+              //Mise à jour de la bar de vie
+              boat.barreVie -= IConfig.DEGAT_CB_B;
+              //Verif si pas de morts
+              if(boat.barreVie <= 0){
+                //fin de la manche
+                world.removeEntite(entite);
+                for(Fixture fix : bodyA.body.getFixtureList()){
+                  bodyA.body.destroyFixture(fix);
+                }
               }
-            }
+              world.removeEntite(entiteEnCollision);
+              for(Fixture fix : cannonballB.body.getFixtureList()){
+                cannonballB.body.destroyFixture(fix);
+              }
 
-            world.removeEntite(entiteEnCollision);
-            for(Fixture fix : cannonballB.body.getFixtureList()){
-              cannonballB.body.destroyFixture(fix);
+              System.out.println("Bateau a :"+boat.barreVie);
             }
-
-            System.out.println("Bateau a :"+boat.barreVie);
+            System.out.println("cc");
             colC.collisionEntite = null;
+
             default:
             break;
           }
@@ -170,25 +174,28 @@ public class CollisionSystem extends IteratingSystem{
         if(typeEnCollsion != null){
           switch(typeEnCollsion.type){
             case TypeComponent.BATEAU_A:
-            StatComponent boatA = boatM.get(entiteEnCollision);
-            BodyComponent bodyBoatA = bodyMap.get(entiteEnCollision);
-            //Mise à jour de la bar de vie
-            boatA.barreVie -= IConfig.DEGAT_CB_B;
-
-            //Verif si pas de morts
-            if(boatA.barreVie <= 0){
-              //fin de la manche
-              world.removeEntite(entiteEnCollision);
-              for(Fixture fix : bodyBoatA.body.getFixtureList()){
-                bodyBoatA.body.destroyFixture(fix);
+            if(ball.camps != CannonballComponent.BATEAU_A){
+              StatComponent boatA = boatM.get(entiteEnCollision);
+              BodyComponent bodyBoatA = bodyMap.get(entiteEnCollision);
+              boatA.barreVie -= IConfig.DEGAT_CB_B;
+              //Mise à jour de la bar de vie
+              //Verif si pas de morts
+              if(boatA.barreVie <= 0){
+                //fin de la manche
+                world.removeEntite(entiteEnCollision);
+                for(Fixture fix : bodyBoatA.body.getFixtureList()){
+                  bodyBoatA.body.destroyFixture(fix);
+                }
               }
+              //Le boulet disparait
+              world.removeEntite(entite);
+              for(Fixture fix : bodyCB.body.getFixtureList()){
+                bodyCB.body.destroyFixture(fix);
+              }
+
             }
 
-            //Le boulet disparait
-            world.removeEntite(entite);
-            for(Fixture fix : bodyCB.body.getFixtureList()){
-              bodyCB.body.destroyFixture(fix);
-            }
+
 
             colC.collisionEntite = null;
 

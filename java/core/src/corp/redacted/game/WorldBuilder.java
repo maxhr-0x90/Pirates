@@ -31,7 +31,7 @@ public class WorldBuilder {
     private Assets assets;
 
     public WorldBuilder(Engine engine, Assets assets){
-        world = new World(new Vector2(-10, -10), true);
+        world = new World(new Vector2(0, 0), true);
         this.engine = engine;
         world.setContactListener(new MyContactListener());
         this.assets = assets;
@@ -181,20 +181,20 @@ public class WorldBuilder {
     /** Crée et place une entité boulet de canon
     * @param pos : vecteur de position d'arrivé.
     */
-    public void createCannonball(Vector2 pos){
+    public BodyComponent createCannonball(Vector2 pos, int camps){
       Entity cannonball = new Entity(); //Création de l'entité
-      MerchendiseComponent cannonballC = new MerchendiseComponent();
+      CannonballComponent cannonballC = new CannonballComponent();
       BodyComponent bodyC = new BodyComponent();
       BodyDef bodyD = new BodyDef();
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
 
-
+      cannonballC.camps = camps;
       /* Définition du corps de l'enité */
-      bodyD.type = BodyDef.BodyType.StaticBody;
-      bodyD.position.x = pos.x/10; //A VOIR AVEC SOAM
-      bodyD.position.y = pos.y/10;
+      bodyD.type = BodyDef.BodyType.DynamicBody;
+      bodyD.position.x = pos.x; //A VOIR AVEC SOAM
+      bodyD.position.y = pos.y;
       bodyC.body = world.createBody(bodyD);
 
       /* Création de l'enveloppe du bateau */
@@ -221,6 +221,8 @@ public class WorldBuilder {
       cannonball.add(colC);
 
       engine.addEntity(cannonball);
+
+      return bodyC;
     }
 
     /** Crée et place une entité correspondant à l'océan
