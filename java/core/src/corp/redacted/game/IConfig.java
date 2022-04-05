@@ -30,4 +30,7 @@ public interface IConfig{
   int DEGAT_B_B = 5; //Nb de dégat infliger dans une collision bateau-bateau
   int DEGAT_CB_B = 20; //Nb de dégat ingliger lors de la réception d'un cannon
 
+  /*-----Ocean-----*/
+  float DENSITE_EAU = 1f;
+
 }
