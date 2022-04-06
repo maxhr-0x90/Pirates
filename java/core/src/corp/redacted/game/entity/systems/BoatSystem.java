@@ -24,6 +24,7 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 public class BoatSystem extends IteratingSystem{
+  private final int LEFT_SHOT = 0;
   private WorldBuilder world;
   private ComponentMapper<BodyComponent> bodyMap;
   private ComponentMapper<StatComponent> statMap;
@@ -46,10 +47,9 @@ public class BoatSystem extends IteratingSystem{
     StatComponent boat = statMap.get(entite);
     TypeComponent typeC = typeMap.get(entite);
 
-    mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
     if(typeC.type == TypeComponent.BATEAU_A){
 
-      // mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
+      mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
 
       /* CONTROLEUR CLAVIER */
 
@@ -113,23 +113,9 @@ public class BoatSystem extends IteratingSystem{
 
     //Gestion quant au tire
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
-      if(boat.dernierTir <=0){  //On vérifie si le temps avant le dernier tir est suffisant
-        float mainM = mainMeasure(bodyC.body.getAngle());
-        float velocity = 50f ; /// VITESSE A DETERMINER
+      if(typeC.type == TypeComponent.BATEAU_A){
 
-        /*On détermine la direction dans laquelle aller*/
-        float velY = MathUtils.sin(mainM)*velocity;
-        float velX = MathUtils.cos(mainM)*velocity;
-
-        Vector2 vel = new Vector2(velX, velY);
-
-        boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
-        /*On place le boulet de cannon*/
-        if(typeC.type == TypeComponent.BATEAU_A){
-          System.out.println(bodyC.body.getPosition());
-          BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getPosition(), CannonballComponent.BATEAU_A);
-          bodyCB.body.setLinearVelocity(vel.x, vel.y);
-        }
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
       }
     }
 	}
@@ -146,17 +132,25 @@ public class BoatSystem extends IteratingSystem{
     return mainM;
   }
 
+  /** Change l'angle de velocité d'un corps vers la droite
+  * @param BodyComponent bodyC : le corps en question
+  */
   private void pousseDroite(BodyComponent bodyC){
     bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
     // bodyC.body.applyTorque(IConfig.MISE_A_NIVEAU, true);
   }
 
-
+  /** Change l'angle de velocité d'un corps vers la gauche
+  * @param BodyComponent bodyC : le corps en question
+  */
   private void pousseGauche(BodyComponent bodyC){
     bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
     // bodyC.body.applyTorque(-IConfig.MISE_A_NIVEAU, true);
   }
 
+  /** Change la velocité linéaire d'un corps
+  * @param BodyComponent bodyC : le corps en question
+  */
   private void pousseHaut(BodyComponent bodyC){
     Vector2 pos = bodyC.body.getPosition();
     Vector2 posP = new Vector2();
@@ -172,11 +166,20 @@ public class BoatSystem extends IteratingSystem{
     bodyC.body.setLinearVelocity(vel.x, vel.y);
     }
 
+  /** Change la velocité linéaire d'un corps
+  * @param BodyComponent bodyC : le corps en question
+  */
   private void pousseBas(BodyComponent bodyC){
     pousseHaut(bodyC);
   }
 
- private void mouvBoat(BodyComponent bodyC, int left, int right){
+
+  /** Change la velocité linéaire d'un corps
+  * @param BodyComponent bodyC : le corps en question
+  * @param left : le nombre de clic gauche
+  * @param right : le npmbre de clique droit
+  */
+  private void mouvBoat(BodyComponent bodyC, int left, int right){
     int diff = left - right;
 
     Vector2 pos = bodyC.body.getPosition();
@@ -207,5 +210,28 @@ public class BoatSystem extends IteratingSystem{
     }
   }
 
+  private void shotBoat(StatComponent boat, BodyComponent bodyC, TypeComponent typeC, int camps, int side){
+
+    if(boat.dernierTir <=0){  //On vérifie si le temps avant le dernier tir est suffisant
+      float mainM = mainMeasure(bodyC.body.getAngle());
+      float velocity = 50f ; /// VITESSE A DETERMINER
+
+      /*On détermine la direction dans laquelle aller*/
+      float velY = MathUtils.sin(mainM)*velocity;
+      float velX = MathUtils.cos(mainM)*velocity;
+
+      Vector2 vel = new Vector2(velX, velY);
+
+      if(side == LEFT_SHOT){
+        vel.rotate(180f);
+      }
+
+      boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
+      /*On place le boulet de cannon*/
+      BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getPosition(), camps);
+      bodyCB.body.setLinearVelocity(vel.x, vel.y);
+
+    }
+  }
 
 }

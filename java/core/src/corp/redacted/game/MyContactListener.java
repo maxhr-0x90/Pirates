@@ -24,39 +24,18 @@ public class MyContactListener implements ContactListener{
 		  Fixture fa = contact.getFixtureA();
 		  Fixture fb = contact.getFixtureB();
 
-      System.out.println("Contact");
 			Entity ent = (Entity) fa.getBody().getUserData();
       Entity colEnt = (Entity) fb.getBody().getUserData();
 
       CollisionComponent col = ent.getComponent(CollisionComponent.class);
       CollisionComponent colb = colEnt.getComponent(CollisionComponent.class);
 
-
-				col.collisionEntite = colEnt;
-				colb.collisionEntite = ent;
-
-
-
-
+			col.collisionEntite = colEnt;
+			colb.collisionEntite = ent;
   }
 
   @Override
 	public void endContact(Contact contact){
-    Fixture fa = contact.getFixtureA();
-    Fixture fb = contact.getFixtureB();
-
-    Entity ent = (Entity) fa.getBody().getUserData();
-    Entity entB = (Entity) fb.getBody().getUserData();
-
-    CollisionComponent col = ent.getComponent(CollisionComponent.class);
-    CollisionComponent colb = entB.getComponent(CollisionComponent.class);
-
-    col = null;
-    colb = null;
-
-    TypeComponent typeA = ent.getComponent(TypeComponent.class); // On recupere son type
-    TypeComponent typeB = ent.getComponent(TypeComponent.class); // On recupere son type
-
 	}
 
 	@Override
