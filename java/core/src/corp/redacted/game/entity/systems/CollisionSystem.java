@@ -54,48 +54,48 @@ public class CollisionSystem extends IteratingSystem{
         if(typeEnCollsion != null){
           switch(typeEnCollsion.type){
             case TypeComponent.BATEAU_B :
-            /*Mise à jour de la barre de vie du bateau*/
-            boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
-            colC.collisionEntite = null;
-
+              /*Mise à jour de la barre de vie du bateau*/
+              boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
+              colC.collisionEntite = null;
             break;
+
             case TypeComponent.MARCHANDISE:
-            MerchendiseComponent merchendise = merchendiseM.get(entiteEnCollision);
-            BodyComponent bodyMerchendise = bodyMap.get(entiteEnCollision);
+              MerchendiseComponent merchendise = merchendiseM.get(entiteEnCollision);
+              BodyComponent bodyMerchendise = bodyMap.get(entiteEnCollision);
 
-            // Mise à jour des scores
-            boat.point += merchendise.weight;
-
-            //La marchandise disparait de la map
-            world.removeEntite(entiteEnCollision);
-            for(Fixture fix : bodyMerchendise.body.getFixtureList()){
-              bodyMerchendise.body.destroyFixture(fix);
-            }
-            colC.collisionEntite = null;
-
-            // Manche finie
-            break;
-            case TypeComponent.CANNONBALL:
-            CannonballComponent cannonball = cannonballM.get(entiteEnCollision);
-            BodyComponent cannonballB = bodyMap.get(entiteEnCollision);
-            //Mise à jour de la bar de vie
-            boat.barreVie -= IConfig.DEGAT_CB_B;
-            //Verif si pas de morts
-            if(boat.barreVie <= 0){
-              //fin de la manche
-              world.removeEntite(entite);
-              for(Fixture fix : bodyA.body.getFixtureList()){
-                bodyA.body.destroyFixture(fix);
+              // Mise à jour des scores
+              boat.point += merchendise.weight;
+              //La marchandise disparait de la map
+              world.removeEntite(entiteEnCollision);
+              for(Fixture fix : bodyMerchendise.body.getFixtureList()){
+                bodyMerchendise.body.destroyFixture(fix);
               }
-            }
+              colC.collisionEntite = null;
+            break;
 
-            world.removeEntite(entiteEnCollision);
-            for(Fixture fix : cannonballB.body.getFixtureList()){
-              cannonballB.body.destroyFixture(fix);
-            }
+            case TypeComponent.CANNONBALL:
+              CannonballComponent cannonball = cannonballM.get(entiteEnCollision);
+              BodyComponent cannonballB = bodyMap.get(entiteEnCollision);
 
-            System.out.println("Bateau a :"+boat.barreVie);
-            colC.collisionEntite = null;
+              if(cannonball.camps != CannonballComponent.BATEAU_A){
+                //Mise à jour de la bar de vie
+                boat.barreVie -= IConfig.DEGAT_CB_B;
+                //Verif si pas de morts
+                if(boat.barreVie <= 0){
+                  //fin de la manche
+                  world.removeEntite(entite);
+                  for(Fixture fix : bodyA.body.getFixtureList()){
+                    bodyA.body.destroyFixture(fix);
+                  }
+                }
+                world.removeEntite(entiteEnCollision);
+                for(Fixture fix : cannonballB.body.getFixtureList()){
+                  cannonballB.body.destroyFixture(fix);
+                }
+              }
+              colC.collisionEntite = null;
+            break;
+
             default:
             break;
           }
@@ -113,47 +113,46 @@ public class CollisionSystem extends IteratingSystem{
         if(typeEnCollsion != null){
           switch(typeEnCollsion.type){
             case TypeComponent.BATEAU_A:
-
-            boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
-            colC.collisionEntite = null;
+              boat.barreVie -= IConfig.DEGAT_B_B; //Degat de la collision
+              colC.collisionEntite = null;
             break;
+
             case TypeComponent.MARCHANDISE:
-            MerchendiseComponent merchendise = merchendiseM.get(entiteEnCollision);
-            BodyComponent bodyMerchendise = bodyMap.get(entiteEnCollision);
+              MerchendiseComponent merchendise = merchendiseM.get(entiteEnCollision);
+              BodyComponent bodyMerchendise = bodyMap.get(entiteEnCollision);
 
-            // Mise à jour des scores
-            boat.point += merchendise.weight;
-
-            //La marchandise disparait de la map
-            world.removeEntite(entiteEnCollision);
-            for(Fixture fix : bodyMerchendise.body.getFixtureList()){
-              bodyMerchendise.body.destroyFixture(fix);
-            }
-            colC.collisionEntite = null;
-            // Manche finie
-
-            break;
-            case TypeComponent.CANNONBALL:
-            CannonballComponent cannonball = cannonballM.get(entiteEnCollision);
-            BodyComponent cannonballB = bodyMap.get(entiteEnCollision);
-            //Mise à jour de la bar de vie
-            boat.barreVie -= IConfig.DEGAT_CB_B;
-
-            //Verif si pas de morts
-            if(boat.barreVie <= 0){
-              //fin de la manche
-              world.removeEntite(entite);
-              for(Fixture fix : bodyB.body.getFixtureList()){
-                bodyB.body.destroyFixture(fix);
+              // Mise à jour des scores
+              boat.point += merchendise.weight;
+              //La marchandise disparait de la map
+              world.removeEntite(entiteEnCollision);
+              for(Fixture fix : bodyMerchendise.body.getFixtureList()){
+                bodyMerchendise.body.destroyFixture(fix);
               }
-            }
+              colC.collisionEntite = null;
+            break;
 
-            world.removeEntite(entiteEnCollision);
-            for(Fixture fix : cannonballB.body.getFixtureList()){
-              cannonballB.body.destroyFixture(fix);
-            }
+            case TypeComponent.CANNONBALL:
+              CannonballComponent cannonball = cannonballM.get(entiteEnCollision);
+              BodyComponent cannonballB = bodyMap.get(entiteEnCollision);
 
-            colC.collisionEntite = null;
+              if(cannonball.camps != CannonballComponent.BATEAU_B){
+                //Mise à jour de la bar de vie
+                boat.barreVie -= IConfig.DEGAT_CB_B;
+                //Verif si pas de morts
+                if(boat.barreVie <= 0){
+                  //fin de la manche
+                  world.removeEntite(entite);
+                  for(Fixture fix : bodyB.body.getFixtureList()){
+                    bodyB.body.destroyFixture(fix);
+                  }
+                }
+                world.removeEntite(entiteEnCollision);
+                for(Fixture fix : cannonballB.body.getFixtureList()){
+                  cannonballB.body.destroyFixture(fix);
+                }
+              }
+              colC.collisionEntite = null;
+            break;
 
             default:
             break;
@@ -170,70 +169,48 @@ public class CollisionSystem extends IteratingSystem{
         if(typeEnCollsion != null){
           switch(typeEnCollsion.type){
             case TypeComponent.BATEAU_A:
-            StatComponent boatA = boatM.get(entiteEnCollision);
-            BodyComponent bodyBoatA = bodyMap.get(entiteEnCollision);
-            //Mise à jour de la bar de vie
-            boatA.barreVie -= IConfig.DEGAT_CB_B;
-
-            //Verif si pas de morts
-            if(boatA.barreVie <= 0){
-              //fin de la manche
-              world.removeEntite(entiteEnCollision);
-              for(Fixture fix : bodyBoatA.body.getFixtureList()){
-                bodyBoatA.body.destroyFixture(fix);
+              if(ball.camps != CannonballComponent.BATEAU_A){
+                StatComponent boatA = boatM.get(entiteEnCollision);
+                BodyComponent bodyBoatA = bodyMap.get(entiteEnCollision);
+                boatA.barreVie -= IConfig.DEGAT_CB_B;
+                //Mise à jour de la bar de vie
+                //Verif si pas de morts
+                if(boatA.barreVie <= 0){
+                  //fin de la manche
+                  world.removeEntite(entiteEnCollision);
+                  for(Fixture fix : bodyBoatA.body.getFixtureList()){
+                    bodyBoatA.body.destroyFixture(fix);
+                  }
+                }
+                //Le boulet disparait
+                world.removeEntite(entite);
+                for(Fixture fix : bodyCB.body.getFixtureList()){
+                  bodyCB.body.destroyFixture(fix);
+                }
               }
-            }
-
-            //Le boulet disparait
-            world.removeEntite(entite);
-            for(Fixture fix : bodyCB.body.getFixtureList()){
-              bodyCB.body.destroyFixture(fix);
-            }
-
-            colC.collisionEntite = null;
-
-            break;
-
-            case TypeComponent.MARCHANDISE:
-            MerchendiseComponent merchendise = merchendiseM.get(entiteEnCollision);
-            BodyComponent bodyMerchendise = bodyMap.get(entiteEnCollision);
-
-            //Le boulet disparait de la map
-            world.removeEntite(entite);
-            for(Fixture fix : bodyCB.body.getFixtureList()){
-              bodyCB.body.destroyFixture(fix);
-            }
-
-            //La marchandise disparait aussi
-            world.removeEntite(entiteEnCollision);
-            for(Fixture fix : bodyMerchendise.body.getFixtureList()){
-              bodyMerchendise.body.destroyFixture(fix);
-            }
-
             colC.collisionEntite = null;
             break;
+
             case TypeComponent.BATEAU_B:
-            StatComponent boatB = boatM.get(entiteEnCollision);
-            BodyComponent bodyBoatB = bodyMap.get(entiteEnCollision);
-            //Mise à jour de la bar de vie
-            boatB.barreVie -= IConfig.DEGAT_CB_B;
-
-            //Verif si pas de morts
-            if(boatB.barreVie <= 0){
-              //fin de la manche
-              world.removeEntite(entiteEnCollision);
-              for(Fixture fix : bodyBoatB.body.getFixtureList()){
-                bodyBoatB.body.destroyFixture(fix);
+              if(ball.camps != CannonballComponent.BATEAU_B){
+                StatComponent boatB = boatM.get(entiteEnCollision);
+                BodyComponent bodyBoatB = bodyMap.get(entiteEnCollision);
+                boatB.barreVie -= IConfig.DEGAT_CB_B; //Mise à jour de la bar de vie
+                //Verif si pas de morts
+                if(boatB.barreVie <= 0){
+                  //fin de la manche
+                  world.removeEntite(entiteEnCollision);
+                  for(Fixture fix : bodyBoatB.body.getFixtureList()){
+                    bodyBoatB.body.destroyFixture(fix);
+                  }
+                }
+                //Le boulet disparait
+                world.removeEntite(entite);
+                for(Fixture fix : bodyCB.body.getFixtureList()){
+                  bodyCB.body.destroyFixture(fix);
+                }
               }
-            }
-
-            //Le boulet disparait
-            world.removeEntite(entite);
-            for(Fixture fix : bodyCB.body.getFixtureList()){
-              bodyCB.body.destroyFixture(fix);
-            }
-
-            colC.collisionEntite = null;
+           break;
 
             default:
             break;

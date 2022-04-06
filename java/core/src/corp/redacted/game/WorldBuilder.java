@@ -7,12 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Filter;
 
 import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.entity.components.*;
@@ -31,7 +32,7 @@ public class WorldBuilder {
     private Assets assets;
 
     public WorldBuilder(Engine engine, Assets assets){
-        world = new World(new Vector2(-10, -10), true);
+        world = new World(new Vector2(0, 0), true);
         this.engine = engine;
         world.setContactListener(new MyContactListener());
         this.assets = assets;
@@ -97,8 +98,12 @@ public class WorldBuilder {
 
       /* Assignation du type/categorie */
       if(camps == 'A'){
+        fixDef.filter.categoryBits = CollisionComponent.CATEGORY_BOAT_A;
+        fixDef.filter.maskBits = CollisionComponent.MASK_BOAT_A;
         typeC.type = TypeComponent.BATEAU_A;
       }else if(camps == 'B'){
+        fixDef.filter.categoryBits = CollisionComponent.CATEGORY_BOAT_B;
+        fixDef.filter.maskBits = CollisionComponent.MASK_BOAT_B;
         typeC.type = TypeComponent.BATEAU_B;
       }
 
@@ -160,6 +165,8 @@ public class WorldBuilder {
       fixDef.friction = IConfig.FRICTION_MARCHANDISE;
       fixDef.restitution = 0f;
       fixDef.shape = poly;
+      fixDef.filter.categoryBits = CollisionComponent.CATEGORY_MERCHENDISE;
+      fixDef.filter.maskBits = CollisionComponent.MASK_MERCHENDISE;
 
       /* Assignation du type/categorie */
       typeC.type = TypeComponent.MARCHANDISE;
@@ -181,36 +188,44 @@ public class WorldBuilder {
     /** Crée et place une entité boulet de canon
     * @param pos : vecteur de position d'arrivé.
     */
-    public void createCannonball(Vector2 pos){
+    public BodyComponent createCannonball(Vector2 pos, int camps){
       Entity cannonball = new Entity(); //Création de l'entité
-      MerchendiseComponent cannonballC = new MerchendiseComponent();
+      CannonballComponent cannonballC = new CannonballComponent();
       BodyComponent bodyC = new BodyComponent();
       BodyDef bodyD = new BodyDef();
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
 
-
+      cannonballC.camps = camps;
       /* Définition du corps de l'enité */
-      bodyD.type = BodyDef.BodyType.StaticBody;
-      bodyD.position.x = pos.x/10; //A VOIR AVEC SOAM
-      bodyD.position.y = pos.y/10;
+      bodyD.type = BodyDef.BodyType.DynamicBody;
+      bodyD.position.x = pos.x; //A VOIR AVEC SOAM
+      bodyD.position.y = pos.y;
       bodyC.body = world.createBody(bodyD);
 
       /* Création de l'enveloppe du bateau */
-      PolygonShape poly = new PolygonShape();
-      poly.setAsBox(IConfig.TAILLE_CANNONBALL, IConfig.TAILLE_CANNONBALL);
+      CircleShape circle = new CircleShape();
+      circle.setRadius(IConfig.TAILLE_CANNONBALL);
+      circle.setPosition(new Vector2(0,0));
 
       /* Création de la fixture/ envrionnement */
       fixDef.density = IConfig.DENSITE_CANNONBALL;
       fixDef.friction = IConfig.FRICTION_CANNONBALL;
       fixDef.restitution = 0f;
-      fixDef.shape = poly;
+      fixDef.shape = circle;
+      if(camps == CannonballComponent.BATEAU_A){
+        fixDef.filter.categoryBits = CollisionComponent.CATEGORY_CANNONBAL_A;
+        fixDef.filter.maskBits = CollisionComponent.MASK_CANNONBAL_A;
+      }else if(camps == CannonballComponent.BATEAU_B){
+        fixDef.filter.categoryBits = CollisionComponent.CATEGORY_CANNONBAL_B;
+        fixDef.filter.maskBits = CollisionComponent.MASK_CANNONBAL_B;
+      }
 
       /* Assignation du type/categorie */
       typeC.type = TypeComponent.CANNONBALL;
       bodyC.body.createFixture(fixDef);
-      poly.dispose(); //On libère l'enveloppe.
+      circle.dispose(); //On libère l'enveloppe.
 
       bodyC.body.setUserData(cannonball);
 
@@ -221,6 +236,8 @@ public class WorldBuilder {
       cannonball.add(colC);
 
       engine.addEntity(cannonball);
+
+      return bodyC;
     }
 
     /** Crée et place une entité correspondant à l'océan
@@ -255,6 +272,8 @@ public class WorldBuilder {
       fixDef.friction = 0;
       fixDef.shape = chain;
       fixDef.restitution = 1f;
+      fixDef.filter.categoryBits = CollisionComponent.CATEGORY_OCEAN;
+      fixDef.filter.maskBits = CollisionComponent.MASK_OCEAN;
 
       bodyC.body.createFixture(fixDef);
       chain.dispose(); //On libère l'enveloppe.
