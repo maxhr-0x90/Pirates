@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 public class BoatSystem extends IteratingSystem{
   private final int LEFT_SHOT = 0;
+  private final int RIGHT_SHOT = 1;
   private WorldBuilder world;
   private ComponentMapper<BodyComponent> bodyMap;
   private ComponentMapper<StatComponent> statMap;
@@ -112,10 +113,26 @@ public class BoatSystem extends IteratingSystem{
     }
 
     //Gestion quant au tire
-    if(controller.isMouseDown){ //Si le bouton de souris est appuyé
-      if(typeC.type == TypeComponent.BATEAU_A){
-
+    if(typeC.type == TypeComponent.BATEAU_A){
+      if(Task.nbShotLeft != 0){
         shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+      }
+
+      if(Task.nbShotRight != 0){
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
+      }
+
+    }
+    if(controller.isMouseDown){ //Si le bouton de souris est appuyé
+
+
+        if(Task.nbShotLeft != 0){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+        }
+
+        if(Task.nbShotRight != 0){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
+
       }
     }
 	}

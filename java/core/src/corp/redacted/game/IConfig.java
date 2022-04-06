@@ -9,7 +9,7 @@ public interface IConfig{
 
   /*-----Boulet de canon-----*/
   int TAILLE_CANNONBALL = 2;
-  int DELAIS_TIR = 50; //ms
+  int DELAIS_TIR = 250; //ms
   float DENSITE_CANNONBALL = 100f;
   int FRICTION_CANNONBALL = 1000;
 
