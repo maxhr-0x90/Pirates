@@ -125,15 +125,13 @@ public class BoatSystem extends IteratingSystem{
     }
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
 
+      if(typeC.type == TypeComponent.BATEAU_A){
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
 
-        if(Task.nbShotLeft != 0){
-          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
-        }
-
-        if(Task.nbShotRight != 0){
-          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
 
       }
+
     }
 	}
 

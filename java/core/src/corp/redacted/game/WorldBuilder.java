@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -204,14 +205,15 @@ public class WorldBuilder {
       bodyC.body = world.createBody(bodyD);
 
       /* Création de l'enveloppe du bateau */
-      PolygonShape poly = new PolygonShape();
-      poly.setAsBox(IConfig.TAILLE_CANNONBALL, IConfig.TAILLE_CANNONBALL);
+      CircleShape circle = new CircleShape();
+      circle.setRadius(IConfig.TAILLE_CANNONBALL);
+      circle.setPosition(new Vector2(0,0));
 
       /* Création de la fixture/ envrionnement */
       fixDef.density = IConfig.DENSITE_CANNONBALL;
       fixDef.friction = IConfig.FRICTION_CANNONBALL;
       fixDef.restitution = 0f;
-      fixDef.shape = poly;
+      fixDef.shape = circle;
       if(camps == CannonballComponent.BATEAU_A){
         fixDef.filter.categoryBits = CollisionComponent.CATEGORY_CANNONBAL_A;
         fixDef.filter.maskBits = CollisionComponent.MASK_CANNONBAL_A;
@@ -223,7 +225,7 @@ public class WorldBuilder {
       /* Assignation du type/categorie */
       typeC.type = TypeComponent.CANNONBALL;
       bodyC.body.createFixture(fixDef);
-      poly.dispose(); //On libère l'enveloppe.
+      circle.dispose(); //On libère l'enveloppe.
 
       bodyC.body.setUserData(cannonball);
 
