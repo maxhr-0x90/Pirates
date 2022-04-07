@@ -1,6 +1,9 @@
 package corp.redacted.game;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.utils.Array;
+import corp.redacted.game.loader.Assets;
 import corp.redacted.game.views.DebugScreen;
 import corp.redacted.game.views.MainScreen;
 
@@ -15,6 +18,8 @@ public class Game extends com.badlogic.gdx.Game {
 	private static final String DEBUG = "debug";
 
 	private HashMap<String, Screen> screens;
+
+	public final static Assets assets = new Assets();
 
 	@Override
 	public void create () {

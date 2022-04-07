@@ -55,7 +55,7 @@ public class RenderingSystem extends IteratingSystem {
         } else {
             cam = new PerspectiveCamera(80, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
-        cam.position.set(0f, 0f, 15f);
+        cam.position.set(0f, 0f, 150f);
         cam.lookAt(0,0,0);
         cam.near = 1f;
         cam.far = 300f;
