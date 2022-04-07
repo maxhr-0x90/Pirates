@@ -17,7 +17,7 @@ import java.net.InetSocketAddress;
 public class GestionHttp implements HttpHandler{
   String racine = "webapp";
   public static HttpServer hserver;
-  public final static int PORT = 8080;
+  public final static int PORT = 8888;
 
   /**
     * Démarre le serveur HTTP sur le port PORT

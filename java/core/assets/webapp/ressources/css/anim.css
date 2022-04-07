@@ -1,0 +1,31 @@
+.rame_gauche{
+  background-image: url("../img/rame_gauche.png");
+}
+
+.rame_droite{
+  background-image: url("../img/rame_droite.png");
+}
+
+.rame_gauche:active{
+  background-image: url("../img/rame_gauche_active.png");
+}
+
+.rame_droite:active{
+  background-image: url("../img/rame_droite_active.png");
+}
+
+.canon_gauche{
+  background-image: url("../img/canon_gauche.png");
+}
+
+.canon_droite{
+  background-image: url("../img/canon_droit.png");
+}
+
+.canon_gauche:active{
+  background-image: url("../img/canon_gauche_active.png");
+}
+
+.canon_droite:active{
+  background-image: url("../img/canon_droit_active.png");
+}
