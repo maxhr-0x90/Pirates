@@ -1,8 +1,23 @@
-function updateOutput(text) {
-  sens.innerHTML = text;
-}
+var IP = "192.168.0.2";
+var webSocket = new WebSocket("ws://" + IP + ":8889");;
+var x, y;
 
-let x, y;
+webSocket.onopen = function(event){
+  webSocket.send("hub");
+};
+
+webSocket.onmessage = function(event) {
+  if(event.data === "redirect"){
+    document.location.href = "erreur.html";
+  }
+  else{
+    updateOutput(event.data);
+  }
+};
+
+webSocket.onclose = function(event) {
+  updateOutput("Connexion terminee");
+};
 
 function repaint(){
   let canvas = document.getElementById('canvas');
@@ -45,6 +60,15 @@ function init_canvas(){
       ctx.fillRect(x, y, 10, 10);
       ctx.fillStyle = "Black";
       updateOutput("clic : " + x);
+      sendPosition(x);
     }
   });
+}
+
+function updateOutput(text) {
+  sens.innerHTML = text;
+}
+
+function sendPosition(x){
+  webSocket.send("position:"+parseInt(x, 10));
 }

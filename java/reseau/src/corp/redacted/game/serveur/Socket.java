@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.Hashtable;
 
 public class Socket extends WebSocketServer {
-	public final static int PORT = 8081;
-	public final static Boolean DEBUG = false;
+	public final static int PORT = 8889;
+	public final static Boolean DEBUG = true;
 
 	// Stockage des informations globales de déplacement et de tir
 	public static int numberLeft = 0;
@@ -29,9 +29,15 @@ public class Socket extends WebSocketServer {
 
 	public static Boolean whiteListed = false;
 
+	/* HASHTABLES UTILISEE AVANT LA SEPARATION*/
+	// White list avant séparation
+	public static Hashtable<String, WebSocket> whiteListIn;
+	// Position dans le cinéma des joueurs avant la séparation
+	public static Hashtable<String, Integer> positionWhiteList;
+
+	/* HASHTABLES UTILISEE APRES LA SEPARATION*/
 	// Liste bateau bleu
 	public static Hashtable<String, WebSocket> whiteListInBleue;
-
 	// Liste bateau rouge
 	public static Hashtable<String, WebSocket> whiteListInRouge;
 
@@ -46,42 +52,35 @@ public class Socket extends WebSocketServer {
 		// Pour éviter le problème d'addresse déjà prise si nouveau lancement
 		this.setReuseAddr(true);
 
-		whiteListInBleue = new Hashtable<String, WebSocket>();
+		whiteListIn = new Hashtable<String, WebSocket>();
 		whiteListInRouge = new Hashtable<String, WebSocket>();
+		whiteListInBleue = new Hashtable<String, WebSocket>();
+		positionWhiteList = new Hashtable<String, Integer>();
 		whiteListOut = new Hashtable<WebSocket, String>();
 	}
 
   @Override
   public void onOpen(WebSocket session, ClientHandshake hs){
 		// Un utilisateur vient de se connecter à la session
-		WebSocket wsb, wsr;
+		WebSocket ws;
 		String ip = session.getRemoteSocketAddress().getAddress().getHostAddress();
 
 		if(!whiteListed){	// Connexion ouverte à tous
-			if(ip.charAt(ip.length()-1) % 2 == 0){
-				whiteListInBleue.put(ip, session);
-			}
-			else{
-				whiteListInRouge.put(ip, session);
-			}
+			whiteListIn.put(ip, session);
 			whiteListOut.put(session, ip);
-			System.out.println("bleue : " + whiteListInBleue);
-			System.out.println("rouge : " + whiteListInRouge);
-			System.out.println(whiteListOut);
+			if(DEBUG){
+				System.out.println(whiteListIn);
+				System.out.println(whiteListOut);
+				System.out.println(positionWhiteList);
+			}
 		}
 		else{	// Connexion fermée
-			wsb = whiteListInBleue.get(ip);
-			wsr = whiteListInRouge.get(ip);
-			if(wsb == null && wsr == null){	// Personne non présente dans la white list
+			ws = whiteListIn.get(ip);
+			if(ws == null){	// Personne non présente dans la white list
 				session.send("redirect");
 			}
 			else{
-				if(wsb == null){
-					whiteListInRouge.put(ip, session);
-				}
-				else{
-					whiteListInBleue.put(ip, session);
-				}
+				whiteListIn.put(ip, session);
 			}
 		}
 
@@ -101,11 +100,11 @@ public class Socket extends WebSocketServer {
 		String ip = whiteListOut.get(session);
 		if(!whiteListed){
 			whiteListOut.remove(session);
-			if(whiteListInBleue.get(ip) != null){
-				whiteListInBleue.remove(ip);
+			if(whiteListIn.get(ip) != null){
+				whiteListIn.remove(ip);
 			}
-			else{
-				whiteListInRouge.remove(ip);
+			if(positionWhiteList.get(ip) != null){
+				positionWhiteList.remove(ip);
 			}
 		}
 
@@ -116,25 +115,45 @@ public class Socket extends WebSocketServer {
 
   @Override
   public void onMessage(WebSocket session, String message){
-		if(message.equals("0")){	// L'utilisateur rame à gauche
+		if(message.equals("gauche")){	// L'utilisateur rame à gauche
 			session.send("Gauche !");
 			numberLeft++;
 		}
-		if(message.equals("1")){	// L'utilisateur rame à droite
+		else if(message.equals("droite")){	// L'utilisateur rame à droite
 			session.send("Droite !");
 			numberRight++;
 		}
-		if(message.equals("2")){	// L'utilisateur tire à gauche
+		else if(message.equals("tgauche")){	// L'utilisateur tire à gauche
 			session.send("Tir gauche !");
 			numberLeftShot++;
 		}
-		if(message.equals("3")){	// L'utilisateur tire à droite
+		else if(message.equals("tdroit")){	// L'utilisateur tire à droite
 			session.send("Tir droit !");
 			numberRightShot++;
 		}
-		if(message.equals("iswhitelisted")){
-			if(!whiteListed){
+		else if(message.equals("manette")){	// L'utilisateur provient de la manette
+			if(!whiteListed && !DEBUG){
 				session.send("redirect");
+			}
+		}
+		else if(message.equals("hub")){	// L'utilisateur provient de l'accueil
+			if(whiteListed){
+				session.send("redirect");
+			}
+		}
+		else{ // Autre message
+			try{
+				// Si c'est une position on la concerve
+				if(message.split(":")[0].equals("position")){
+					positionWhiteList.put(
+						session.getRemoteSocketAddress().getAddress().getHostAddress(),
+						Integer.parseInt(message.split(":")[1])
+					);
+					System.out.println(positionWhiteList);
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
 			}
 		}
 
@@ -153,4 +172,11 @@ public class Socket extends WebSocketServer {
 	@Override
   public void onStart(){
   }
+
+	/**
+		* Fonction de séparation des deux équipes
+	*/
+	private static void separation(){
+		// Séparation
+	}
 }

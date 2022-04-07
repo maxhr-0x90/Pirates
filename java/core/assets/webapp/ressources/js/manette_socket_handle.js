@@ -1,11 +1,11 @@
-var IP = "192.168.0.29";
-var webSocket = new WebSocket("ws://" + IP + ":8081");;
+var IP = "192.168.0.2";
+var webSocket = new WebSocket("ws://" + IP + ":8889");;
 
-webSocket.onopen = function(event) {
-  webSocket.send("iswhitelisted")
+webSocket.onopen = function(event){
+  webSocket.send("manette");
 };
 
-webSocket.onmessage = function(event) {
+webSocket.onmessage = function(event){
   if(event.data === "redirect"){
     document.location.href = "erreur.html";
   }
@@ -14,34 +14,30 @@ webSocket.onmessage = function(event) {
   }
 };
 
-webSocket.onclose = function(event) {
+webSocket.onclose = function(event){
   updateOutput("Connexion terminee");
 };
 
 function connect(){
 }
 
-function left() {
-  webSocket.send("0");
+function left(){
+  webSocket.send("gauche");
 }
 
-function right() {
-  webSocket.send("1");
+function right(){
+  webSocket.send("droite");
 }
 
-function right() {
-  webSocket.send("1");
+function leftShot(){
+  webSocket.send("tgauche");
 }
 
-function leftShot() {
-  webSocket.send("2");
+function rightShot(){
+  webSocket.send("tdroit");
 }
 
-function rightShot() {
-  webSocket.send("3");
-}
-
-function closeSocket() {
+function closeSocket(){
   webSocket.close();
 }
 
