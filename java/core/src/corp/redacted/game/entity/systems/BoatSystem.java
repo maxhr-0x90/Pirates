@@ -151,7 +151,7 @@ public class BoatSystem extends IteratingSystem{
   * @param BodyComponent bodyC : le corps en question
   */
   private void pousseDroite(BodyComponent bodyC){
-    bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
+    bodyC.body.setAngularVelocity(-IConfig.MISE_A_NIVEAU/100000);
     // bodyC.body.applyTorque(IConfig.MISE_A_NIVEAU, true);
   }
 
