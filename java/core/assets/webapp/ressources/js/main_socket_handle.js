@@ -1,4 +1,4 @@
-var IP = "localhost";
+var IP = "192.168.0.29";
 var webSocket = new WebSocket("ws://" + IP + ":8081");;
 
 webSocket.onopen = function(event) {
@@ -19,4 +19,8 @@ webSocket.onclose = function(event) {
 
 function connect(){
   webSocket.send("5");
+}
+
+function updateOutput(text) {
+  sens.innerHTML = text;
 }
