@@ -215,10 +215,10 @@ public class BoatSystem extends IteratingSystem{
     bodyC.body.setLinearVelocity(vel.x, vel.y);
    if(diff > 0){
      bodyC.body.setAngularVelocity(-angle);
-     bodyC.body.setAngularVelocity(-IConfig.MISE_A_NIVEAU/1000000);
+     bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/1000000);
       // bodyC.body.applyTorque(-angle/100, true);
     }else if(diff < 0){
-      bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/1000000);
+      bodyC.body.setAngularVelocity(-IConfig.MISE_A_NIVEAU/1000000);
       // bodyC.body.setAngularVelocity(angle);
     }else{
       bodyC.body.setAngularVelocity(0);
