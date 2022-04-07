@@ -2,30 +2,19 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./ressources/css/main_style.css">
+		<link rel="stylesheet" href="./ressources/css/anim.css">
     <link rel="icon" href="./ressources/img/favicon.ico"/>
-		<script src="./ressources/js/socket_handle.js"></script>
+		<script src="./ressources/js/manette_socket_handle.js"></script>
+		<script src="./ressources/js/manette_anim.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Manette</title>
 	</head>
-	<body>
-		<div>
-			<table>
-					<tr>
-						<td>
-							<div class="image rame_gauche" onclick="left()"></div>
-						</td>
-						<td>
-							<div class="image rame_droite" onclick="right()"></div>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<div class="image canon_gauche" onclick="leftShot()"></div>
-						</td>
-						<td>
-							<div class="image canon_droite" onclick="rightShot()"></div>
-						</td>
-					</tr>
-			</table>
-		</div>
+	<body onload="load()">
+
+		<button id="a" class="image rame_gauche" onclick="left()"></button>
+		<button class="image rame_droite" onclick="right()"></button><br/>
+		<button class="image canon_gauche" onclick="leftShot()"></button>
+		<button class="image canon_droite" onclick="rightShot()"></button>
 
 		<div id="msgbox">
 			<div id="opacity"></div>

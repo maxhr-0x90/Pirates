@@ -2,14 +2,20 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./ressources/css/main_style.css">
+		<link rel="stylesheet" href="./ressources/css/accueil.css">
     <link rel="icon" href="./ressources/img/favicon.ico"/>
-		<script src="./ressources/js/socket_handle.js"></script>
+		<script src="./ressources/js/main_handler.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Accueil</title>
 	</head>
-	<body>
+	<body onload="init_canvas()">
+		<canvas id="canvas" class="clickBox" width="355" height="300">
+		</canvas>
+
 		<div id="msgbox">
 			<div id="opacity"></div>
 			<div id="text">
-				<u>Infos :</u>
+				info
 				<p id="sens"></p>
 			</div>
 		</div>
