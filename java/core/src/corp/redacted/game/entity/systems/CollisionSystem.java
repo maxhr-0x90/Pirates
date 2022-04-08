@@ -70,6 +70,7 @@ public class CollisionSystem extends IteratingSystem{
               for(Fixture fix : bodyMerchendise.body.getFixtureList()){
                 bodyMerchendise.body.destroyFixture(fix);
               }
+              world.creeMarchandise();
               colC.collisionEntite = null;
             break;
 
@@ -128,6 +129,7 @@ public class CollisionSystem extends IteratingSystem{
               for(Fixture fix : bodyMerchendise.body.getFixtureList()){
                 bodyMerchendise.body.destroyFixture(fix);
               }
+              world.creeMarchandise();
               colC.collisionEntite = null;
             break;
 

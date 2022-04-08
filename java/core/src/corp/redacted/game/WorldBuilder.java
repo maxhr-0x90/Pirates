@@ -1,5 +1,6 @@
 package corp.redacted.game;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -18,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
+import com.badlogic.gdx.math.MathUtils;
+import java.lang.Math;
 
 /**
  * Permet la mise en place des entités dans le jeu
@@ -52,9 +55,7 @@ public class WorldBuilder {
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
-        Entity marchandise = creeMarchandise(-20,20,10,5, 5);
-        engine.addEntity(marchandise);
-
+        creeMarchandise(0,0);
         createOcean();
     }
 
@@ -132,13 +133,11 @@ public class WorldBuilder {
       return bateau;
     }
 
-    /** Renvoie une entité marchandise
+    /** Place une entité marchandise à une position donnée
     * @param posx : position initiale sur l'axe des x
     * @param posy : position initiale sur l'axe des y
-    * @param taillex : taille sur l'axe Ox de la marchandise
-    * @param tailley : taille sur l'axe Oy de la marchandise
     */
-    public Entity creeMarchandise(int posx, int posy, float taillex, float tailley, float weight){
+    public void creeMarchandise(int posx, int posy){
       Entity merchendise = new Entity(); //Création de l'entité
       MerchendiseComponent merchendiseC = new MerchendiseComponent();
       BodyComponent bodyC = new BodyComponent();
@@ -146,10 +145,13 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
-
+      float taillex, tailley, weight;
 
       /*Définition de ses caractéristique*/
+      weight = MathUtils.random(MerchendiseComponent.LIMIT_MIN_M, MerchendiseComponent.LIMIT_MAX_M);
       merchendiseC.weight = weight;
+      taillex = weight;
+      tailley = weight;
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
@@ -191,9 +193,96 @@ public class WorldBuilder {
       merchendise.add(typeC);
       merchendise.add(colC);
 
-      return merchendise;
+      engine.addEntity(merchendise);
     }
 
+
+    /** Place une entité marchandise de manière "speudo-aléatoire"
+    */
+    public Entity creeMarchandise(){
+      Entity merchendise = new Entity(); //Création de l'entité
+      MerchendiseComponent merchendiseC = new MerchendiseComponent();
+      BodyComponent bodyC = new BodyComponent();
+      BodyDef bodyD = new BodyDef();
+      FixtureDef fixDef = new FixtureDef();
+      TypeComponent typeC =  new TypeComponent();
+      CollisionComponent colC = new CollisionComponent();
+      float taillex, tailley, weight, posx, posy;
+
+
+      /*Définition de ses caractéristique*/
+      weight = MathUtils.random(MerchendiseComponent.LIMIT_MIN_M, MerchendiseComponent.LIMIT_MAX_M);
+      merchendiseC.weight = weight;
+      taillex = weight;
+      tailley = weight;
+
+      if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
+        merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
+      }else if(weight < MerchendiseComponent.LIMIT_CLASSIC_M){
+        merchendiseC.merchendiseType = MerchendiseComponent.CLASSIC_MERCHENDISE;
+      }else{
+        merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
+      }
+
+      /*Définition de la position de la marchandise*/
+      ComponentMapper<BodyComponent> bodyMap = ComponentMapper.getFor(BodyComponent.class);
+      BodyComponent bodyA = bodyMap.get(this.bateauA);
+      BodyComponent bodyB = bodyMap.get(this.bateauB);
+      float posxA = bodyA.body.getWorldCenter().x;
+      float posyA = bodyA.body.getWorldCenter().y;
+      float posxB = bodyB.body.getWorldCenter().x;
+      float posyB = bodyB.body.getWorldCenter().y;
+
+
+      if(posxA > 0 && posxB > 0){
+        posx = -1*(bodyA.body.getWorldCenter().x + bodyB.body.getWorldCenter().x )/2;
+      }else if( (posxA>0 && posxB<0) || (posxA<0 && posxB>0) ){
+        posx = (bodyA.body.getWorldCenter().x + bodyB.body.getWorldCenter().x )/2;
+      }else{
+        posx = -1*(bodyA.body.getWorldCenter().x + bodyB.body.getWorldCenter().x )/2;
+      }
+
+      if(posyA > 0 && posyB > 0){
+        posy = -1*(bodyA.body.getWorldCenter().y + bodyB.body.getWorldCenter().y )/2;
+      }else if( (posyA>0 && posyB<0) || (posyA<0 && posyB>0) ){
+        posy = (bodyA.body.getWorldCenter().y + bodyB.body.getWorldCenter().y )/2;
+      }else{
+        posy = -1*(bodyA.body.getWorldCenter().y + bodyB.body.getWorldCenter().y )/2;
+      }
+
+      /* Définition du corps de l'enité */
+      bodyD.type = BodyDef.BodyType.StaticBody;
+      bodyD.position.x = posx;
+      bodyD.position.y = posy;
+      bodyC.body = world.createBody(bodyD);
+
+      /* Création de l'enveloppe du bateau */
+      PolygonShape poly = new PolygonShape();
+      poly.setAsBox(taillex, tailley);
+
+      /* Création de la fixture/ envrionnement */
+      fixDef.density = IConfig.DENSITE_MARCHANDISE;
+      fixDef.friction = IConfig.FRICTION_MARCHANDISE;
+      fixDef.restitution = 0f;
+      fixDef.shape = poly;
+      fixDef.filter.categoryBits = CollisionComponent.CATEGORY_MERCHENDISE;
+      fixDef.filter.maskBits = CollisionComponent.MASK_MERCHENDISE;
+
+      /* Assignation du type/categorie */
+      typeC.type = TypeComponent.MARCHANDISE;
+      bodyC.body.createFixture(fixDef);
+      poly.dispose(); //On libère l'enveloppe.
+
+      bodyC.body.setUserData(merchendise);
+
+      /*On ajoute les components à l'entité*/
+      merchendise.add(merchendiseC);
+      merchendise.add(bodyC);
+      merchendise.add(typeC);
+      merchendise.add(colC);
+
+      return merchendise;
+    }
 
     /** Crée et place une entité boulet de canon
     * @param pos : vecteur de position d'arrivé.
