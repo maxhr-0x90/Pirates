@@ -98,12 +98,10 @@ public class BoatSystem extends IteratingSystem{
 
         //Permet d'arreter le bateau
         if(!controller.leftB && ! controller.rightB){
-          // bodyC.body.setAngularVelocity(0);
-          // bodyC.body.setLinearVelocity(0,0);
+          bodyC.body.setAngularVelocity(0);
         }
         if(!controller.upB && !controller.downB){
-          // bodyC.body.setAngularVelocity(0);
-          // bodyC.body.setLinearVelocity(0,0);
+          bodyC.body.setLinearVelocity(0,0);
       }
     }
 
@@ -126,8 +124,8 @@ public class BoatSystem extends IteratingSystem{
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
 
       if(typeC.type == TypeComponent.BATEAU_A){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
         shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
 
 
       }
@@ -243,7 +241,7 @@ public class BoatSystem extends IteratingSystem{
 
       boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
       /*On place le boulet de cannon*/
-      BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getPosition(), camps);
+      BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getWorldCenter(), camps);
       bodyCB.body.setLinearVelocity(vel.x, vel.y);
 
     }
