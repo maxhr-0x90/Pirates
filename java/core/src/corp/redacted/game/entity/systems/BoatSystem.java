@@ -18,9 +18,9 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
+import java.lang.Math;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import java.lang.Math;
 import java.util.ArrayList;
 
 public class BoatSystem extends IteratingSystem{
@@ -150,7 +150,6 @@ public class BoatSystem extends IteratingSystem{
   */
   private void pousseDroite(BodyComponent bodyC){
     bodyC.body.setAngularVelocity(-IConfig.MISE_A_NIVEAU/100000);
-    // bodyC.body.applyTorque(IConfig.MISE_A_NIVEAU, true);
   }
 
   /** Change l'angle de velocité d'un corps vers la gauche
@@ -165,8 +164,6 @@ public class BoatSystem extends IteratingSystem{
   * @param BodyComponent bodyC : le corps en question
   */
   private void pousseHaut(BodyComponent bodyC){
-    Vector2 pos = bodyC.body.getPosition();
-    Vector2 posP = new Vector2();
     float mainM = mainMeasure(bodyC.body.getAngle());
     float velocity = 9000f;
 

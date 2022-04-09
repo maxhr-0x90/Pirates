@@ -5,7 +5,7 @@ public interface IConfig{
 
   /*-----Carte de jeu-----*/
   int HAUTEUR_CARTE = 250;
-  int LARGEUR_CARTE = 250;
+  int LARGEUR_CARTE = 400;
 
   /*-----Boulet de canon-----*/
   int TAILLE_CANNONBALL = 2;
