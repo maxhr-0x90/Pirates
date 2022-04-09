@@ -415,6 +415,10 @@ public class WorldBuilder {
       System.out.println("Zone M : "+zoneM);
       Random r = new Random();
       float moyenneX, moyenneY, ecartTX, ecartTY;
+      float m1, m2;
+      m1 = (float)IConfig.HAUTEUR_CARTE / (float)IConfig.LARGEUR_CARTE;
+      m2 = -m1;
+
 
       /*On tire aléatoire une position qui sera le centre*/
       ecartTX = IConfig.LARGEUR_CARTE/10;
@@ -427,7 +431,7 @@ public class WorldBuilder {
             moyenneY = (posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while(posy>posx || posy<0);
+            }while(posy> m1*posx || posy<0 || posy>IConfig.HAUTEUR_CARTE/2);
           }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
         break;
 
@@ -438,7 +442,7 @@ public class WorldBuilder {
             moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while( (posy < posx) || (posy < 0));
+            }while( (posy < m1*posx) || (posy < 0) || posx > IConfig.HAUTEUR_CARTE/2);
           }while( (posx > (IConfig.LARGEUR_CARTE/2 - weight)) || (posx < 0));
         break;
 
@@ -449,7 +453,7 @@ public class WorldBuilder {
             moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy < -posx) || posy<0);
+            }while((posy < m2*posx) || posy<0 || posy>IConfig.HAUTEUR_CARTE/2);
           }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
         break;
 
@@ -460,7 +464,7 @@ public class WorldBuilder {
             moyenneY = (-posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > -posx) || posy < 0);
+            }while((posy > m2*posx) || posy < 0 || posy > IConfig.HAUTEUR_CARTE/2);
           }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
         break;
 
@@ -471,7 +475,7 @@ public class WorldBuilder {
             moyenneY = (posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((-posy>-posx) || (posy>0));
+            }while((posy > m1*posx) || (posy>0) || posy < -IConfig.HAUTEUR_CARTE/2);
           }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
         break;
 
@@ -482,7 +486,7 @@ public class WorldBuilder {
             moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while( (-posy<-posx) || posy > 0 );
+            }while( (posy < m1*posx) || posy > 0 || posy < -IConfig.HAUTEUR_CARTE/2 );
           }while(posx < -(IConfig.LARGEUR_CARTE/2-weight)  || posx > 0);
         break;
 
@@ -493,7 +497,7 @@ public class WorldBuilder {
             moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((-posy < posx) || posy>0);
+            }while((posy > m2*posx) || posy>0 || posy < -IConfig.HAUTEUR_CARTE/2);
           }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
         break;
 
@@ -504,7 +508,7 @@ public class WorldBuilder {
             moyenneY = (-posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((-posy > posx) || posy < 0);
+            }while((posy <  m2*posx) || posy < 0 || posy < - IConfig.HAUTEUR_CARTE/2);
           }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx < 0);
         break;
 
@@ -524,20 +528,24 @@ public class WorldBuilder {
     * @return int -1 si le point n'est pas dedans, et entre 0 et 8 sinon.
     */
     private int oceanZone(float x, float y){
+      float m1, m2;
+      m1 = (float)IConfig.HAUTEUR_CARTE / (float)IConfig.LARGEUR_CARTE;
+      m2 = -m1;
+
       /*On regarde si le point est dans l'ocean*/
       if( (Math.abs(x) >= IConfig.LARGEUR_CARTE) || (Math.abs(y) >= IConfig.HAUTEUR_CARTE)){
         return -1;
       }
 
       if(x > 0){ //Zone 0,1,6 ou 7
-        if(y>0){ //Zone 0 ou 1
-          if(x > y){ // Zone 0
+        if(y> 0){ //Zone 0 ou 1
+          if(y < m1*x){ // Zone 0
             return 0;
           }else{ //Zone 1
             return 1;
           }
         }else{ //Zone 6 ou 7
-          if(Math.abs(x) > Math.abs(y)){ //Zone 7
+          if(y > m2*x){ //Zone 7
             return 7;
           }else{ //Zone 6
             return 6;
@@ -545,13 +553,13 @@ public class WorldBuilder {
         }
       }else{ //Zone 2,3,4 ou 5
         if(y>0){ //Zone 2 ou 3
-           if(Math.abs(x) > Math.abs(y)){ //Zone 3
+           if(y < m2*x){ //Zone 3
              return 3;
            }else{ // Zone 2
              return 2;
            }
         }else{ //Zone 4 ou 5
-          if(Math.abs(x)>Math.abs(y)){ //Zone 4
+          if(y > m1*x){ //Zone 4
             return 4;
           }else{ //Zone 5
             return 5;
