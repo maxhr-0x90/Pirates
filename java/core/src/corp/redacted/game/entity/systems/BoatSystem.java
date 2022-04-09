@@ -113,19 +113,19 @@ public class BoatSystem extends IteratingSystem{
     //Gestion quant au tire
     if(typeC.type == TypeComponent.BATEAU_A){
       if(Task.nbShotLeft != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,true);
       }
 
       if(Task.nbShotRight != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT,true);
       }
 
     }
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
 
       if(typeC.type == TypeComponent.BATEAU_A){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,true);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT,true);
 
 
       }
@@ -157,7 +157,6 @@ public class BoatSystem extends IteratingSystem{
   */
   private void pousseGauche(BodyComponent bodyC){
     bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
-    // bodyC.body.applyTorque(-IConfig.MISE_A_NIVEAU, true);
   }
 
   /** Change la velocité linéaire d'un corps
@@ -220,7 +219,7 @@ public class BoatSystem extends IteratingSystem{
     }
   }
 
-  private void shotBoat(StatComponent boat, BodyComponent bodyC, TypeComponent typeC, int camps, int side){
+  private void shotBoat(StatComponent boat, BodyComponent bodyC, TypeComponent typeC, int camps, int side, boolean bonus){
 
     if(boat.dernierTir <=0){  //On vérifie si le temps avant le dernier tir est suffisant
       float mainM = mainMeasure(bodyC.body.getAngle());
@@ -237,9 +236,27 @@ public class BoatSystem extends IteratingSystem{
       }
 
       boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
-      /*On place le boulet de cannon*/
-      BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getWorldCenter(), camps);
-      bodyCB.body.setLinearVelocity(vel.x, vel.y);
+      if(bonus){
+        Vector2 vel2 = new Vector2(vel);
+        vel2.rotate(90);
+        System.out.println(vel2);
+        /*On place le boulet de cannon*/
+        BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getWorldCenter(), camps);
+        bodyCB.body.setLinearVelocity(vel.x, vel.y);
+
+        Vector2 posCB2 = new Vector2( (bodyC.body.getWorldCenter().x + 0.15f * vel2.x) , (bodyC.body.getWorldCenter().y + 0.15f * vel2.y));
+        BodyComponent bodyCB2 = this.world.createCannonball(posCB2, camps);
+        bodyCB2.body.setLinearVelocity(vel.x, vel.y);
+
+        Vector2 posCB3 = new Vector2( (bodyC.body.getWorldCenter().x - 0.15f * vel2.x) , (bodyC.body.getWorldCenter().y - 0.15f * vel2.y));
+        BodyComponent bodyCB3 = this.world.createCannonball(posCB3, camps);
+        bodyCB3.body.setLinearVelocity(vel.x, vel.y);
+      }else{
+        /*On place le boulet de cannon*/
+        BodyComponent bodyCB = this.world.createCannonball(bodyC.body.getWorldCenter(), camps);
+        bodyCB.body.setLinearVelocity(vel.x, vel.y);
+      }
+
 
     }
   }
