@@ -504,7 +504,7 @@ public class WorldBuilder {
             moyenneY = (-posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy <  m2*posx) || posy < 0 || posy < - IConfig.HAUTEUR_CARTE/2);
+            }while((posy <  m2*posx) || posy < 0);
           }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx < 0);
         break;
 
