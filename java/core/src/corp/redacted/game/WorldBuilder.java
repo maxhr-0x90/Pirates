@@ -16,6 +16,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
+import java.util.Random;
 import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
@@ -47,7 +48,7 @@ public class WorldBuilder {
     /** Genère un monde
     */
     public void generateWorld(){
-        Entity batA = creeBateau(0,50,'A');
+        Entity batA = creeBateau(50,10,'A');
         this.bateauA = batA;
         engine.addEntity(bateauA);
 
@@ -57,6 +58,7 @@ public class WorldBuilder {
 
         creeMarchandise(0,0);
         createOcean();
+
     }
 
     /** Renvoie une entité bateau
@@ -83,19 +85,13 @@ public class WorldBuilder {
       /* Création de l'enveloppe du bateau */
       Vector2[] vect = new Vector2[5];
       PolygonShape poly = new PolygonShape();
-      vect[0] = new Vector2(posx-IConfig.LARGEUR_BATEAU/2, posy - IConfig.LONGUEUR_BATEAU/2);
-      vect[1] =  new Vector2(posx + IConfig.LARGEUR_BATEAU/2, posy - IConfig.LONGUEUR_BATEAU/2);
+      vect[0] = new Vector2(-IConfig.LARGEUR_BATEAU/2, -IConfig.LONGUEUR_BATEAU/2);
+      vect[1] =  new Vector2(IConfig.LARGEUR_BATEAU/2, -IConfig.LONGUEUR_BATEAU/2);
 
-      vect[2] = new Vector2(posx+ IConfig.LARGEUR_BATEAU/2, posy + IConfig.LONGUEUR_BATEAU/5);
-      vect[3] = new Vector2(posx, posy + IConfig.LONGUEUR_BATEAU/2);
-      vect[4] = new Vector2(posx - IConfig.LARGEUR_BATEAU/2, posy + IConfig.LONGUEUR_BATEAU/5);
-      /*
-      vect[0] = new Vector2(0, 0);
-      vect[1] =  new Vector2(IConfig.LARGEUR_BATEAU,0);
-      vect[3] = new Vector2(IConfig.LARGEUR_BATEAU, 4*IConfig.LONGUEUR_BATEAU/5);
-      vect[2] = new Vector2(IConfig.LARGEUR_BATEAU/2, IConfig.LONGUEUR_BATEAU);
-      vect[4] = new Vector2(0,4*IConfig.LONGUEUR_BATEAU/5);
-      */
+      vect[2] = new Vector2(IConfig.LARGEUR_BATEAU/2, 3*IConfig.LONGUEUR_BATEAU/5);
+      vect[3] = new Vector2(0, IConfig.LONGUEUR_BATEAU);
+      vect[4] = new Vector2(- IConfig.LARGEUR_BATEAU/2,  3*IConfig.LONGUEUR_BATEAU/5);
+
 
       poly.set(vect);
 
@@ -225,31 +221,14 @@ public class WorldBuilder {
       }
 
       /*Définition de la position de la marchandise*/
-      ComponentMapper<BodyComponent> bodyMap = ComponentMapper.getFor(BodyComponent.class);
-      BodyComponent bodyA = bodyMap.get(this.bateauA);
-      BodyComponent bodyB = bodyMap.get(this.bateauB);
-      float posxA = bodyA.body.getWorldCenter().x;
-      float posyA = bodyA.body.getWorldCenter().y;
-      float posxB = bodyB.body.getWorldCenter().x;
-      float posyB = bodyB.body.getWorldCenter().y;
+      Vector2 pos;
+      do{
+        pos = positionAleaMarch(weight);
+      }while( Math.abs(pos.x) > (IConfig.LARGEUR_CARTE/2 - weight) || Math.abs(pos.y) > (IConfig.HAUTEUR_CARTE/2 - weight) );
+      posx = pos.x;
+      posy = pos.y;
 
-
-      if(posxA > 0 && posxB > 0){
-        posx = -1*(bodyA.body.getWorldCenter().x + bodyB.body.getWorldCenter().x )/2;
-      }else if( (posxA>0 && posxB<0) || (posxA<0 && posxB>0) ){
-        posx = (bodyA.body.getWorldCenter().x + bodyB.body.getWorldCenter().x )/2;
-      }else{
-        posx = -1*(bodyA.body.getWorldCenter().x + bodyB.body.getWorldCenter().x )/2;
-      }
-
-      if(posyA > 0 && posyB > 0){
-        posy = -1*(bodyA.body.getWorldCenter().y + bodyB.body.getWorldCenter().y )/2;
-      }else if( (posyA>0 && posyB<0) || (posyA<0 && posyB>0) ){
-        posy = (bodyA.body.getWorldCenter().y + bodyB.body.getWorldCenter().y )/2;
-      }else{
-        posy = -1*(bodyA.body.getWorldCenter().y + bodyB.body.getWorldCenter().y )/2;
-      }
-
+      System.out.println(pos);
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
       bodyD.position.x = posx;
@@ -281,6 +260,7 @@ public class WorldBuilder {
       merchendise.add(typeC);
       merchendise.add(colC);
 
+      engine.addEntity(merchendise);
       return merchendise;
     }
 
@@ -390,6 +370,197 @@ public class WorldBuilder {
       engine.addEntity(ocean);
     }
 
+    /**
+    */
+    private Vector2 positionAleaMarch(float weight){
+      float posx, posy;
+      ComponentMapper<BodyComponent> bodyMap = ComponentMapper.getFor(BodyComponent.class);
+      BodyComponent bodyA = bodyMap.get(this.bateauA);
+      BodyComponent bodyB = bodyMap.get(this.bateauB);
+      /*On récupère les coordonées des bateaux*/
+      float posxA = bodyA.body.getWorldCenter().x;
+      float posyA = bodyA.body.getWorldCenter().y;
+      float posxB = bodyB.body.getWorldCenter().x;
+      float posyB = bodyB.body.getWorldCenter().y;
+
+      /*On détermine à quelle partie de la carte le bateau A apparatient*/
+      int zoneA = oceanZone(posxA, posyA);
+
+      /*On détermine à quelle partie de la carte le bateau B apparatient*/
+      int zoneB = oceanZone(posxB, posyB);
+      System.out.println("A: "+zoneA+ "B "+zoneB);
+
+      /*On crée la liste des zones candidats*/
+      /*Règle de selection : - ni zone de A, ni zone de B
+                            - ni zone de A +/- 1, ni zone de B +/- 1 */
+      int[] zoneCandidate = new int[8];
+      int nbCandidat = 0;
+
+      int zoneInt1 = Math.floorMod(zoneA-1, 8); //ZoneA -1
+      int zoneInt2 = Math.floorMod(zoneA+1, 8); //ZoneA +1
+      int zoneInt3 = Math.floorMod(zoneB-1, 8); //ZoneB -1
+      int zoneInt4 = Math.floorMod(zoneB+1, 8); //ZoneB +1
+
+      for(int i = 0; i <= 7; i++){
+        if( (i != zoneA) && (i != zoneB) && (i!=zoneInt1) && (i!=zoneInt2) && (i!=zoneInt3) && (i!=zoneInt4) ){
+          zoneCandidate[nbCandidat] = i;
+          nbCandidat++;
+        }
+      }
+
+
+      /*On tire aléatoire une zone parmi celles candidates*/
+      int indiceCandidat = (int)(Math.random()*(nbCandidat));
+      int zoneM = zoneCandidate[indiceCandidat]; //Zone de la marchandise
+      System.out.println("Zone M : "+zoneM);
+      Random r = new Random();
+      float moyenneX, moyenneY, ecartTX, ecartTY;
+
+      /*On tire aléatoire une position qui sera le centre*/
+      ecartTX = IConfig.LARGEUR_CARTE/10;
+      ecartTY = IConfig.HAUTEUR_CARTE/10;
+      switch(zoneM){
+        case 0:
+          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while(posy>posx || posy<0);
+          }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
+        break;
+
+        case 1:
+          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while( (posy < posx) || (posy < 0));
+          }while( (posx > (IConfig.LARGEUR_CARTE/2 - weight)) || (posx < 0));
+        break;
+
+        case 2:
+          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while((posy < -posx) || posy<0);
+          }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
+        break;
+
+        case 3:
+          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (-posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while((posy > -posx) || posy < 0);
+          }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
+        break;
+
+        case 4:
+          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while((-posy>-posx) || (posy>0));
+          }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
+        break;
+
+        case 5:
+          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while( (-posy<-posx) || posy > 0 );
+          }while(posx < -(IConfig.LARGEUR_CARTE/2-weight)  || posx > 0);
+        break;
+
+        case 6:
+          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while((-posy < posx) || posy>0);
+          }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
+        break;
+
+        case 7:
+          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
+          do{
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
+            moyenneY = (-posx)/2;
+            do{
+              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
+            }while((-posy > posx) || posy < 0);
+          }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx < 0);
+        break;
+
+        default:
+          posx = 0;
+          posy = 0;
+        break;
+      }
+
+
+      return new Vector2(posx, posy);
+    }
+
+    /** Renvoie le numéro de la zone dans laquelle se trouve le point (x,y)
+    * @param x : l'abscisse du point
+    * @param y : l'ordonnée du point
+    * @return int -1 si le point n'est pas dedans, et entre 0 et 8 sinon.
+    */
+    private int oceanZone(float x, float y){
+      /*On regarde si le point est dans l'ocean*/
+      if( (Math.abs(x) >= IConfig.LARGEUR_CARTE) || (Math.abs(y) >= IConfig.HAUTEUR_CARTE)){
+        return -1;
+      }
+
+      if(x > 0){ //Zone 0,1,6 ou 7
+        if(y>0){ //Zone 0 ou 1
+          if(x > y){ // Zone 0
+            return 0;
+          }else{ //Zone 1
+            return 1;
+          }
+        }else{ //Zone 6 ou 7
+          if(Math.abs(x) > Math.abs(y)){ //Zone 7
+            return 7;
+          }else{ //Zone 6
+            return 6;
+          }
+        }
+      }else{ //Zone 2,3,4 ou 5
+        if(y>0){ //Zone 2 ou 3
+           if(Math.abs(x) > Math.abs(y)){ //Zone 3
+             return 3;
+           }else{ // Zone 2
+             return 2;
+           }
+        }else{ //Zone 4 ou 5
+          if(Math.abs(x)>Math.abs(y)){ //Zone 4
+            return 4;
+          }else{ //Zone 5
+            return 5;
+          }
+        }
+      }
+
+
+    }
 
     public World getWorld() {
         return world;
