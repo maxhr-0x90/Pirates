@@ -44,11 +44,11 @@ public class WorldBuilder {
     /** Genère un monde
     */
     public void generateWorld(){
-        Entity batA = creeBateau(-10,-10,'A');
+        Entity batA = creeBateau(0,50,'A');
         this.bateauA = batA;
         engine.addEntity(bateauA);
 
-        Entity batB = creeBateau(7,7,'B');
+        Entity batB = creeBateau(-50,-50,'B');
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
@@ -78,14 +78,23 @@ public class WorldBuilder {
       bodyD.position.y = posy;
       bodyC.body = world.createBody(bodyD);
 
+      System.out.println(bodyC.body.getPosition());
       /* Création de l'enveloppe du bateau */
       Vector2[] vect = new Vector2[5];
       PolygonShape poly = new PolygonShape();
-      vect[0] = new Vector2(posx, posy);
-      vect[1] = new Vector2(posx+IConfig.LARGEUR_BATEAU,posy);
-      vect[2] = new Vector2(posx+IConfig.LARGEUR_BATEAU, posy+4*IConfig.LONGUEUR_BATEAU/5);
-      vect[3] =  new Vector2(posx+IConfig.LARGEUR_BATEAU/2, posy+IConfig.LONGUEUR_BATEAU);
-      vect[4] = new Vector2(posx, posy+4*IConfig.LONGUEUR_BATEAU/5);
+      vect[0] = new Vector2(posx-IConfig.LARGEUR_BATEAU/2, posy - IConfig.LONGUEUR_BATEAU/2);
+      vect[1] =  new Vector2(posx + IConfig.LARGEUR_BATEAU/2, posy - IConfig.LONGUEUR_BATEAU/2);
+
+      vect[2] = new Vector2(posx+ IConfig.LARGEUR_BATEAU/2, posy + IConfig.LONGUEUR_BATEAU/5);
+      vect[3] = new Vector2(posx, posy + IConfig.LONGUEUR_BATEAU/2);
+      vect[4] = new Vector2(posx - IConfig.LARGEUR_BATEAU/2, posy + IConfig.LONGUEUR_BATEAU/5);
+      /*
+      vect[0] = new Vector2(0, 0);
+      vect[1] =  new Vector2(IConfig.LARGEUR_BATEAU,0);
+      vect[3] = new Vector2(IConfig.LARGEUR_BATEAU, 4*IConfig.LONGUEUR_BATEAU/5);
+      vect[2] = new Vector2(IConfig.LARGEUR_BATEAU/2, IConfig.LONGUEUR_BATEAU);
+      vect[4] = new Vector2(0,4*IConfig.LONGUEUR_BATEAU/5);
+      */
 
       poly.set(vect);
 
@@ -112,6 +121,7 @@ public class WorldBuilder {
 
 
       bodyC.body.setUserData(bateau);
+
 
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);

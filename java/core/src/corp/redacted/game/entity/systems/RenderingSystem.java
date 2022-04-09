@@ -4,21 +4,22 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.entity.components.BodyComponent;
 import corp.redacted.game.entity.components.ModelComponent;
+import corp.redacted.game.shader.CustomShaderProvider;
 
 public class RenderingSystem extends IteratingSystem {
     private ComponentMapper<ModelComponent> modelMap;
@@ -55,7 +56,7 @@ public class RenderingSystem extends IteratingSystem {
         } else {
             cam = new PerspectiveCamera(80, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
-        cam.position.set(0f, 0f, 150f);
+        cam.position.set(0f, 0f, 75f);
         cam.lookAt(0,0,0);
         cam.near = 1f;
         cam.far = 300f;
@@ -63,7 +64,8 @@ public class RenderingSystem extends IteratingSystem {
 
         renderQueue = new Array<>();
 
-        modelBatch = new ModelBatch();
+        CustomShaderProvider csp = new CustomShaderProvider(null);
+        modelBatch = new ModelBatch(csp);
 
         ModelBuilder modBuild = new ModelBuilder();
 
@@ -99,7 +101,7 @@ public class RenderingSystem extends IteratingSystem {
 
             if(modelComp != null){
                 if (bodyComp != null){
-                    Vector2 pos = bodyComp.body.getPosition();
+                    Vector2 pos = bodyComp.body.getWorldCenter();
                     float angle = bodyComp.body.getAngle();
                     modelComp.model.transform.idt();
                     modelComp.model.transform.translate(new Vector3(pos, 0));
