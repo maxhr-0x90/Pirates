@@ -48,9 +48,18 @@ public class BoatSystem extends IteratingSystem{
     StatComponent boat = statMap.get(entite);
     TypeComponent typeC = typeMap.get(entite);
 
+
+    if(typeC.type == TypeComponent.BATEAU_A){
+      mouvBoat(bodyC, Task.nbLeftR, Task.nbRightR);
+    }
+
+    if(typeC.type == TypeComponent.BATEAU_B){
+      mouvBoat(bodyC, Task.nbLeftB, Task.nbRightB);
+    }
+
+
     if(typeC.type == TypeComponent.BATEAU_A){
 
-      mouvBoat(bodyC, Task.nbLeft, Task.nbRight);
 
       /* CONTROLEUR CLAVIER */
 
@@ -98,10 +107,10 @@ public class BoatSystem extends IteratingSystem{
 
         //Permet d'arreter le bateau
         if(!controller.leftB && ! controller.rightB){
-          bodyC.body.setAngularVelocity(0);
+          // bodyC.body.setAngularVelocity(0);
         }
         if(!controller.upB && !controller.downB){
-          bodyC.body.setLinearVelocity(0,0);
+          // bodyC.body.setLinearVelocity(0,0);
       }
     }
 
@@ -112,11 +121,11 @@ public class BoatSystem extends IteratingSystem{
 
     //Gestion quant au tire
     if(typeC.type == TypeComponent.BATEAU_A){
-      if(Task.nbShotLeft != 0){
+      if(Task.nbShotLeftR != 0){
         shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
       }
 
-      if(Task.nbShotRight != 0){
+      if(Task.nbShotRightR != 0){
         shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
       }
 
