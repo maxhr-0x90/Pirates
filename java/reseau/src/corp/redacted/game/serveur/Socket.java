@@ -257,5 +257,12 @@ public class Socket extends WebSocketServer {
 			System.out.println("Rouges : " + whiteListRouge);
 			System.out.println("Bleus : " + whiteListBleue);
 		}
+
+		for (Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListIn.entrySet()){
+      ip = (String)entry.getKey();
+      if(whiteListRouge.get(ip) == null && whiteListBleue.get(ip) == null){
+				((WebSocket)entry.getValue()).send("redirect");
+			}
+    }
 	}
 }
