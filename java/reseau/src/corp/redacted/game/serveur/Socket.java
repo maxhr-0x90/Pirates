@@ -16,6 +16,10 @@ import java.io.InputStreamReader;
 
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
 
 public class Socket extends WebSocketServer {
 	public final static int PORT = 8889;
@@ -37,9 +41,9 @@ public class Socket extends WebSocketServer {
 
 	/* HASHTABLES UTILISEE APRES LA SEPARATION*/
 	// Liste bateau bleu
-	public static Hashtable<String, WebSocket> whiteListInBleue;
+	public static Hashtable<String, WebSocket> whiteListBleue;
 	// Liste bateau rouge
-	public static Hashtable<String, WebSocket> whiteListInRouge;
+	public static Hashtable<String, WebSocket> WhiteListRouge;
 
 	// Sert uniquement à enlever des personnes de la white list quand la connexion
 	// est ouverte
@@ -53,8 +57,8 @@ public class Socket extends WebSocketServer {
 		this.setReuseAddr(true);
 
 		whiteListIn = new Hashtable<String, WebSocket>();
-		whiteListInRouge = new Hashtable<String, WebSocket>();
-		whiteListInBleue = new Hashtable<String, WebSocket>();
+		WhiteListRouge = new Hashtable<String, WebSocket>();
+		whiteListBleue = new Hashtable<String, WebSocket>();
 		positionWhiteList = new Hashtable<String, Integer>();
 		whiteListOut = new Hashtable<WebSocket, String>();
 	}
@@ -173,10 +177,65 @@ public class Socket extends WebSocketServer {
   public void onStart(){
   }
 
+  //Fonction qui transformer la hashtable en hashmap tout en la triant par position
+  private static HashMap <Integer, String> tri_hashtable(Hashtable <String, Integer> hashtable){
+	HashMap <Integer, String> hm = new HashMap<Integer, String>();
+
+	//On cree un iterateur
+	Iterator <Map.Entry <String, Integer>> i = hashtable.entrySet().iterator();
+
+	//On parcours
+	while(i.hasNext()){
+		Map.Entry <String, Integer> entry = (Map.Entry <String, Integer>) i.next();
+		Integer key = (Integer) entry.getValue();
+		String value = (String) entry.getKey();
+		hm.put(key, value);
+	}
+
+	return hm;
+  }
+
 	/**
 		* Fonction de séparation des deux équipes
 	*/
 	private static void separation(){
 		// Séparation
+		Integer j = 0;
+		String key;
+		WebSocket value;
+
+		//On recupere la moitie de la longueur de la hashmap et de la hashtable
+		HashMap <Integer, String> position_hm_trie = tri_hashtable(positionWhiteList);
+		Integer moitie_position = position_hm_trie.size() / 2;
+
+		//On creer un iterateur sur la table 
+		Iterator <Map.Entry <Integer, String>> i = position_hm_trie.entrySet().iterator();
+
+		//On parcours la hashmap
+		while(i.hasNext()){
+			if(j < moitie_position){
+				Map.Entry <Integer, String> entry = (Map.Entry <Integer, String>) i.next();
+				key = (String) entry.getValue();
+				value = (WebSocket) whiteListIn.get(key);
+				WhiteListRouge.put(key, value);
+				if(DEBUG == true){
+					System.out.println("Equipe Rouge :" + WhiteListRouge);
+				}
+				j++;
+			}
+			else{
+				Map.Entry <Integer, String> entry = (Map.Entry <Integer, String>) i.next();
+				key = (String) entry.getValue();
+				value = (WebSocket) whiteListIn.get(key);
+				whiteListBleue.put(key, value);
+				if(DEBUG == true){
+					System.out.println("Equipe Bleue :" + whiteListBleue);
+				}
+				j++;
+			}
+		}
+
+
+		
 	}
 }
