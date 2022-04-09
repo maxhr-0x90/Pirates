@@ -81,7 +81,6 @@ public class WorldBuilder {
       bodyD.position.y = posy;
       bodyC.body = world.createBody(bodyD);
 
-      System.out.println(bodyC.body.getPosition());
       /* Création de l'enveloppe du bateau */
       Vector2[] vect = new Vector2[5];
       PolygonShape poly = new PolygonShape();
@@ -228,7 +227,6 @@ public class WorldBuilder {
       posx = pos.x;
       posy = pos.y;
 
-      System.out.println(pos);
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
       bodyD.position.x = posx;
@@ -388,7 +386,6 @@ public class WorldBuilder {
 
       /*On détermine à quelle partie de la carte le bateau B apparatient*/
       int zoneB = oceanZone(posxB, posyB);
-      System.out.println("A: "+zoneA+ "B "+zoneB);
 
       /*On crée la liste des zones candidats*/
       /*Règle de selection : - ni zone de A, ni zone de B
@@ -419,7 +416,6 @@ public class WorldBuilder {
       m1 = (float)IConfig.HAUTEUR_CARTE / (float)IConfig.LARGEUR_CARTE;
       m2 = -m1;
 
-
       /*On tire aléatoire une position qui sera le centre*/
       ecartTX = IConfig.LARGEUR_CARTE/10;
       ecartTY = IConfig.HAUTEUR_CARTE/10;
@@ -431,7 +427,7 @@ public class WorldBuilder {
             moyenneY = (posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while(posy> m1*posx || posy<0 || posy>IConfig.HAUTEUR_CARTE/2);
+            }while(posy> m1*posx || posy<0);
           }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
         break;
 
@@ -442,7 +438,7 @@ public class WorldBuilder {
             moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while( (posy < m1*posx) || (posy < 0) || posx > IConfig.HAUTEUR_CARTE/2);
+            }while( (posy < m1*posx) || (posy < 0));
           }while( (posx > (IConfig.LARGEUR_CARTE/2 - weight)) || (posx < 0));
         break;
 
@@ -453,7 +449,7 @@ public class WorldBuilder {
             moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy < m2*posx) || posy<0 || posy>IConfig.HAUTEUR_CARTE/2);
+            }while((posy < m2*posx) || posy<0);
           }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
         break;
 
@@ -464,7 +460,7 @@ public class WorldBuilder {
             moyenneY = (-posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > m2*posx) || posy < 0 || posy > IConfig.HAUTEUR_CARTE/2);
+            }while((posy > m2*posx) || posy < 0 );
           }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
         break;
 
@@ -475,7 +471,7 @@ public class WorldBuilder {
             moyenneY = (posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > m1*posx) || (posy>0) || posy < -IConfig.HAUTEUR_CARTE/2);
+            }while((posy > m1*posx) || (posy>0));
           }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
         break;
 
@@ -486,7 +482,7 @@ public class WorldBuilder {
             moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while( (posy < m1*posx) || posy > 0 || posy < -IConfig.HAUTEUR_CARTE/2 );
+            }while( (posy < m1*posx) || posy > 0 );
           }while(posx < -(IConfig.LARGEUR_CARTE/2-weight)  || posx > 0);
         break;
 
@@ -497,7 +493,7 @@ public class WorldBuilder {
             moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/2;
             do{
               posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > m2*posx) || posy>0 || posy < -IConfig.HAUTEUR_CARTE/2);
+            }while((posy > m2*posx) || posy>0);
           }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
         break;
 
