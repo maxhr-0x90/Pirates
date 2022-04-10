@@ -48,16 +48,43 @@ public class BoatSystem extends IteratingSystem{
     StatComponent boat = statMap.get(entite);
     TypeComponent typeC = typeMap.get(entite);
 
+    //Gestion du temps entre 2 tires
+    if(boat.dernierTir > 0){
+      boat.dernierTir -= dt;
+    }
 
     if(typeC.type == TypeComponent.BATEAU_A){
+      //Gestion des mouvements
       mouvBoat(bodyC, Task.nbLeftR, Task.nbRightR);
+
+      //Gestion des tirs
+      if(Task.nbShotLeftR != 0){
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+      }
+
+      if(Task.nbShotRightR != 0){
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
+      }
     }
 
     if(typeC.type == TypeComponent.BATEAU_B){
+      //Gestion des mouvements
       mouvBoat(bodyC, Task.nbLeftB, Task.nbRightB);
+
+      //Gestion des tirs
+      if(Task.nbShotLeftB != 0){
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, LEFT_SHOT);
+      }
+
+      if(Task.nbShotRightB != 0){
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, RIGHT_SHOT);
+      }
     }
 
 
+
+
+    /* CONTROLE CLAVIER/SOURIS*/
     if(typeC.type == TypeComponent.BATEAU_A){
 
 
@@ -112,23 +139,6 @@ public class BoatSystem extends IteratingSystem{
         if(!controller.upB && !controller.downB){
           // bodyC.body.setLinearVelocity(0,0);
       }
-    }
-
-    //Gestion du temps entre 2 tires
-    if(boat.dernierTir > 0){
-      boat.dernierTir -= dt;
-    }
-
-    //Gestion quant au tire
-    if(typeC.type == TypeComponent.BATEAU_A){
-      if(Task.nbShotLeftR != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
-      }
-
-      if(Task.nbShotRightR != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
-      }
-
     }
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
 
