@@ -24,7 +24,7 @@ public class GestionHttp implements HttpHandler{
   */
   public static void start(){
     try{  // On crée le serveur HTTP sur le port PORT
-      hserver = HttpServer.create(new InetSocketAddress("192.168.0.2", PORT), 0);
+      hserver = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
       hserver.createContext("/", new  GestionHttp());
       hserver.start();
     }
