@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class Socket extends WebSocketServer {
 	public final static int PORT = 8889;
-	public final static Boolean DEBUG = true;
+	public final static Boolean DEBUG = false;
 
 	// Stockage des informations globales de déplacement et de tir des rouges
 	public static int numberLeftR = 0;
@@ -153,11 +153,21 @@ public class Socket extends WebSocketServer {
 		}
 		else if(message.equals("tgauche")){	// L'utilisateur tire à gauche
 			session.send("Tir gauche !");
-			numberLeftShotR++;
+			if(whiteListRouge.get(ip) != null){
+				numberLeftShotR++;
+			}
+			else if(whiteListBleue.get(ip) != null){
+				numberLeftShotB++;
+			}
 		}
 		else if(message.equals("tdroit")){	// L'utilisateur tire à droite
 			session.send("Tir droit !");
-			numberRightShotR++;
+			if(whiteListRouge.get(ip) != null){
+				numberRightShotR++;
+			}
+			else if(whiteListBleue.get(ip) != null){
+				numberRightShotB++;
+			}
 		}
 		else if(message.equals("manette")){	// L'utilisateur provient de la manette
 			if(!whiteListed && !DEBUG){
@@ -179,12 +189,6 @@ public class Socket extends WebSocketServer {
 					);
 					if(DEBUG){
 						System.out.println(positionWhiteList);
-					}
-					if(positionWhiteList.size() > 1){
-						separation();
-						System.out.println(whiteListRouge);
-						System.out.println(whiteListBleue);
-						whiteListed = true;
 					}
 				}
 			}
@@ -258,11 +262,15 @@ public class Socket extends WebSocketServer {
 			System.out.println("Bleus : " + whiteListBleue);
 		}
 
+		// Redirection des personnes n'ayant pas renseigné leur localisation
 		for (Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListIn.entrySet()){
       ip = (String)entry.getKey();
       if(whiteListRouge.get(ip) == null && whiteListBleue.get(ip) == null){
 				((WebSocket)entry.getValue()).send("redirect");
 			}
     }
+
+		// La partie est désormais whitelistée
+		whiteListed = false;
 	}
 }
