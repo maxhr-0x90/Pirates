@@ -137,27 +137,7 @@ public class BoatSystem extends IteratingSystem{
           // bodyC.body.setAngularVelocity(0);
         }
         if(!controller.upB && !controller.downB){
-<<<<<<< HEAD
-          bodyC.body.setLinearVelocity(0,0);
-      }
-    }
-
-    //Gestion du temps entre 2 tires
-    if(boat.dernierTir > 0){
-      boat.dernierTir -= dt;
-    }
-
-    //Gestion quant au tire
-    if(typeC.type == TypeComponent.BATEAU_A){
-      if(Task.nbShotLeft != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,true);
-      }
-
-      if(Task.nbShotRight != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT,true);
-=======
           // bodyC.body.setLinearVelocity(0,0);
->>>>>>> deux_bateaux
       }
     }
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
