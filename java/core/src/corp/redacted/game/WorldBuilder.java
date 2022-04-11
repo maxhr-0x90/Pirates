@@ -2,6 +2,8 @@ package corp.redacted.game;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
@@ -22,6 +24,16 @@ import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
 import com.badlogic.gdx.math.MathUtils;
 import java.lang.Math;
+
+import java.util.Iterator;
+
+import java.util.Iterator;
+
+import java.util.Iterator;
+
+import java.util.Iterator;
+
+import java.util.Iterator;
 
 /**
  * Permet la mise en place des entités dans le jeu
@@ -52,7 +64,7 @@ public class WorldBuilder {
         this.bateauA = batA;
         engine.addEntity(bateauA);
 
-        Entity batB = creeBateau(-50,-50,'B');
+        Entity batB = creeBateau(-20,-20,'B');
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
@@ -74,6 +86,7 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
+      ModelComponent modC = new ModelComponent();
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.DynamicBody;
@@ -118,12 +131,17 @@ public class WorldBuilder {
 
       bodyC.body.setUserData(bateau);
 
+      Model sand = assets.manager.get(assets.boatModel, Model.class);//ModelGenerator.seaModel(120, 30, 90, 60, 3, 1f/4);
+
+      modC.model = new ModelInstance(sand);
+
 
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);
       bateau.add(bodyC);
       bateau.add(typeC);
       bateau.add(colC);
+      bateau.add(modC);
 
       return bateau;
     }
