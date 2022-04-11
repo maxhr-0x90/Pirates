@@ -368,7 +368,8 @@ public class WorldBuilder {
       engine.addEntity(ocean);
     }
 
-    /**
+    /** Selection via un aléatoire controlé d'une position sur la carte
+    * @param poids de la marchandise
     */
     private Vector2 positionAleaMarch(float weight){
       float posx, posy;
@@ -409,7 +410,6 @@ public class WorldBuilder {
       /*On tire aléatoire une zone parmi celles candidates*/
       int indiceCandidat = (int)(Math.random()*(nbCandidat));
       int zoneM = zoneCandidate[indiceCandidat]; //Zone de la marchandise
-      System.out.println("Zone M : "+zoneM);
       Random r = new Random();
       float moyenneX, moyenneY, ecartTX, ecartTY;
       float m1, m2;
@@ -419,93 +419,184 @@ public class WorldBuilder {
       /*On tire aléatoire une position qui sera le centre*/
       ecartTX = IConfig.LARGEUR_CARTE/10;
       ecartTY = IConfig.HAUTEUR_CARTE/10;
+      moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
+      int nb_tirX_max= 50; //tirage aléatoire limité
+      int nb_tirY_max = 50;
+      int nb_tirX = 0;
+      int nb_tirY = 0;
       switch(zoneM){
         case 0:
-          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while(posy> m1*posx || posy<0);
-          }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
+            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+            /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+            if(posx > (IConfig.LARGEUR_CARTE/2 -weight)){
+              posx = IConfig.LARGEUR_CARTE/2 - weight;
+            }else if(posx < weight){
+              posx = weight;
+            }
+
+            moyenneY = (posx)/2; //Calcule la moyenne de Y
+            posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+            /*On vérifie que y soit dans le bon intervalle*/
+            if(posy > (m1*posx -weight)){
+              posy = m1*posx - weight;
+            }else if(posy < weight){
+              posy = weight;
+            }
         break;
 
         case 1:
-          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while( (posy < m1*posx) || (posy < 0));
-          }while( (posx > (IConfig.LARGEUR_CARTE/2 - weight)) || (posx < 0));
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx > (IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = IConfig.LARGEUR_CARTE/2 - weight;
+          }else if(posx < weight){
+            posx = weight;
+          }
+
+          moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/2; //Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy < (m1*posx -weight)){
+            posy = m1*posx - weight;
+          }else if(posy > IConfig.HAUTEUR_CARTE/2 - weight){
+            posy = IConfig.HAUTEUR_CARTE/2 - weight;
+          }
         break;
 
         case 2:
-          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy < m2*posx) || posy<0);
-          }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
+          moyenneX *= -1;
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx < -(IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = -IConfig.LARGEUR_CARTE/2 + weight;
+          }else if(posx > -weight){
+            posx = -weight;
+          }
+
+          moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/2;//Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy < (m2*posx -weight)){
+            posy = m2*posx - weight;
+          }else if(posy > IConfig.HAUTEUR_CARTE/2 -weight){
+            posy = IConfig.HAUTEUR_CARTE/2 - weight;
+          }
         break;
 
         case 3:
-          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (-posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > m2*posx) || posy < 0 );
-          }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
+          moyenneX *= -1;
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx < -(IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = - IConfig.LARGEUR_CARTE/2 + weight;
+          }else if(posx > -weight){
+            posx = -weight;
+          }
+
+          moyenneY = (-posx)/2; //Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy > (m2*posx -weight)){
+            posy = m2*posx - weight;
+          }else if(posy < weight){
+            posy = weight;
+          }
         break;
 
         case 4:
-          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > m1*posx) || (posy>0));
-          }while((posx < -(IConfig.LARGEUR_CARTE/2-weight)) || posx > 0);
+          moyenneX *= -1;
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx < -(IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = -IConfig.LARGEUR_CARTE/2 + weight;
+          }else if(posx > -weight){
+            posx = -weight;
+          }
+
+          moyenneY = (posx)/2; //Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy > (m1*posx + weight)){
+            posy = m1*posx + weight;
+          }else if(posy > -weight){
+            posy = -weight;
+          }
         break;
 
         case 5:
-          moyenneX = -2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while( (posy < m1*posx) || posy > 0 );
-          }while(posx < -(IConfig.LARGEUR_CARTE/2-weight)  || posx > 0);
+          moyenneX *= -1;
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx < -(IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = -IConfig.LARGEUR_CARTE/2 + weight;
+          }else if(posx > -weight){
+            posx = -weight;
+          }
+
+          moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/2; //Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy < (m1*posx -weight)){
+            posy = m1*posx - weight;
+          }else if(posy > -IConfig.HAUTEUR_CARTE/2 + weight){
+            posy = -IConfig.HAUTEUR_CARTE/2 + weight;
+          }
         break;
 
         case 6:
           moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy > m2*posx) || posy>0);
-          }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx<0);
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx > (IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = IConfig.LARGEUR_CARTE/2 - weight;
+          }else if(posx < weight){
+            posx = weight;
+          }
+
+          moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/2;//Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy < (m2*posx -weight)){
+            posy = m2*posx - weight;
+          }else if(posy > -IConfig.HAUTEUR_CARTE/2 + weight){
+            posy = IConfig.HAUTEUR_CARTE/2 + weight;
+          }
         break;
 
         case 7:
           moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
-          do{
-            posx = (float)r.nextGaussian()*(ecartTX) + moyenneX;
-            moyenneY = (-posx)/2;
-            do{
-              posy = (float)r.nextGaussian()*(ecartTY) + moyenneY;
-            }while((posy <  m2*posx) || posy < 0);
-          }while(posx>(IConfig.LARGEUR_CARTE/2-weight) || posx < 0);
+          posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
+
+          /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
+          if(posx > (IConfig.LARGEUR_CARTE/2 -weight)){
+            posx = IConfig.LARGEUR_CARTE/2 - weight;
+          }else if(posx < weight){
+            posx = weight;
+          }
+
+          moyenneY = (-posx)/2;//Calcule la moyenne de Y
+          posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
+
+          /*On vérifie que y soit dans le bon intervalle*/
+          if(posy > (m2*posx -weight)){
+            posy = m2*posx - weight;
+          }else if(posy < weight){
+            posy = weight;
+          }
         break;
 
         default:
