@@ -23,8 +23,6 @@ public class DebugScreen implements Screen {
     private PooledEngine engine;
     private WorldBuilder worldBuilder;
 
-    private CameraInputController camController;
-
     private KeyboardController clavier = new KeyboardController();
 
     public DebugScreen(Game parent){
@@ -36,15 +34,12 @@ public class DebugScreen implements Screen {
         worldBuilder = new WorldBuilder(engine, Game.assets);
         worldBuilder.generateWorld();
 
-        RenderingSystem renderSys = new RenderingSystem(false);
+        RenderingSystem renderSys = new RenderingSystem();
         renderSys.setDebugging(true);
         engine.addSystem(renderSys);
         engine.addSystem(new PhysicsDebugSystem(worldBuilder.getWorld(), renderSys.getCam()));
         engine.addSystem(new BoatSystem(clavier, worldBuilder));
         engine.addSystem(new CollisionSystem(worldBuilder));
-
-        camController = new CameraInputController(renderSys.getCam());
-        Gdx.input.setInputProcessor(camController);
     }
 
     @Override
@@ -63,7 +58,7 @@ public class DebugScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        engine.getSystem(RenderingSystem.class).windowResized();
     }
 
     @Override

@@ -8,16 +8,14 @@ public class Assets {
     public final AssetManager manager = new AssetManager();
 
     // Modeles 3D
-    public final String boatModel = "models/boat.g3db";
-    public final String waterModel = "models/water.g3db";
-    public final String canonballModel = "models/canonball.g3db";
-    public final String cubeModel = "models/test.g3db";
+    public final String merchModel = "models/tonneau.g3dj";
+    public final String boatModel = "models/bateau.g3dj";
+    public final String canonballModel = "models/boulet.g3dj";
 
     public void queueAdd3DModels(){
         //ModelLoader.ModelParameters mp = new ModelLoader.ModelParameters();
         manager.load(boatModel, Model.class);
-        manager.load(waterModel, Model.class);
         manager.load(canonballModel, Model.class);
-        manager.load(cubeModel, Model.class);
+        manager.load(merchModel, Model.class);
     }
 }
