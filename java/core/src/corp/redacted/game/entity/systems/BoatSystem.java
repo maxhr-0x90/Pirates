@@ -165,21 +165,21 @@ public class BoatSystem extends IteratingSystem{
   }
 
   /** Change l'angle de velocité d'un corps vers la droite
-  * @param BodyComponent bodyC : le corps en question
+  * @param bodyC : le corps en question
   */
   private void pousseDroite(BodyComponent bodyC){
     bodyC.body.setAngularVelocity(-IConfig.MISE_A_NIVEAU/100000);
   }
 
   /** Change l'angle de velocité d'un corps vers la gauche
-  * @param BodyComponent bodyC : le corps en question
+  * @param bodyC : le corps en question
   */
   private void pousseGauche(BodyComponent bodyC){
     bodyC.body.setAngularVelocity(IConfig.MISE_A_NIVEAU/100000);
   }
 
   /** Change la velocité linéaire d'un corps
-  * @param BodyComponent bodyC : le corps en question
+  * @param bodyC : le corps en question
   */
   private void pousseHaut(BodyComponent bodyC){
     float mainM = mainMeasure(bodyC.body.getAngle());
@@ -195,7 +195,7 @@ public class BoatSystem extends IteratingSystem{
     }
 
   /** Change la velocité linéaire d'un corps
-  * @param BodyComponent bodyC : le corps en question
+  * @param bodyC : le corps en question
   */
   private void pousseBas(BodyComponent bodyC){
     pousseHaut(bodyC);
@@ -203,7 +203,7 @@ public class BoatSystem extends IteratingSystem{
 
 
   /** Change la velocité linéaire d'un corps
-  * @param BodyComponent bodyC : le corps en question
+  * @param bodyC : le corps en question
   * @param left : le nombre de clic gauche
   * @param right : le npmbre de clique droit
   */
