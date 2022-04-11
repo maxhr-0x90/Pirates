@@ -1,4 +1,4 @@
-var IP = "192.168.0.2";
+var IP = "localhost";
 var webSocket = new WebSocket("ws://" + IP + ":8889");;
 var x, y;
 
@@ -9,6 +9,9 @@ webSocket.onopen = function(event){
 webSocket.onmessage = function(event) {
   if(event.data === "redirect"){
     document.location.href = "erreur.html";
+  }
+  else if(event.data === "start"){
+    document.location.href = "manette.html";
   }
   else{
     updateOutput(event.data);
