@@ -59,11 +59,11 @@ public class BoatSystem extends IteratingSystem{
 
       //Gestion des tirs
       if(Task.nbShotLeftR != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,false);
       }
 
       if(Task.nbShotRightR != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT, false);
       }
     }
 
@@ -73,11 +73,11 @@ public class BoatSystem extends IteratingSystem{
 
       //Gestion des tirs
       if(Task.nbShotLeftB != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, LEFT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, LEFT_SHOT, false);
       }
 
       if(Task.nbShotRightB != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, RIGHT_SHOT);
+        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, RIGHT_SHOT,false);
       }
     }
 
