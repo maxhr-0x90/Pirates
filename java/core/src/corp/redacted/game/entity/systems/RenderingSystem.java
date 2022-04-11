@@ -10,13 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import corp.redacted.game.IConfig;
 import corp.redacted.game.entity.components.BodyComponent;
 import corp.redacted.game.entity.components.ModelComponent;
 import corp.redacted.game.shader.CustomShaderProvider;
@@ -25,8 +24,10 @@ public class RenderingSystem extends IteratingSystem {
     private ComponentMapper<ModelComponent> modelMap;
     private ComponentMapper<BodyComponent> bodyMap;
 
+    private PerspectiveCamera cam;
+    private float fovV = 80;
+
     private Array<Entity> renderQueue;
-    private Camera cam;
     private Environment environment;
     private ModelBatch modelBatch;
 
@@ -38,7 +39,7 @@ public class RenderingSystem extends IteratingSystem {
     private SpriteBatch spriteBatch;
     private BitmapFont font;
 
-    public RenderingSystem(boolean ortho) {
+    public RenderingSystem() {
         super(Family.all(ModelComponent.class).get());
 
         // Initialisation des maps
@@ -48,18 +49,12 @@ public class RenderingSystem extends IteratingSystem {
         // Création de l'environnement 3D
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        environment.add(new DirectionalLight().set(0.6f, 0.6f, 0.6f, -1f, -0f, -1f));
 
         // Placement de la camera
-        if (ortho){
-            cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else {
-            cam = new PerspectiveCamera(80, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        }
-        cam.position.set(0f, 0f, 200f);
-        cam.lookAt(0,0,0);
-        cam.near = 1f;
-        cam.far = 300f;
+        cam = new PerspectiveCamera(fovV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        updateCam(IConfig.LARGEUR_CARTE + 20, IConfig.HAUTEUR_CARTE + 20, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.update();
 
         renderQueue = new Array<>();
@@ -114,11 +109,29 @@ public class RenderingSystem extends IteratingSystem {
         if (debugging) {debugRender();}
         modelBatch.end();
 
-        spriteBatch.begin();
-        font.draw(spriteBatch, "FPS=" + Gdx.graphics.getFramesPerSecond(), 0, font.getLineHeight());
-        spriteBatch.end();
-
         renderQueue.clear();
+    }
+
+    private void updateCam(float width, float height, float widthView, float heightView){
+        float ratioXY = width / height;
+        float ratioXYView = widthView / heightView;
+        float z, fovH;
+
+        if (ratioXY < ratioXYView){ // => on veut que la hauteur de l'objet soit la meme que celle de la vue
+            z = (float) ((height / 2) / Math.tan(Math.toRadians(fovV / 2)));
+        } else {  // => on veut que la largeur de l'objet soit la meme que celle de la vue
+            double d = (heightView * 0.5) / Math.tan(Math.toRadians(fovV * 0.5));
+            fovH = (float) (2 * Math.toDegrees(Math.atan((widthView * 0.5) / d)));
+            z = (float) ((width / 2) / Math.tan(Math.toRadians(fovH / 2)));
+        }
+
+        cam.viewportWidth = widthView;
+        cam.viewportHeight = heightView;
+        cam.position.set(0f, 0f, z);
+        cam.lookAt(0,0,0);
+        cam.near = 1f;
+        cam.far = 2 * z;
+        cam.update();
     }
 
     /**
@@ -127,6 +140,10 @@ public class RenderingSystem extends IteratingSystem {
     private void debugRender(){
         modelBatch.render(axisInstance, environment);
         modelBatch.render(gridInstance);
+
+        spriteBatch.begin();
+        font.draw(spriteBatch, "FPS=" + Gdx.graphics.getFramesPerSecond(), 0, font.getLineHeight());
+        spriteBatch.end();
     }
 
     @Override
@@ -148,5 +165,9 @@ public class RenderingSystem extends IteratingSystem {
      */
     public void setDebugging(boolean debugging) {
         this.debugging = debugging;
+    }
+
+    public void windowResized(){
+        updateCam(IConfig.LARGEUR_CARTE + 20, IConfig.HAUTEUR_CARTE + 20, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 }
