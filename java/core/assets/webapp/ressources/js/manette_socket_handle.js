@@ -1,5 +1,11 @@
-var IP = "localhost";
-var webSocket = new WebSocket("ws://" + IP + ":8889");;
+var ws_address;
+var websocket;
+
+ws_address = document.location.href;
+ws_address = ws_address.replace("http://", "ws://");
+ws_address = ws_address.replace(":8888/manette.html", ":8889");
+
+webSocket = new WebSocket(ws_address);
 
 webSocket.onopen = function(event){
   webSocket.send("manette");

@@ -14,7 +14,12 @@ public class DesktopLauncher {
 		Socket server;
 		try{
 			// DEMARRAGE DU SERVEUR HTTP
-			GestionHttp.start();
+			if(!GestionHttp.start()){
+				System.out.println(
+					"Connexion impossible, vérifiez votre connexion ou votre matériel"
+				);
+				System.exit(-1);
+			}
 			System.out.print("Serveur HTTP démarré sur le port ");
 			System.out.println(GestionHttp.PORT);
 
@@ -43,9 +48,8 @@ public class DesktopLauncher {
 			Metronome.timer.purge();
 		}
 		catch(Exception e){
+			System.out.println("JE SORSSSSSSSSSSSSs");
 			e.printStackTrace();
 		}
 	}
-
-
 }
