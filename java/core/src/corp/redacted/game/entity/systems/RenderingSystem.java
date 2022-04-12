@@ -49,7 +49,7 @@ public class RenderingSystem extends IteratingSystem {
         // Création de l'environnement 3D
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.6f, 0.6f, 0.6f, -1f, -0f, -1f));
+        environment.add(new DirectionalLight().set(0.75f, 0.75f, 0.75f, -1f, 0f, -1f));
 
         // Placement de la camera
         cam = new PerspectiveCamera(fovV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -101,6 +101,7 @@ public class RenderingSystem extends IteratingSystem {
                     modelComp.model.transform.idt();
                     modelComp.model.transform.translate(new Vector3(pos, 0));
                     modelComp.model.transform.rotateRad(new Vector3(0, 0, 1), angle);
+                    modelComp.model.transform.mul(modelComp.transform);
                 }
                 modelBatch.render(modelComp.model, environment);
             }
@@ -139,6 +140,7 @@ public class RenderingSystem extends IteratingSystem {
         cam.lookAt(0,0,0);
         cam.near = 1f;
         cam.far = 2 * z;
+        cam.up.set(0, 1, 0);
         cam.update();
     }
 
