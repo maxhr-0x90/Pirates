@@ -16,6 +16,15 @@ import corp.redacted.game.model.SandShapeBuilder;
  * Méthodes de génération des diffenrents modèles du jeu
  */
 public class ModelGenerator {
+    /**
+     * @param viewWidth Largeur de l'espace d'affichage ou plus généralement du modèle
+     * @param depth Profondeur du modèle
+     * @param alt0Width Largeur de la partie "mer" du modèle
+     * @param alt0Height Hauteur de la partie "mer" du modèlse
+     * @param stepNb Finesse de la partie "plage" du modèle
+     * @param stiffness Dénivelé de la partie "plage" du modèle
+     * @return Un modèle de mer avec une plage
+     */
     public static Model seaModel(
             float viewWidth, float depth, float alt0Width, float alt0Height, int stepNb, float stiffness
     ){
@@ -55,6 +64,15 @@ public class ModelGenerator {
         return water;
     }
 
+    /**
+     * @param viewWidth Largeur de l'espace d'affichage ou plus généralement du modèle
+     * @param depth Profondeur du modèle
+     * @param alt0Width Largeur du modèle sur le plan z = 0
+     * @param alt0Height Hauteur du modèle sur le plan z = 0
+     * @param stepNb Finesse de la partie "plage" du modèle
+     * @param stiffness Dénivelé de la partie "plage" du modèle
+     * @return Un modèle de plage
+     */
     public static Model sandModel(
             float viewWidth, float depth, float alt0Width, float alt0Height, int stepNb, float stiffness
     ){
