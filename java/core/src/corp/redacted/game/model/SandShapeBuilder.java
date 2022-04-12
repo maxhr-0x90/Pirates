@@ -39,7 +39,7 @@ public class SandShapeBuilder extends BaseShapeBuilder {
         for (int i = 0; i < vi.length; i++) {
             vi[i] = new MeshPartBuilder.VertexInfo();
             vi[i].set(null, null, null, null);
-            vi[i].hasPosition = vi[i].hasNormal = true;
+            vi[i].hasPosition = vi[i].hasNormal = vi[i].hasUV = true;
         }
 
         short[] ind = new short[8];
@@ -87,8 +87,10 @@ public class SandShapeBuilder extends BaseShapeBuilder {
     }
 
     private void setVertexSand(MeshPartBuilder.VertexInfo vi, Vector3 pos, float offsetX){
+        float viewHeight = ratioYX * viewWidth;
         vi.position.set(pos);
         vi.normal.set(normalSandVertex(vi.position, offsetX));
+        vi.uv.set(pos.x / viewWidth + 0.5f, pos.y / viewHeight + 0.5f);
     }
 
     private Vector3 normalSandVertex(Vector3 vertex, float offsetX){

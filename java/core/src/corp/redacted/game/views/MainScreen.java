@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import corp.redacted.game.Game;
 import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.controller.KeyboardController;
@@ -23,11 +24,13 @@ public class MainScreen implements Screen {
     private WorldBuilder worldBuilder;
 
     private KeyboardController clavier = new KeyboardController();
+    private CameraInputController camCtrl;
 
     private RenderingSystem renderSys;
     private PhysicsDebugSystem physicsDebugSys;
 
     private boolean debugging = false;
+    private boolean freeCam = false;
 
     public MainScreen(Game parent){
         PARENT = parent;
@@ -44,6 +47,8 @@ public class MainScreen implements Screen {
         engine.addSystem(renderSys);
         engine.addSystem(new BoatSystem(clavier, worldBuilder));
         engine.addSystem(new CollisionSystem(worldBuilder));
+
+        camCtrl = new CameraInputController(renderSys.getCam());
     }
 
     @Override
@@ -75,6 +80,17 @@ public class MainScreen implements Screen {
                     engine.addSystem(physicsDebugSys);
                     renderSys.setDebugging(true);
                     debugging = true;
+                }
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.C)){
+                if (freeCam){
+                    Gdx.input.setInputProcessor(clavier);
+                    engine.getSystem(RenderingSystem.class).windowResized();
+                    freeCam = false;
+                } else {
+                    Gdx.input.setInputProcessor(camCtrl);
+                    freeCam = true;
                 }
             }
 

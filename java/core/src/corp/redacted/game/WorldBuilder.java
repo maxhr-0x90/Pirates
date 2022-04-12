@@ -2,38 +2,22 @@ package corp.redacted.game;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 
 import java.util.Random;
-import com.badlogic.gdx.utils.Array;
+
 import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
 import com.badlogic.gdx.math.MathUtils;
+import corp.redacted.game.model.ModelGenerator;
+
 import java.lang.Math;
-
-import java.util.Iterator;
-
-import java.util.Iterator;
-
-import java.util.Iterator;
-
-import java.util.Iterator;
-
-import java.util.Iterator;
 
 /**
  * Permet la mise en place des entités dans le jeu
@@ -54,6 +38,7 @@ public class WorldBuilder {
         this.assets = assets;
 
         assets.queueAdd3DModels();
+        assets.queueAddTextures();
         assets.manager.finishLoading();
     }
 
@@ -131,9 +116,9 @@ public class WorldBuilder {
 
       bodyC.body.setUserData(bateau);
 
-      Model sand = assets.manager.get(assets.boatModel, Model.class);//ModelGenerator.seaModel(120, 30, 90, 60, 3, 1f/4);
+      Model model = assets.manager.get(assets.boatModel, Model.class);
 
-      modC.model = new ModelInstance(sand);
+      modC.model = new ModelInstance(model);
 
 
       /* On ajoute les components à l'entité */
@@ -220,6 +205,7 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
+      ModelComponent modC = new ModelComponent();
       float taillex, tailley, weight, posx, posy;
 
 
@@ -270,11 +256,16 @@ public class WorldBuilder {
 
       bodyC.body.setUserData(merchendise);
 
+      /* Définition du modèle de l'entité */
+      modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
+      modC.transform.scale(weight / 5, weight / 5, weight / 5);
+
       /*On ajoute les components à l'entité*/
       merchendise.add(merchendiseC);
       merchendise.add(bodyC);
       merchendise.add(typeC);
       merchendise.add(colC);
+      merchendise.add(modC);
 
       engine.addEntity(merchendise);
       return merchendise;
@@ -291,6 +282,11 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
+      ModelComponent modC = new ModelComponent();
+
+      /* Définition du modèle de l'entité */
+      modC.model = new ModelInstance(assets.manager.get(assets.canonballModel, Model.class));
+      modC.transform.scale(5, 5, 5);
 
       cannonballC.camps = camps;
       /* Définition du corps de l'enité */
@@ -329,13 +325,14 @@ public class WorldBuilder {
       cannonball.add(bodyC);
       cannonball.add(typeC);
       cannonball.add(colC);
+      cannonball.add(modC);
 
       engine.addEntity(cannonball);
 
       return bodyC;
     }
 
-    /** Crée et place une entité correspondant à l'océan
+  /** Crée et place une entité correspondant à l'océan
     */
     public void createOcean(){
       Entity ocean = new Entity(); //Création de l'entité
@@ -344,6 +341,13 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
+      ModelComponent modC = new ModelComponent();
+
+      /* Définition du modèle de l'entité */
+      modC.model = new ModelInstance(ModelGenerator.seaModel(
+              IConfig.LARGEUR_CARTE * 1.5f, 30f,
+              IConfig.LARGEUR_CARTE, IConfig.HAUTEUR_CARTE, 4, 1f/4
+      ));
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
@@ -382,12 +386,13 @@ public class WorldBuilder {
       ocean.add(bodyC);
       ocean.add(typeC);
       ocean.add(colC);
+      ocean.add(modC);
 
       engine.addEntity(ocean);
     }
 
     /** Selection via un aléatoire controlé d'une position sur la carte
-    * @param poids de la marchandise
+    * @param weight de la marchandise
     */
     private Vector2 positionAleaMarch(float weight){
       float posx, posy;

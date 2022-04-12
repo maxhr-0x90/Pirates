@@ -5756,7 +5756,7 @@
 			"textures": [
 				{
 					"id": "base_color_texture", 
-					"filename": "TextutureCanon.png", 
+					"filename": "TextureCanon.png",
 					"type": "DIFFUSE"
 				}
 			]

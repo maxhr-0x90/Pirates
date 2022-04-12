@@ -1,15 +1,20 @@
-package corp.redacted.game;
+package corp.redacted.game.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import corp.redacted.game.Game;
+import corp.redacted.game.loader.Assets;
 import corp.redacted.game.model.SandShapeBuilder;
 
 /**
@@ -53,8 +58,9 @@ public class ModelGenerator {
                 -width/2, height/2, 0,
                 0, 1, 0,
                 new Material(
-                        ColorAttribute.createDiffuse(Color.SKY),
-                        new BlendingAttribute(0.5f)
+                        ColorAttribute.createDiffuse(new Color(.05f, .45f, .75f, 1)),
+                        ColorAttribute.createSpecular(new Color(1, 1, 1, 1)),
+                        new BlendingAttribute(0.8f)
                 ),
                 Usage.Position | Usage.Normal
         );
@@ -84,9 +90,17 @@ public class ModelGenerator {
         Node node = builder.node();
         node.id = "sand";
 
-        meshBuilder = builder.part("sand", GL20.GL_TRIANGLES, Usage.Position | Usage.Normal, new Material(
-                ColorAttribute.createDiffuse(Color.GOLDENROD)
-        ));
+        TextureAttribute texAttr = TextureAttribute.createDiffuse(Game.assets.manager.get(Assets.sandTexture, Texture.class));
+
+        meshBuilder = builder.part("sand", GL20.GL_TRIANGLES,
+                Usage.Position | Usage.Normal | Usage.TextureCoordinates,
+                new Material(
+                        ColorAttribute.createAmbient(new Color(1, 1, 1, 1)),
+                        ColorAttribute.createDiffuse(new Color(0.638190f, 0.486372f, 0.143198f, 1)),
+                        ColorAttribute.createSpecular(new Color(1, 1, 1, 1)),
+                        texAttr
+                )
+        );
 
         SandShapeBuilder sandBuilder = new SandShapeBuilder(
                 meshBuilder, viewWidth, depth, alt0Width, alt0Height, stepNb, stiffness
