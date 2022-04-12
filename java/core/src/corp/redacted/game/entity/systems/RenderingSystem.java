@@ -112,6 +112,14 @@ public class RenderingSystem extends IteratingSystem {
         renderQueue.clear();
     }
 
+    /**
+     * Place la caméra de manière à afficher un objet de dimension width x height sur le plan z = 0 dans son intégralité
+     *
+     * @param width Largeur de l'objet
+     * @param height Hauteur de l'objet
+     * @param widthView Largeur du ViewPort (espace d'affichage)
+     * @param heightView Hauteur du ViewPort (espace d'affichage)
+     */
     private void updateCam(float width, float height, float widthView, float heightView){
         float ratioXY = width / height;
         float ratioXYView = widthView / heightView;

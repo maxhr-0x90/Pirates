@@ -26,6 +26,9 @@ public class SandShapeBuilder extends BaseShapeBuilder {
         stepSize = 3f / (stepNb * stiffness);
     }
 
+    /**
+     * Crée le modèle de sable
+     */
     public void build(){
         float viewHeight = viewWidth * ratioYX;
 

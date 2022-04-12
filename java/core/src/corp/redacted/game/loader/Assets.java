@@ -2,6 +2,8 @@ package corp.redacted.game.loader;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g3d.Model;
 
 public class Assets {
@@ -12,6 +14,12 @@ public class Assets {
     public final String boatModel = "models/bateau.g3dj";
     public final String canonballModel = "models/boulet.g3dj";
 
+    // Polices
+    public static final String pirateFont = "fonts/TheDarkestPearl.ttf";
+
+    /**
+     * Charge les modèles 3D
+     */
     public void queueAdd3DModels(){
         //ModelLoader.ModelParameters mp = new ModelLoader.ModelParameters();
         manager.load(boatModel, Model.class);
