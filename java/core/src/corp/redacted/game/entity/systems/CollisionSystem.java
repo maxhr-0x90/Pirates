@@ -8,6 +8,7 @@ import corp.redacted.game.entity.components.TypeComponent;
 import corp.redacted.game.entity.components.BodyComponent;
 import corp.redacted.game.IConfig;
 import corp.redacted.game.WorldBuilder;
+import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -97,6 +98,22 @@ public class CollisionSystem extends IteratingSystem{
               colC.collisionEntite = null;
             break;
 
+            case TypeComponent.OCEAN:
+              Vector2 dirInv = new Vector2(); //Vecteur de direction inverse ;
+              float velocity = 9000000f;
+
+              /*Création d'un effet de rebond*/
+              float angle = -bodyA.body.getAngle() + (float)(2*Math.PI);
+              bodyA.body.setTransform(bodyA.body.getWorldCenter().x, bodyA.body.getWorldCenter().y, angle);
+
+              dirInv.x = MathUtils.cos(bodyA.body.getAngle())*velocity;
+              dirInv.y = MathUtils.sin(bodyA.body.getAngle())*velocity;
+              dirInv.rotate90(1);
+              bodyA.body.applyLinearImpulse(dirInv, bodyA.body.getWorldCenter(), true);
+
+              colC.collisionEntite = null;
+            break;
+
             default:
             break;
           }
@@ -156,6 +173,21 @@ public class CollisionSystem extends IteratingSystem{
               colC.collisionEntite = null;
             break;
 
+            case TypeComponent.OCEAN:
+              Vector2 dirInv = new Vector2(); //Vecteur de direction inverse ;
+              float velocity = 9000000f;
+
+              /*Création d'un effet de rebond*/
+              float angle = -bodyB.body.getAngle() + (float)(2*Math.PI);
+              bodyB.body.setTransform(bodyB.body.getWorldCenter().x, bodyB.body.getWorldCenter().y, angle);
+
+              dirInv.x = MathUtils.cos(bodyB.body.getAngle())*velocity;
+              dirInv.y = MathUtils.sin(bodyB.body.getAngle())*velocity;
+              dirInv.rotate90(1);
+              bodyB.body.applyLinearImpulse(dirInv, bodyB.body.getWorldCenter(), true);
+
+              colC.collisionEntite = null;
+            break;
             default:
             break;
           }
@@ -220,7 +252,7 @@ public class CollisionSystem extends IteratingSystem{
         }
       }
     }
-    
+
 
 
 
