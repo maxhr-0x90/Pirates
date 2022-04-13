@@ -14,6 +14,8 @@ import corp.redacted.game.entity.systems.CollisionSystem;
 import corp.redacted.game.entity.systems.PhysicsDebugSystem;
 import corp.redacted.game.entity.systems.RenderingSystem;
 
+import corp.redacted.game.serveur.Socket;
+
 /**
  * Écran principal de jeu. Là où le jeu, à proprement parlé, se déroule
  */
@@ -53,6 +55,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
+      Socket.separation();
         Gdx.input.setInputProcessor(clavier);
     }
 
