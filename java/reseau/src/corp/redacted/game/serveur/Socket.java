@@ -218,7 +218,7 @@ public class Socket extends WebSocketServer {
 	/**
 		* Fonction de séparation des deux équipes
 	*/
-	private static void separation(){
+	public static void separation(){
 		Hashtable<Integer, String> reverseWL = new Hashtable<Integer, String>();
 		ArrayList<Integer> listePos;
 		Integer key;
@@ -271,6 +271,6 @@ public class Socket extends WebSocketServer {
     }
 
 		// La partie est désormais whitelistée
-		whiteListed = false;
+		whiteListed = true;
 	}
 }
