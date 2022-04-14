@@ -29,7 +29,7 @@ public class DesktopLauncher {
 			System.out.println("WebSocket démarrée sur le port " + Socket.PORT);
 
 			// DEMARRAGE DU TIMER
-			Metronome.launchTimer(2000);
+			Metronome.launchTimer(150);
 
 			// DEMARRAGE DU JEU
 			config = new Lwjgl3ApplicationConfiguration();

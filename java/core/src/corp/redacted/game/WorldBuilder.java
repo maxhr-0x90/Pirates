@@ -45,11 +45,11 @@ public class WorldBuilder {
     /** Genère un monde
     */
     public void generateWorld(){
-        Entity batA = creeBateau(50,10,'A');
+        Entity batA = creeBateau(-100,20,'A');
         this.bateauA = batA;
         engine.addEntity(bateauA);
 
-        Entity batB = creeBateau(-20,-20,'B');
+        Entity batB = creeBateau(100,-20,'B');
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
@@ -115,8 +115,13 @@ public class WorldBuilder {
 
 
       bodyC.body.setUserData(bateau);
+      Model model;
 
-      Model model = assets.manager.get(assets.boatModel, Model.class);
+      if(typeC.type == TypeComponent.BATEAU_A){
+        model = assets.manager.get(assets.boatRModel, Model.class);
+      }else{
+        model = assets.manager.get(assets.boatBModel, Model.class);
+      }
 
       modC.model = new ModelInstance(model);
 

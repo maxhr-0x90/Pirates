@@ -13,6 +13,8 @@ public class Assets {
     // Modeles 3D
     public final String merchModel = "models/tonneau.g3dj";
     public final String boatModel = "models/bateau.g3dj";
+    public final String boatBModel = "models/bateauBleu.g3dj";
+    public final String boatRModel = "models/bateauRouge.g3dj";
     public final String canonballModel = "models/boulet.g3dj";
 
     // Polices
@@ -29,6 +31,8 @@ public class Assets {
         manager.load(boatModel, Model.class);
         manager.load(canonballModel, Model.class);
         manager.load(merchModel, Model.class);
+        manager.load(boatBModel, Model.class);
+        manager.load(boatRModel, Model.class);
     }
 
     public void queueAddTextures(){
