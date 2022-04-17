@@ -148,13 +148,12 @@ public class WorldBuilder {
       FixtureDef fixDef = new FixtureDef();
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
-      float taillex, tailley, weight;
+      ModelComponent modC = new ModelComponent();
+      float weight;
 
       /*Définition de ses caractéristique*/
       weight = MathUtils.random(MerchendiseComponent.LIMIT_MIN_M, MerchendiseComponent.LIMIT_MAX_M);
       merchendiseC.weight = weight;
-      taillex = weight;
-      tailley = weight;
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
@@ -172,29 +171,35 @@ public class WorldBuilder {
       bodyC.body = world.createBody(bodyD);
 
       /* Création de l'enveloppe du bateau */
-      PolygonShape poly = new PolygonShape();
-      poly.setAsBox(taillex, tailley);
+      CircleShape circle = new CircleShape();
+      circle.setRadius(weight);
+      circle.setPosition(new Vector2(0,0));
 
       /* Création de la fixture/ envrionnement */
       fixDef.density = IConfig.DENSITE_MARCHANDISE;
       fixDef.friction = IConfig.FRICTION_MARCHANDISE;
       fixDef.restitution = 0f;
-      fixDef.shape = poly;
+      fixDef.shape = circle;
       fixDef.filter.categoryBits = CollisionComponent.CATEGORY_MERCHENDISE;
       fixDef.filter.maskBits = CollisionComponent.MASK_MERCHENDISE;
 
       /* Assignation du type/categorie */
       typeC.type = TypeComponent.MARCHANDISE;
       bodyC.body.createFixture(fixDef);
-      poly.dispose(); //On libère l'enveloppe.
+      circle.dispose(); //On libère l'enveloppe.
 
       bodyC.body.setUserData(merchendise);
+
+      /* Définition du modèle de l'entité */
+      modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
+      modC.transform.scale(weight/2, weight/2, weight/2);
 
       /*On ajoute les components à l'entité*/
       merchendise.add(merchendiseC);
       merchendise.add(bodyC);
       merchendise.add(typeC);
       merchendise.add(colC);
+      merchendise.add(modC);
 
       engine.addEntity(merchendise);
     }
@@ -211,14 +216,13 @@ public class WorldBuilder {
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
       ModelComponent modC = new ModelComponent();
-      float taillex, tailley, weight, posx, posy;
+      float weight, posx, posy;
 
 
       /*Définition de ses caractéristique*/
       weight = MathUtils.random(MerchendiseComponent.LIMIT_MIN_M, MerchendiseComponent.LIMIT_MAX_M);
       merchendiseC.weight = weight;
-      taillex = weight;
-      tailley = weight;
+
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
@@ -243,27 +247,28 @@ public class WorldBuilder {
       bodyC.body = world.createBody(bodyD);
 
       /* Création de l'enveloppe du bateau */
-      PolygonShape poly = new PolygonShape();
-      poly.setAsBox(taillex, tailley);
+      CircleShape circle = new CircleShape();
+      circle.setRadius(weight/2);
+      circle.setPosition(new Vector2(0,0));
 
       /* Création de la fixture/ envrionnement */
       fixDef.density = IConfig.DENSITE_MARCHANDISE;
       fixDef.friction = IConfig.FRICTION_MARCHANDISE;
       fixDef.restitution = 0f;
-      fixDef.shape = poly;
+      fixDef.shape = circle;
       fixDef.filter.categoryBits = CollisionComponent.CATEGORY_MERCHENDISE;
       fixDef.filter.maskBits = CollisionComponent.MASK_MERCHENDISE;
 
       /* Assignation du type/categorie */
       typeC.type = TypeComponent.MARCHANDISE;
       bodyC.body.createFixture(fixDef);
-      poly.dispose(); //On libère l'enveloppe.
+      circle.dispose(); //On libère l'enveloppe.
 
       bodyC.body.setUserData(merchendise);
 
       /* Définition du modèle de l'entité */
       modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
-      modC.transform.scale(weight / 5, weight / 5, weight / 5);
+      modC.transform.scale(weight/2, weight/2, weight/2);
 
       /*On ajoute les components à l'entité*/
       merchendise.add(merchendiseC);

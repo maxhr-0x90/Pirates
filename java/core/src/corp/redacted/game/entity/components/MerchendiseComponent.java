@@ -9,10 +9,10 @@ public class MerchendiseComponent implements Component {
     public static int LITTLE_MERCHENDISE = 3;
 
     /*Limites de poids pour les catégories*/
-    public static int LIMIT_MAX_M = 30;
-    public static int LIMIT_MIN_M = 5;
-    public static int LIMIT_LITTLE_M = 15; //kg
-    public static int LIMIT_CLASSIC_M = 25; //kg
+    public static int LIMIT_MAX_M = 9;
+    public static int LIMIT_MIN_M = 3;
+    public static int LIMIT_LITTLE_M = 4; //kg
+    public static int LIMIT_CLASSIC_M = 6; //kg
 
     public float weight; //poids de la marchandise
     public int merchendiseType; //catégorie de la marchandise
