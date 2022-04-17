@@ -15,7 +15,7 @@ public interface IConfig{
 
   /*-----Bateau-----*/
   int LARGEUR_BATEAU = 10;
-  int LONGUEUR_BATEAU = 25;
+  int LONGUEUR_BATEAU = 16;
 
   int DENSITE_BATEAU = 10;
   int MISE_A_NIVEAU = 1000000;
