@@ -85,9 +85,9 @@ public class WorldBuilder {
       vect[0] = new Vector2(-IConfig.LARGEUR_BATEAU/2, -IConfig.LONGUEUR_BATEAU/2);
       vect[1] =  new Vector2(IConfig.LARGEUR_BATEAU/2, -IConfig.LONGUEUR_BATEAU/2);
 
-      vect[2] = new Vector2(IConfig.LARGEUR_BATEAU/2, 3*IConfig.LONGUEUR_BATEAU/5);
+      vect[2] = new Vector2(IConfig.LARGEUR_BATEAU/2, 8*IConfig.LONGUEUR_BATEAU/10);
       vect[3] = new Vector2(0, IConfig.LONGUEUR_BATEAU);
-      vect[4] = new Vector2(- IConfig.LARGEUR_BATEAU/2,  3*IConfig.LONGUEUR_BATEAU/5);
+      vect[4] = new Vector2(- IConfig.LARGEUR_BATEAU/2,  8*IConfig.LONGUEUR_BATEAU/10);
 
 
       poly.set(vect);
