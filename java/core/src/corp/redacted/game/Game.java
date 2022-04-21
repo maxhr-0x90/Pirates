@@ -42,6 +42,8 @@ public class Game extends com.badlogic.gdx.Game {
 		System.out.println("Pendant que la partie est en cours vous pouvez:");
 		System.out.println("\t - Entrer Ctrl+B pour entrer dans le mode debug");
 		System.out.println("\t - Entrer Ctrl+F pour terminer la partie prématurément");
+		System.out.println("\t - Entrer Ctrl+C pour activer la caméra libre");
+		System.out.println("\t - Entrer Ctrl+T pour voir le timer");
 		System.out.println("Entrez Ctrl+R dans l'écran de fin pour revenir sur l'écran de départ");
 		System.out.println("============================================================\n");
 	}

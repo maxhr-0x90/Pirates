@@ -172,7 +172,7 @@ public class WorldBuilder {
 
       /* Création de l'enveloppe du bateau */
       CircleShape circle = new CircleShape();
-      circle.setRadius(weight);
+      circle.setRadius(weight/2);
       circle.setPosition(new Vector2(0,0));
 
       /* Création de la fixture/ envrionnement */
@@ -192,7 +192,7 @@ public class WorldBuilder {
 
       /* Définition du modèle de l'entité */
       modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
-      modC.transform.scale(weight/2, weight/2, weight/2);
+      modC.transform.scale(weight/2.3f, weight/2.3f, weight/2.3f);
 
       /*On ajoute les components à l'entité*/
       merchendise.add(merchendiseC);

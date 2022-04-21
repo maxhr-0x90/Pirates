@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import corp.redacted.game.Game;
 import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.controller.KeyboardController;
+import corp.redacted.game.entity.components.StatComponent;
 import corp.redacted.game.entity.systems.BoatSystem;
 import corp.redacted.game.entity.systems.CollisionSystem;
 import corp.redacted.game.entity.systems.PhysicsDebugSystem;
@@ -34,6 +35,9 @@ public class MainScreen implements Screen {
     private boolean debugging = false;
     private boolean freeCam = false;
 
+    private final float TIMER_INIT = 1 * 30f;
+    private float timer;
+
     public MainScreen(Game parent){
         PARENT = parent;
         engine = new PooledEngine();
@@ -55,8 +59,9 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-      Socket.separation();
+        Socket.separation();
         Gdx.input.setInputProcessor(clavier);
+        timer = TIMER_INIT;
     }
 
     @Override
@@ -66,7 +71,10 @@ public class MainScreen implements Screen {
 
         engine.update(delta);
         worldBuilder.getWorld().step(delta, 6, 2);
+
+        timer -= delta;
         checkCtrl();
+        endGameCheck();
     }
 
     /**
@@ -76,30 +84,77 @@ public class MainScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
             if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
                 if (debugging){
+                    System.err.println("Mode debug desactivé");
                     engine.removeSystem(physicsDebugSys);
                     renderSys.setDebugging(false);
                     debugging = false;
                 } else {
+                    System.err.println("Mode debug activé");
                     engine.addSystem(physicsDebugSys);
                     renderSys.setDebugging(true);
                     debugging = true;
                 }
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.C)){
+            if (Gdx.input.isKeyJustPressed(Input.Keys.C)){
                 if (freeCam){
+                    System.err.println("Caméra libre desactivé");
                     Gdx.input.setInputProcessor(clavier);
                     engine.getSystem(RenderingSystem.class).windowResized();
                     freeCam = false;
                 } else {
+                    System.err.println("Caméra libre activé");
                     Gdx.input.setInputProcessor(camCtrl);
                     freeCam = true;
                 }
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.F)){
+                System.err.println("Partie terminé prématuré");
                 endGame();
             }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.T)){
+                System.err.println("Temps restant: " + timer + " s");
+            }
+        }
+    }
+
+    /**
+     * Fonction de vérification de fin de partie
+     */
+    public void endGameCheck(){
+        StatComponent statA = worldBuilder.bateauA.getComponent(StatComponent.class);
+        StatComponent statB = worldBuilder.bateauB.getComponent(StatComponent.class);
+
+        if (statA.barreVie <= 0){
+            EndScreen.victoryType = "par destruction !";
+            EndScreen.pts = statB.point;
+            EndScreen.winningTeam = "bleu";
+            endGame();
+        }
+
+        if (statB.barreVie <= 0){
+            EndScreen.victoryType = "par destruction !";
+            EndScreen.pts = statA.point;
+            EndScreen.winningTeam = "rouge";
+            endGame();
+        }
+
+        if (timer <= 0f){
+            EndScreen.victoryType = "commerciale";
+
+            if (statA.point > statB.point){
+                EndScreen.pts = statA.point;
+                EndScreen.winningTeam = "rouge";
+            } else if (statA.point < statB.point){
+                EndScreen.pts = statB.point;
+                EndScreen.winningTeam = "bleu";
+            } else {
+                EndScreen.pts = 0;
+                EndScreen.winningTeam = "de Personne";
+            }
+            endGame();
         }
     }
 
@@ -107,7 +162,6 @@ public class MainScreen implements Screen {
      * Fonction de fin de partie
      */
     public void endGame(){
-        // TODO Mettre à jour les labels de l'écran de fin
         EndScreen end = (EndScreen) PARENT.getScreen(Game.END);
         end.updateLabels();
 
