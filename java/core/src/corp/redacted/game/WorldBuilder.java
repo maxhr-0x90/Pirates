@@ -645,7 +645,7 @@ public class WorldBuilder {
     /** Renvoie le numéro de la zone dans laquelle se trouve le point (x,y)
     * @param x : l'abscisse du point
     * @param y : l'ordonnée du point
-    * @return int -1 si le point n'est pas dedans, et entre 0 et 8 sinon.
+    * @return -1 si le point n'est pas dedans, et entre 0 et 8 sinon.
     */
     private int oceanZone(float x, float y){
       float m1, m2;
@@ -698,6 +698,21 @@ public class WorldBuilder {
     */
     public void removeEntite(Entity ent){
       engine.removeEntity(ent);
+    }
+
+
+    /** Permet de remettre le monde à 0
+    */
+    public void reset(){
+      Entity batA = creeBateau(-100,20,'A');
+      this.bateauA = batA;
+      engine.addEntity(bateauA);
+
+      Entity batB = creeBateau(100,-20,'B');
+      this.bateauB = batB;
+      engine.addEntity(bateauB);
+
+      creeMarchandise(0,0);
     }
 
 }
