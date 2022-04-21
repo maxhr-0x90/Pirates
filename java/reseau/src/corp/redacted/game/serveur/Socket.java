@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class Socket extends WebSocketServer {
 	public final static int PORT = 8889;
-	public final static Boolean DEBUG = false;
+	public final static Boolean DEBUG = true;
 
 	// Stockage des informations globales de déplacement et de tir des rouges
 	public static int numberLeftR = 0;

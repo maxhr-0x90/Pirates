@@ -21,6 +21,7 @@ body table td tr div{
   background-color : rgba(0, 0, 0, 0.75);
   position : relative;
   color : #946439;
+  text-align: center;
 }
 
 .image{
@@ -29,4 +30,25 @@ body table td tr div{
   height : 45vmin;
   background-size : 45vmin;
   cursor : pointer;
+}
+
+.bouton{
+  background-color: black;
+  color: white;
+  font-size: 4vmin;
+  font-family: sans-serif;
+  height: 8vmin;
+  width: 30vmin;
+  border-radius: 0;
+  margin-left: 32vmin;
+}
+
+#confirmation:disabled{
+  background-color: grey;
+  color: white;
+}
+
+#refresh{
+  margin-left: 0;
+  height: 12vmin;
 }
