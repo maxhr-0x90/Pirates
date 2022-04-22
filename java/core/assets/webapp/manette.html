@@ -4,16 +4,31 @@
 		<link rel="stylesheet" href="./ressources/css/main_style.css">
 		<link rel="stylesheet" href="./ressources/css/anim.css">
     <link rel="icon" href="./ressources/img/favicon.ico"/>
-		<script src="./ressources/js/manette_socket_handle.js"></script>
+		<script src="./ressources/js/manette_socket.js"></script>
+		<script src="./ressources/js/manette_handler.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Manette</title>
 	</head>
 	<body>
 
-		<button id="a" class="image rame_gauche" onclick="left()"></button>
-		<button class="image rame_droite" onclick="right()"></button><br/>
-		<button class="image canon_gauche" onclick="leftShot()"></button>
-		<button class="image canon_droite" onclick="rightShot()"></button>
+		<!-- <button disabled class="" onclick="left()"></button> -->
+
+
+		<table>
+			<tr>
+				<td>
+					<button id="rame_gauche" class="image" onclick="left(); couleur_equipe('rouge');"></button>
+				</td>
+				<td><button id="rame_droite" class="image" onclick="right()"></button></td>
+			</tr>
+			<tr>
+				<td><button id="canon_gauche" class="image" onclick="leftShot(); drop(2);"></button></td>
+				<td>
+					<button id="canon_droit" class="image" onclick="rightShot(); drop(3);">
+					</button>
+				</td>
+			</tr>
+		</table>
 
 		<div id="msgbox">
 			<div id="opacity"></div>
