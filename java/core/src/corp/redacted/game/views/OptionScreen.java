@@ -192,13 +192,6 @@ public class OptionScreen implements Screen {
         table.add(lab);
         table.row().pad(0,0,0,0);
 
-        table.add(cb1L);
-        table.add(cb1);
-        // table.add(lab);
-        table.add(cb1LB);
-        table.add(cb1B);
-        table.row().pad(0,0,0,0);
-
         table.add(cb2L);
         table.add(cb2);
         // table.add(lab);
@@ -206,18 +199,26 @@ public class OptionScreen implements Screen {
         table.add(cb2B);
         table.row().pad(0,0,0,0);
 
-        table.add(cb3L);
-        table.add(cb3);
+        table.add(cb1L);
+        table.add(cb1);
         // table.add(lab);
-        table.add(cb3LB);
-        table.add(cb3B);
+        table.add(cb1LB);
+        table.add(cb1B);
         table.row().pad(0,0,0,0);
+
 
         table.add(cb4L);
         table.add(cb4);
         // table.add(lab);
         table.add(cb4LB);
         table.add(cb4B);
+        table.row().pad(0,0,0,0);
+
+        table.add(cb3L);
+        table.add(cb3);
+        // table.add(lab);
+        table.add(cb3LB);
+        table.add(cb3B);
 
 
 
