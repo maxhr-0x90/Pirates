@@ -27,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.files.FileHandle;
 
+import corp.redacted.game.serveur.Socket;
+
 
 /**
  * Écran présent au démarrage du jeu pour le choix des options de jeu
@@ -95,8 +97,8 @@ public class OptionScreen implements Screen {
         cb1.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("1");
+              Socket.rameDroiteG += 1;
+              Socket.rameDroiteG = Socket.rameDroiteG%2;
           }
         });
         Label cb1LB = new Label("Rame droite",new Label.LabelStyle(font, Color.WHITE));
@@ -106,8 +108,8 @@ public class OptionScreen implements Screen {
         cb1B.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("1");
+            Socket.rameDroiteD += 1;
+            Socket.rameDroiteD = Socket.rameDroiteD%2;
           }
         });
 
@@ -117,8 +119,8 @@ public class OptionScreen implements Screen {
         cb2.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("2");
+            Socket.rameGaucheG += 1;
+            Socket.rameGaucheG = Socket.rameGaucheG%2;
           }
         });
         Label cb2LB = new Label("Rame gauche",new Label.LabelStyle(font, Color.WHITE));
@@ -127,8 +129,8 @@ public class OptionScreen implements Screen {
         cb2B.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("2");
+            Socket.rameGaucheD += 1;
+            Socket.rameGaucheD = Socket.rameGaucheD%2;
           }
         });
 
@@ -138,8 +140,8 @@ public class OptionScreen implements Screen {
         cb3.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("3");
+              Socket.tirDroiteG += 1;
+              Socket.tirDroiteG = Socket.tirDroiteG%2;
           }
         });
         Label cb3LB = new Label("Tir droite",new Label.LabelStyle(font, Color.WHITE));
@@ -148,8 +150,8 @@ public class OptionScreen implements Screen {
         cb3B.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("3");
+            Socket.tirDroiteD += 1;
+            Socket.tirDroiteD = Socket.tirDroiteD%2;
           }
         });
 
@@ -159,8 +161,8 @@ public class OptionScreen implements Screen {
         cb4.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("4");
+            Socket.tirGaucheG += 1;
+            Socket.tirGaucheG = Socket.tirGaucheG%2;
           }
         });
         Label cb4LB = new Label("Tir gauche",new Label.LabelStyle(font, Color.WHITE));
@@ -169,8 +171,8 @@ public class OptionScreen implements Screen {
         cb4B.addListener(new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-              ok = !ok;
-              System.out.println("4");
+            Socket.tirGaucheD += 1;
+            Socket.tirGaucheD = Socket.tirGaucheD%2;
           }
         });
 
