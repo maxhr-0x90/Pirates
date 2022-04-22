@@ -5,6 +5,7 @@ import corp.redacted.game.loader.Assets;
 import corp.redacted.game.views.EndScreen;
 import corp.redacted.game.views.MainScreen;
 import corp.redacted.game.views.StartScreen;
+import corp.redacted.game.views.OptionScreen;
 
 import java.util.HashMap;
 
@@ -16,6 +17,7 @@ public class Game extends com.badlogic.gdx.Game {
 	public static final String MAIN = "main";
 	public static final String START = "start";
 	public static final String END = "end";
+	public static final String OPT = "opt";
 
 	private HashMap<String, Screen> screens;
 
@@ -27,8 +29,9 @@ public class Game extends com.badlogic.gdx.Game {
 		screens.put(MAIN, new MainScreen(this));
 		screens.put(START, new StartScreen(this));
 		screens.put(END, new EndScreen(this));
+		screens.put(OPT, new OptionScreen(this));
 
-		setScreen(screens.get(START));
+		setScreen(screens.get(OPT));
 		usage();
 	}
 
