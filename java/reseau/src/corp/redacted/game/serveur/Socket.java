@@ -41,15 +41,15 @@ public class Socket extends WebSocketServer {
 
 	// Elements de la moitié gauche des équipes
 	public static int rameGaucheG = 1;
-	public static int rameDroiteG = 0;
-	public static int tirGaucheG = 0;
+	public static int rameDroiteG = 1;
+	public static int tirGaucheG = 1;
 	public static int tirDroiteG = 1;
 
 	// Elements de la moitié droite des équipes
-	public static int rameGaucheD = 0;
+	public static int rameGaucheD = 1;
 	public static int rameDroiteD = 1;
 	public static int tirGaucheD = 1;
-	public static int tirDroiteD = 0;
+	public static int tirDroiteD = 1;
 
 	/* HASHTABLES UTILISEE AVANT LA SEPARATION*/
 	// White list avant séparation
