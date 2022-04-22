@@ -15,17 +15,40 @@ webSocket.onopen = function(event){
 };
 
 webSocket.onmessage = function(event){
+  let splitted = event.data.split(":");
+  let buttons = document.querySelectorAll("button.image");
+  let i;
+
   if(event.data === "redirect"){  // Redirection sur la page d'erreur
     document.location.href = "erreur.html";
   }
-  else if(event.data === "rouge"){  // Le joueur fait partie de l'équipe rouge
-    couleur_equipe(event.data);
-  }
-  else if(event.data === "bleu"){ // Le joueur fait partie de l'équipe bleue
-    couleur_equipe(event.data);
-  }
-  else{ // Sinon on affiche ce que la websocket à envoyé
-    updateOutput(event.data);
+  else{
+    // Le joueur fait partie d'une équipe
+    if(splitted[0] === "rouge" || splitted[0] === "bleu"){
+      console.log(event.data);
+      // if(splitted[1][0] == "0"){
+      //   document.querySelector("#rame_gauche").disabled = true;
+      // }
+      // if(splitted[1][1] == "0"){
+      //   document.querySelector("#rame_droite").disabled = true;
+      // }
+      // if(splitted[1][2] == "0"){
+      //   document.querySelector("#canon_gauche").disabled = true;
+      // }
+      // if(splitted[1][3] == "0"){
+      //   document.querySelector("#canon_droit").disabled = true;
+      // }
+
+      for(i = 0; i < 4; i++){
+        if(splitted[1][i] === "0"){
+          buttons[i].disabled = true;
+        }
+      }
+      couleur_equipe(splitted[0]);
+    }
+    else{ // Sinon on affiche ce que la websocket à envoyé
+      updateOutput(event.data);
+    }
   }
 };
 
@@ -62,14 +85,16 @@ function updateOutput(text) {
 function couleur_equipe(color){
   let buttons = document.querySelectorAll("button.image");
   for(i = 0; i < buttons.length; i++){
-    if(color === "rouge"){
-      buttons[i].style.backgroundColor = "rgba(120, 0, 0, 0.9)";
-    }
-    else if(color == "bleu"){
-      buttons[i].style.backgroundColor = "rgba(0, 0, 120, 0.9)";
-    }
-    else{
-      buttons[i].style.backgroundColor = "rgba(120, 120, 120, 0.9)";
+    if(!buttons[i].disabled){
+      if(color === "rouge"){
+        buttons[i].style.backgroundColor = "rgba(120, 0, 0, 0.9)";
+      }
+      else if(color == "bleu"){
+        buttons[i].style.backgroundColor = "rgba(0, 0, 120, 0.9)";
+      }
+      else{
+        buttons[i].style.backgroundColor = "rgba(120, 120, 120, 0.9)";
+      }
     }
   }
 }
