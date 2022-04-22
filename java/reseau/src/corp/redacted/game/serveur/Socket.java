@@ -182,7 +182,7 @@ public class Socket extends WebSocketServer {
 		else{ // Autre message
 			try{
 				// Si c'est une position on la concerve
-				if(message.split(":")[0].equals("position") && !whitelisted){
+				if(message.split(":")[0].equals("position") && !whiteListed){
 					positionWhiteList.put(
 						session.getRemoteSocketAddress().getAddress().getHostAddress(),
 						Integer.parseInt(message.split(":")[1])
