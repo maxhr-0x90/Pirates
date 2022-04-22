@@ -32,6 +32,29 @@ body table td tr div{
   cursor : pointer;
 }
 
+.progression{
+  margin-left: 2vmin;
+  margin-right: 2vmin;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 100%;
+  height: 8vmin;
+  background-color: grey;
+}
+
+.barre{
+  width: 0%;
+  height: 8vmin;
+  background-color: black;
+}
+
+.chargement{
+  width : 45vmin;
+  height : 45vmin;
+  background-color: white;
+  display: flex;
+}
+
 .bouton{
   background-color: black;
   color: white;
