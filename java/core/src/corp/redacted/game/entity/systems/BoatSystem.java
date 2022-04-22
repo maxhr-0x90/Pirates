@@ -43,27 +43,40 @@ public class BoatSystem extends IteratingSystem{
 
   //Méthode appliqué lors d'update, dt := temps depuis la derniere mise à jour
   @Override
-	protected void processEntity(Entity entite, float dt) {
+	protected void processEntity(Entity entite, float dt){
 		BodyComponent bodyC = bodyMap.get(entite);
     StatComponent boat = statMap.get(entite);
     TypeComponent typeC = typeMap.get(entite);
-
-    //Gestion du temps entre 2 tires
-    if(boat.dernierTir > 0){
-      boat.dernierTir -= dt;
-    }
+    int i, r, k;
 
     if(typeC.type == TypeComponent.BATEAU_A){
+
       //Gestion des mouvements
       mouvBoat(bodyC, Task.nbLeftR, Task.nbRightR);
 
       //Gestion des tirs
       if(Task.nbShotLeftR != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,false);
+        r  = Task.nbShotLeftR%3;
+        k = Task.nbShotLeftR/3;
+        Task.nbShotLeftR = 0;
+        for(i = 0; i<r ;i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,false);
+        }
+        for(i = 0; i<k; i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,true);
+        }
       }
 
       if(Task.nbShotRightR != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT, false);
+         r  = Task.nbShotRightR%3;
+         k = Task.nbShotRightR/3;
+         Task.nbShotRightR = 0;
+        for(i = 0; i<r ;i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT,false);
+        }
+        for(i = 0; i<k; i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT,true);
+        }
       }
     }
 
@@ -73,15 +86,29 @@ public class BoatSystem extends IteratingSystem{
 
       //Gestion des tirs
       if(Task.nbShotLeftB != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, LEFT_SHOT, false);
+         r  = Task.nbShotLeftB%3;
+         k = Task.nbShotLeftB/3;
+         Task.nbShotLeftB = 0;
+        for(i = 0; i<r ;i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, LEFT_SHOT,false);
+        }
+        for(i = 0; i<k; i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, LEFT_SHOT,true);
+        }
       }
 
       if(Task.nbShotRightB != 0){
-        shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, RIGHT_SHOT,false);
+         r  = Task.nbShotRightB%3;
+         k = Task.nbShotRightB/3;
+         Task.nbShotRightB = 0;
+        for(i = 0; i<r ;i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, RIGHT_SHOT,false);
+        }
+        for(i = 0; i<k; i++){
+          shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_B, RIGHT_SHOT,true);
+        }
       }
     }
-
-
 
 
     /* CONTROLE CLAVIER/SOURIS*/
@@ -141,15 +168,12 @@ public class BoatSystem extends IteratingSystem{
       }
     }
     if(controller.isMouseDown){ //Si le bouton de souris est appuyé
-
       if(typeC.type == TypeComponent.BATEAU_A){
         shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, LEFT_SHOT,true);
         shotBoat(boat, bodyC, typeC, CannonballComponent.BATEAU_A, RIGHT_SHOT,true);
-
-
       }
-
     }
+
 	}
 
   /** Renvoie la mesure principale d'un angle donnée
@@ -238,9 +262,17 @@ public class BoatSystem extends IteratingSystem{
     }
   }
 
+
+  /** Permet le tir des bateaux
+  * @param boat : le bateau en question
+  * @param bodyC : son body
+  * @param typeC : son type
+  * @param camps : son camps (A ou B)
+  * @param side : de quel côté me tir est effectué
+  * @param bonus : true si tir à 3 canon, false si tir à un canon
+  */
   private void shotBoat(StatComponent boat, BodyComponent bodyC, TypeComponent typeC, int camps, int side, boolean bonus){
 
-    if(boat.dernierTir <=0){  //On vérifie si le temps avant le dernier tir est suffisant
       float mainM = mainMeasure(bodyC.body.getAngle());
       float velocity = 50f ; /// VITESSE A DETERMINER
 
@@ -254,7 +286,6 @@ public class BoatSystem extends IteratingSystem{
         vel.rotate(180f);
       }
 
-      boat.dernierTir = IConfig.DELAIS_TIR; //On met à jour le delais de tir.
       if(bonus){
         Vector2 vel2 = new Vector2(vel);
         vel2.rotate(90);
@@ -278,6 +309,6 @@ public class BoatSystem extends IteratingSystem{
 
 
     }
-  }
+
 
 }
