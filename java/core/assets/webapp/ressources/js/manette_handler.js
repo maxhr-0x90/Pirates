@@ -25,6 +25,15 @@ function drop(cote){
   // Ajout des classes aux div de la barre de chargement
   chargement.classList.add("chargement");
   progression.classList.add("progression");
+
+  if(cote === 2){
+    chargement.id = "canon_gauche";
+  }
+  else if(cote === 3){
+    chargement.id = "canon_droit";
+  }
+
+  chargement.classList.add("image");
   barre.classList.add("barre");
 
   // On enlève le bouton de la cellule du tableau
@@ -33,7 +42,7 @@ function drop(cote){
   // On ajoute la barre de chargement à la cellule du tableau
   progression.appendChild(barre);
   chargement.appendChild(progression);
-  chargement.style.backgroundColor = canon.style.backgroundColor;
+  chargement.style.backgroundColor = "rgba(0, 0, 0, 0.75)";
   boutons[cote].appendChild(chargement);
 
   // On fait progresser la barre de chargement
