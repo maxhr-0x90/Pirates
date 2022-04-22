@@ -26,24 +26,24 @@ webSocket.onmessage = function(event){
     // Le joueur fait partie d'une équipe
     if(splitted[0] === "rouge" || splitted[0] === "bleu"){
       console.log(event.data);
-      if(splitted[1][0] == "0"){
-        document.querySelector("#rame_gauche").disabled = true;
-      }
-      if(splitted[1][1] == "0"){
-        document.querySelector("#rame_droite").disabled = true;
-      }
-      if(splitted[1][2] == "0"){
-        document.querySelector("#canon_gauche").disabled = true;
-      }
-      if(splitted[1][3] == "0"){
-        document.querySelector("#canon_droit").disabled = true;
-      }
-
-      // for(i = 0; i < 4; i++){
-      //   if(splitted[1][i] === "0"){
-      //     buttons[i].disabled = true;
-      //   }
+      // if(splitted[1][0] == "0"){
+      //   document.querySelector("#rame_gauche").disabled = true;
       // }
+      // if(splitted[1][1] == "0"){
+      //   document.querySelector("#rame_droite").disabled = true;
+      // }
+      // if(splitted[1][2] == "0"){
+      //   document.querySelector("#canon_gauche").disabled = true;
+      // }
+      // if(splitted[1][3] == "0"){
+      //   document.querySelector("#canon_droit").disabled = true;
+      // }
+
+      for(i = 0; i < 4; i++){
+        if(splitted[1][i] === "0"){
+          buttons[i].disabled = true;
+        }
+      }
       couleur_equipe(splitted[0]);
     }
     else{ // Sinon on affiche ce que la websocket à envoyé

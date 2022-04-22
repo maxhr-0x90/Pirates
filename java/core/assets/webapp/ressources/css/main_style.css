@@ -77,8 +77,3 @@ body table td tr div{
   margin-left: 0;
   height: 12vmin;
 }
-
-button.image:disabled{
-  background-color: green;
-  color : green;
-}

@@ -29,3 +29,12 @@
 #canon_droit:active{
   background-image: url("../img/canon_droit_active.png");
 }
+
+button#rame_gauche:disabled,
+button#rame_droite:disabled,
+button#canon_gauche:disabled,
+button#canon_droit:disabled{
+  background-color: rgba(0, 0, 0, 0.75);
+  background-image: none;
+  cursor: default;
+}
