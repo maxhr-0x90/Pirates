@@ -36,7 +36,20 @@ public class Socket extends WebSocketServer {
 	public static int numberLeftShotB = 0;
 	public static int numberRightShotB = 0;
 
+	// Booleen indiquant si la socket est whitelistée
 	public static Boolean whiteListed = false;
+
+	// Elements de la moitié gauche des équipes
+	public static int rameGaucheG = 1;
+	public static int rameDroiteG = 0;
+	public static int tirGaucheG = 0;
+	public static int tirDroiteG = 1;
+
+	// Elements de la moitié droite des équipes
+	public static int rameGaucheD = 0;
+	public static int rameDroiteD = 1;
+	public static int tirGaucheD = 1;
+	public static int tirDroiteD = 0;
 
 	/* HASHTABLES UTILISEE AVANT LA SEPARATION*/
 	// White list avant séparation
@@ -45,10 +58,15 @@ public class Socket extends WebSocketServer {
 	public static Hashtable<String, Integer> positionWhiteList;
 
 	/* HASHTABLES UTILISEE APRES LA SEPARATION*/
-	// Liste bateau bleu
-	public static Hashtable<String, WebSocket> whiteListBleue;
-	// Liste bateau rouge
-	public static Hashtable<String, WebSocket> whiteListRouge;
+	// Moitie gauche de la liste bateau bleu
+	public static Hashtable<String, WebSocket> whiteListBleueG;
+	// Moitie droite de la liste bateau bleu
+	public static Hashtable<String, WebSocket> whiteListBleueD;
+	// Moitie gauche de la liste bateau rouge
+	public static Hashtable<String, WebSocket> whiteListRougeG;
+	// Moitie droite de la liste bateau rouge
+	public static Hashtable<String, WebSocket> whiteListRougeD;
+
 
 	// Sert uniquement à enlever des personnes de la white list quand la connexion
 	// est ouverte
@@ -62,8 +80,10 @@ public class Socket extends WebSocketServer {
 		this.setReuseAddr(true);
 
 		whiteListIn = new Hashtable<String, WebSocket>();
-		whiteListRouge = new Hashtable<String, WebSocket>();
-		whiteListBleue = new Hashtable<String, WebSocket>();
+		whiteListRougeG = new Hashtable<String, WebSocket>();
+		whiteListRougeD = new Hashtable<String, WebSocket>();
+		whiteListBleueG = new Hashtable<String, WebSocket>();
+		whiteListBleueD = new Hashtable<String, WebSocket>();
 		positionWhiteList = new Hashtable<String, Integer>();
 		whiteListOut = new Hashtable<WebSocket, String>();
 	}
@@ -71,8 +91,10 @@ public class Socket extends WebSocketServer {
   @Override
   public void onOpen(WebSocket session, ClientHandshake hs){
 		// Un utilisateur vient de se connecter à la session
-		WebSocket wsr, wsb;
+		WebSocket wsrg, wsrd, wsbg, wsbd;
 		String ip = session.getRemoteSocketAddress().getAddress().getHostAddress();
+		String messG = "" + rameGaucheG + rameDroiteG + tirGaucheG + tirDroiteG;
+		String messD = "" + rameGaucheD + rameDroiteD + tirGaucheD + tirDroiteD;
 
 		if(!whiteListed){	// Connexion ouverte à tous
 			whiteListIn.put(ip, session);
@@ -84,20 +106,29 @@ public class Socket extends WebSocketServer {
 			}
 		}
 		else{	// Connexion fermée
-			wsr = whiteListRouge.get(ip);
-			wsb = whiteListBleue.get(ip);
-			if(wsr == null && wsb == null){	// Personne non présente dans les white lists
-				session.send("redirect");
+			wsrg = whiteListRougeG.get(ip);
+			wsrd = whiteListRougeD.get(ip);
+			wsbg = whiteListBleueG.get(ip);
+			wsbd = whiteListBleueD.get(ip);
+
+			if(wsrg != null){	// Moitié gauche de l'équipe rouge
+				whiteListRougeG.put(ip, session);
+				session.send("rouge:" + messG);
 			}
-			else{
-				if(wsr == null){	// Membre de l'équipe rouge
-					whiteListBleue.put(ip, session);
-					session.send("bleu");
-				}
-				else{	// Membre de l'équipe
-					whiteListRouge.put(ip, session);
-					session.send("rouge");
-				}
+			else if(wsrd != null){	// Moitié droite de l'équipe rouge
+				whiteListRougeD.put(ip, session);
+				session.send("rouge:" + messD);
+			}
+			else if(wsbg != null){	// Moitié gauche de l'équipe bleue
+				whiteListBleueG.put(ip, session);
+				session.send("bleu:" + messG);
+			}
+			else if(wsbd != null){	// Moitié droite de l'équipe bleue
+				whiteListBleueD.put(ip, session);
+				session.send("bleu:" + messD);
+			}
+			else{	// Personne inconnue des whitelists
+				session.send("redirect");
 			}
 		}
 
@@ -133,44 +164,51 @@ public class Socket extends WebSocketServer {
   @Override
   public void onMessage(WebSocket session, String message){
 		String ip = session.getRemoteSocketAddress().getAddress().getHostAddress();
+		WebSocket wsrg, wsrd, wsbg, wsbd;
+
+		wsrg = whiteListRougeG.get(ip);
+		wsrd = whiteListRougeD.get(ip);
+		wsbd = whiteListBleueG.get(ip);
+		wsbg = whiteListBleueD.get(ip);
+
 		if(message.equals("gauche")){	// L'utilisateur rame à gauche
 			session.send("Gauche !");
-			if(whiteListRouge.get(ip) != null){
+			if(wsrg != null || wsrd != null){
 				numberLeftR++;
 			}
-			else if(whiteListBleue.get(ip) != null){
+			else if(wsbg != null || wsbd != null){
 				numberLeftB++;
 			}
 		}
 		else if(message.equals("droite")){	// L'utilisateur rame à droite
 			session.send("Droite !");
-			if(whiteListRouge.get(ip) != null){
+			if(wsrg != null || wsrd != null){
 				numberRightR++;
 			}
-			else if(whiteListBleue.get(ip) != null){
+			else if(wsbg != null || wsbd != null){
 				numberRightB++;
 			}
 		}
 		else if(message.equals("tgauche")){	// L'utilisateur tire à gauche
 			session.send("Tir gauche !");
-			if(whiteListRouge.get(ip) != null){
+			if(wsrg != null || wsrd != null){
 				numberLeftShotR++;
 			}
-			else if(whiteListBleue.get(ip) != null){
+			else if(wsbg != null || wsbd != null){
 				numberLeftShotB++;
 			}
 		}
 		else if(message.equals("tdroit")){	// L'utilisateur tire à droite
 			session.send("Tir droit !");
-			if(whiteListRouge.get(ip) != null){
+			if(wsrg != null || wsrd != null){
 				numberRightShotR++;
 			}
-			else if(whiteListBleue.get(ip) != null){
+			else if(wsbg != null || wsbd != null){
 				numberRightShotB++;
 			}
 		}
 		else if(message.equals("manette")){	// L'utilisateur provient de la manette
-			if(!whiteListed && !DEBUG){
+			if(!whiteListed){
 				session.send("redirect");
 			}
 		}
@@ -223,7 +261,7 @@ public class Socket extends WebSocketServer {
 		ArrayList<Integer> listePos;
 		Integer key;
 		String ip;
-    int i, middle;
+    int i, quart, moitie, troisQuarts;
 
 		// On crée une Hashtable similaire avec les clés en valeur et réciproquement
     for (Map.Entry entry : (Set<Map.Entry<String, Integer>>)positionWhiteList.entrySet()){
@@ -236,36 +274,55 @@ public class Socket extends WebSocketServer {
     listePos = new ArrayList<Integer>(reverseWL.keySet());
     Collections.sort(listePos);
 
-    middle = listePos.size()/2;	// Milieu de la liste
+		quart = listePos.size()/4;	// Premier quart de la liste
+    moitie = listePos.size()/2;	// Milieu de la liste
+		troisQuarts = moitie+quart;	// Troisième quart de la liste
 
     for(i = 0; i < listePos.size(); i++){
 
       ip = reverseWL.get(listePos.get(i));	// On récupère l'IP
       if(ip != null){
-        if(i < middle){	// Nouveau membre chez les rouges
+        if(i < quart){	// Nouveau membre chez les rouges de gauche
 					if(DEBUG){
-	          System.out.println("Rouge : " + ip);
+	          System.out.println("RougeG : " + ip);
 					}
-          whiteListRouge.put(ip, whiteListIn.get(ip));
+          whiteListRougeG.put(ip, whiteListIn.get(ip));
         }
-        else{	// Nouveau membre chez les bleus
+				else if(i <  moitie){	// Nouveau membre chez les rouges de droite
 					if(DEBUG){
-	          System.out.println("Bleu : " + ip);
+	          System.out.println("RougeG : " + ip);
 					}
-          whiteListBleue.put(ip, whiteListIn.get(ip));
+          whiteListRougeD.put(ip, whiteListIn.get(ip));
+				}
+				else if(i < troisQuarts){	// Nouveau membre chez les bleus de gauche
+					if(DEBUG){
+	          System.out.println("BleuG : " + ip);
+					}
+          whiteListBleueG.put(ip, whiteListIn.get(ip));
+				}
+        else{	// Nouveau membre chez les bleus de droite
+					if(DEBUG){
+	          System.out.println("BleuD : " + ip);
+					}
+          whiteListBleueD.put(ip, whiteListIn.get(ip));
         }
 				whiteListIn.get(ip).send("start");
       }
     }
 		if(DEBUG){
-			System.out.println("Rouges : " + whiteListRouge);
-			System.out.println("Bleus : " + whiteListBleue);
+			System.out.println("RougesG : " + whiteListRougeG);
+			System.out.println("RougesD : " + whiteListRougeD);
+			System.out.println("BleusG : " + whiteListBleueG);
+			System.out.println("BleusD : " + whiteListBleueD);
 		}
 
 		// Redirection des personnes n'ayant pas renseigné leur localisation
-		for (Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListIn.entrySet()){
+		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListIn.entrySet()){
       ip = (String)entry.getKey();
-      if(whiteListRouge.get(ip) == null && whiteListBleue.get(ip) == null){
+      if(whiteListRougeG.get(ip) == null
+			&& whiteListRougeD.get(ip) == null
+			&& whiteListBleueG.get(ip) == null
+			&& whiteListBleueD.get(ip) == null){
 				((WebSocket)entry.getValue()).send("redirect");
 			}
     }

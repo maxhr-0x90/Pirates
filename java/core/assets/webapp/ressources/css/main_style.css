@@ -32,6 +32,8 @@ body table td tr div{
   cursor : pointer;
 }
 
+
+
 .progression{
   margin-left: 2vmin;
   margin-right: 2vmin;
@@ -74,4 +76,9 @@ body table td tr div{
 #refresh{
   margin-left: 0;
   height: 12vmin;
+}
+
+button.image:disabled{
+  background-color: green;
+  color : green;
 }
