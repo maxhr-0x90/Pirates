@@ -22,6 +22,7 @@ public class Game extends com.badlogic.gdx.Game {
 	private HashMap<String, Screen> screens;
 
 	public final static Assets assets = new Assets();
+	public static WorldBuilder worldBuilder;
 
 	@Override
 	public void create () {

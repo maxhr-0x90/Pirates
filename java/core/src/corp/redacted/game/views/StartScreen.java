@@ -94,8 +94,14 @@ public class StartScreen implements Screen {
      * Vérifie si une commande a été entrée pour passer au jeu
      */
     private void checkCtrl(){
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.X)){
-            PARENT.switchScreen(Game.MAIN);
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
+            if (Gdx.input.isKeyJustPressed(Input.Keys.X)){
+                PARENT.switchScreen(Game.MAIN);
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.R)){
+                PARENT.switchScreen(Game.OPT);
+            }
         }
     }
 

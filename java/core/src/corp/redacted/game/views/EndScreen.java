@@ -108,6 +108,9 @@ public class EndScreen implements Screen {
      * Fonction de reset de partie
      */
     public void resetGame(){
+        if (Game.worldBuilder != null){
+            Game.worldBuilder.reset();
+        }
         PARENT.switchScreen(Game.START);
     }
 

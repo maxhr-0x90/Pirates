@@ -10,8 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.ashley.core.Entity;
 
+import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
 import com.badlogic.gdx.math.MathUtils;
@@ -704,15 +706,14 @@ public class WorldBuilder {
     /** Permet de remettre le monde à 0
     */
     public void reset(){
-      Entity batA = creeBateau(-100,20,'A');
-      this.bateauA = batA;
-      engine.addEntity(bateauA);
+      Array<Body> bodies = new Array<>();
+      engine.removeAllEntities();
+      world.getBodies(bodies);
+      for (Body body: bodies) {
+        world.destroyBody(body);
+      }
 
-      Entity batB = creeBateau(100,-20,'B');
-      this.bateauB = batB;
-      engine.addEntity(bateauB);
-
-      creeMarchandise(0,0);
+      generateWorld();
     }
 
 }

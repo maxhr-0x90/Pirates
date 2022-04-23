@@ -134,5 +134,10 @@ public class KeyboardController  implements InputProcessor {
 		return false;
 	}
 
-
+	public void reset(){
+		left = false; right = false; up = false; down = false;
+		leftB = false; rightB = false; upB = false; downB = false;
+		isMouseDown = false;
+		mouseLocation.set(0, 0);
+	}
 }
