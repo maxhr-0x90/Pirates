@@ -36,7 +36,7 @@ public class MainScreen implements Screen {
     private boolean freeCam = false;
 
     private final float TIMER_INIT = 1 * 30f;
-    private float timer;
+    public static float timer;
 
     public MainScreen(Game parent){
         PARENT = parent;
@@ -63,6 +63,7 @@ public class MainScreen implements Screen {
         Socket.separation();
         Gdx.input.setInputProcessor(clavier);
         clavier.reset();
+        renderSys.setBateaux(worldBuilder.bateauA, worldBuilder.bateauB);
         timer = TIMER_INIT;
     }
 
@@ -109,6 +110,10 @@ public class MainScreen implements Screen {
                     Gdx.input.setInputProcessor(camCtrl);
                     freeCam = true;
                 }
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.I)){
+                renderSys.switchSplit();
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.F)){

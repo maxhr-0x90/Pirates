@@ -125,7 +125,7 @@ public class WorldBuilder {
         model = assets.manager.get(assets.boatBModel, Model.class);
       }
 
-      modC.model = new ModelInstance(model);
+      modC.setModel(new ModelInstance(model));
 
 
       /* On ajoute les components à l'entité */
@@ -193,7 +193,7 @@ public class WorldBuilder {
       bodyC.body.setUserData(merchendise);
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
+      modC.setModel(new ModelInstance(assets.manager.get(assets.merchModel, Model.class)));
       modC.transform.scale(weight/2.3f, weight/2.3f, weight/2.3f);
 
       /*On ajoute les components à l'entité*/
@@ -269,7 +269,7 @@ public class WorldBuilder {
       bodyC.body.setUserData(merchendise);
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
+      modC.setModel(new ModelInstance(assets.manager.get(assets.merchModel, Model.class)));
       modC.transform.scale(weight/2, weight/2, weight/2);
 
       /*On ajoute les components à l'entité*/
@@ -297,7 +297,7 @@ public class WorldBuilder {
       ModelComponent modC = new ModelComponent();
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(assets.manager.get(assets.canonballModel, Model.class));
+      modC.setModel(new ModelInstance(assets.manager.get(assets.canonballModel, Model.class)));
       modC.transform.scale(5, 5, 5);
 
       cannonballC.camps = camps;
@@ -356,10 +356,10 @@ public class WorldBuilder {
       ModelComponent modC = new ModelComponent();
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(ModelGenerator.seaModel(
+      modC.setModel(new ModelInstance(ModelGenerator.seaModel(
               IConfig.LARGEUR_CARTE * 1.5f, 30f,
               IConfig.LARGEUR_CARTE, IConfig.HAUTEUR_CARTE, 4, 1f/4
-      ));
+      )));
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
