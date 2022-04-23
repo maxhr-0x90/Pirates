@@ -330,4 +330,30 @@ public class Socket extends WebSocketServer {
 		// La partie est désormais whitelistée
 		whiteListed = true;
 	}
+
+	/**
+		* Permet d'envoyer à tous les utilisateurs pendant le jeu
+		* @param message Message à envoyer
+	*/
+	public static void envoyerWhiteLists(String message){
+		// Envoi à la moitié gauche des rouges
+		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
+      ((WebSocket)entry.getValue()).send(message);
+    }
+
+		// Envoi à la moitié droite des rouges
+		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeD.entrySet()){
+      ((WebSocket)entry.getValue()).send(message);
+    }
+
+		// Envoi à la moitié gauche des bleus
+		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
+      ((WebSocket)entry.getValue()).send(message);
+    }
+
+		// Envoi à la moitié droite des bleus
+		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueD.entrySet()){
+      ((WebSocket)entry.getValue()).send(message);
+    }
+	}
 }
