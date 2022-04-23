@@ -42,7 +42,8 @@ public class MainScreen implements Screen {
         PARENT = parent;
         engine = new PooledEngine();
 
-        worldBuilder = new WorldBuilder(engine, Game.assets);
+        Game.worldBuilder = new WorldBuilder(engine, Game.assets);
+        worldBuilder = Game.worldBuilder;
         worldBuilder.generateWorld();
 
         renderSys = new RenderingSystem();
@@ -61,6 +62,7 @@ public class MainScreen implements Screen {
     public void show() {
         Socket.separation();
         Gdx.input.setInputProcessor(clavier);
+        clavier.reset();
         timer = TIMER_INIT;
     }
 
