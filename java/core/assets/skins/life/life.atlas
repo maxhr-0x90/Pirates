@@ -1,0 +1,45 @@
+
+life.png
+size: 512, 512
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+bg_life
+  rotate: false
+  xy: 131, 223
+  size: 70, 70
+  split: 33, 33, 33, 33
+  pad: 19, 19, 19, 19
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+knob_life
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  split: 14, 14, 14, 14
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+knob_life_deact
+  rotate: false
+  xy: 131, 189
+  size: 32, 32
+  split: 14, 14, 14, 14
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skull
+  rotate: false
+  xy: 1, 165
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+skull_act
+  rotate: false
+  xy: 1, 35
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

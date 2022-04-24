@@ -28,8 +28,12 @@ public class WorldBuilder {
     private Engine engine;
     private World world;
     public int niveauCourant = 0;
+
     public Entity bateauA;
     public Entity bateauB;
+
+    public Entity flecheA;
+    public Entity flecheB;
 
     private Assets assets;
 
@@ -55,9 +59,9 @@ public class WorldBuilder {
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
+        createArrows();
         creeMarchandise(0,0);
         createOcean();
-
     }
 
     /** Renvoie une entité bateau
@@ -125,7 +129,7 @@ public class WorldBuilder {
         model = assets.manager.get(assets.boatBModel, Model.class);
       }
 
-      modC.model = new ModelInstance(model);
+      modC.setModel(new ModelInstance(model));
 
 
       /* On ajoute les components à l'entité */
@@ -193,7 +197,7 @@ public class WorldBuilder {
       bodyC.body.setUserData(merchendise);
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
+      modC.setModel(new ModelInstance(assets.manager.get(assets.merchModel, Model.class)));
       modC.transform.scale(weight/2.3f, weight/2.3f, weight/2.3f);
 
       /*On ajoute les components à l'entité*/
@@ -202,6 +206,9 @@ public class WorldBuilder {
       merchendise.add(typeC);
       merchendise.add(colC);
       merchendise.add(modC);
+
+      flecheA.getComponent(DirectionComponent.class).dest = bodyC.body;
+      flecheB.getComponent(DirectionComponent.class).dest = bodyC.body;
 
       engine.addEntity(merchendise);
     }
@@ -269,7 +276,7 @@ public class WorldBuilder {
       bodyC.body.setUserData(merchendise);
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(assets.manager.get(assets.merchModel, Model.class));
+      modC.setModel(new ModelInstance(assets.manager.get(assets.merchModel, Model.class)));
       modC.transform.scale(weight/2, weight/2, weight/2);
 
       /*On ajoute les components à l'entité*/
@@ -278,6 +285,9 @@ public class WorldBuilder {
       merchendise.add(typeC);
       merchendise.add(colC);
       merchendise.add(modC);
+
+      flecheA.getComponent(DirectionComponent.class).dest = bodyC.body;
+      flecheB.getComponent(DirectionComponent.class).dest = bodyC.body;
 
       engine.addEntity(merchendise);
       return merchendise;
@@ -297,7 +307,7 @@ public class WorldBuilder {
       ModelComponent modC = new ModelComponent();
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(assets.manager.get(assets.canonballModel, Model.class));
+      modC.setModel(new ModelInstance(assets.manager.get(assets.canonballModel, Model.class)));
       modC.transform.scale(5, 5, 5);
 
       cannonballC.camps = camps;
@@ -356,10 +366,10 @@ public class WorldBuilder {
       ModelComponent modC = new ModelComponent();
 
       /* Définition du modèle de l'entité */
-      modC.model = new ModelInstance(ModelGenerator.seaModel(
+      modC.setModel(new ModelInstance(ModelGenerator.seaModel(
               IConfig.LARGEUR_CARTE * 1.5f, 30f,
               IConfig.LARGEUR_CARTE, IConfig.HAUTEUR_CARTE, 4, 1f/4
-      ));
+      )));
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
@@ -401,6 +411,35 @@ public class WorldBuilder {
       ocean.add(modC);
 
       engine.addEntity(ocean);
+    }
+
+    private void createArrows(){
+      flecheA = new Entity();
+      flecheB = new Entity();
+
+      Model flecheMod = assets.manager.get(assets.arrowModel, Model.class);
+      ModelComponent modC = new ModelComponent();
+      DirectionComponent dirC = new DirectionComponent();
+
+      /* Définition du modèle de l'entité */
+      modC.setModel(new ModelInstance(flecheMod));
+      dirC.src = bateauA.getComponent(BodyComponent.class).body;
+
+      flecheA.add(modC);
+      flecheA.add(dirC);
+
+      modC = new ModelComponent();
+      dirC = new DirectionComponent();
+
+      /* Définition du modèle de l'entité */
+      modC.setModel(new ModelInstance(flecheMod));
+      dirC.src = bateauB.getComponent(BodyComponent.class).body;
+
+      flecheB.add(modC);
+      flecheB.add(dirC);
+
+      engine.addEntity(flecheA);
+      engine.addEntity(flecheB);
     }
 
     /** Selection via un aléatoire controlé d'une position sur la carte
