@@ -28,15 +28,15 @@ public class CollisionSystem extends IteratingSystem{
   ComponentMapper<BodyComponent> bodyMap;
   WorldBuilder world;
 
-	public CollisionSystem(WorldBuilder world) {
-		super(Family.all(CollisionComponent.class).get());
-		this.colM = ComponentMapper.getFor(CollisionComponent.class);
-		this.boatM = ComponentMapper.getFor(StatComponent.class);
+  public CollisionSystem(WorldBuilder world) {
+    super(Family.all(CollisionComponent.class).get());
+    this.colM = ComponentMapper.getFor(CollisionComponent.class);
+    this.boatM = ComponentMapper.getFor(StatComponent.class);
     this.merchendiseM = ComponentMapper.getFor(MerchendiseComponent.class);
     this.bodyMap = ComponentMapper.getFor(BodyComponent.class);
     this.cannonballM = ComponentMapper.getFor(CannonballComponent.class);
     this.world = world;
-	}
+  }
 
   @Override
   protected void processEntity(Entity entite, float temps){

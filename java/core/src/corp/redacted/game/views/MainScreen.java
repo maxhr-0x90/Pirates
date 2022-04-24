@@ -6,14 +6,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.utils.Timer;
 import corp.redacted.game.Game;
 import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.controller.KeyboardController;
 import corp.redacted.game.entity.components.StatComponent;
-import corp.redacted.game.entity.systems.BoatSystem;
-import corp.redacted.game.entity.systems.CollisionSystem;
-import corp.redacted.game.entity.systems.PhysicsDebugSystem;
-import corp.redacted.game.entity.systems.RenderingSystem;
+import corp.redacted.game.entity.systems.*;
 
 import corp.redacted.game.serveur.Socket;
 
@@ -35,7 +33,7 @@ public class MainScreen implements Screen {
     private boolean debugging = false;
     private boolean freeCam = false;
 
-    private final float TIMER_INIT = 1 * 30f;
+    private final float TIMER_INIT = 2 * 60f;
     public static float timer;
 
     public MainScreen(Game parent){
@@ -54,6 +52,7 @@ public class MainScreen implements Screen {
         engine.addSystem(renderSys);
         engine.addSystem(new BoatSystem(clavier, worldBuilder));
         engine.addSystem(new CollisionSystem(worldBuilder));
+        engine.addSystem(new ArrowSystem());
 
         camCtrl = new CameraInputController(renderSys.getCam());
     }
@@ -63,7 +62,7 @@ public class MainScreen implements Screen {
         Socket.separation();
         Gdx.input.setInputProcessor(clavier);
         clavier.reset();
-        renderSys.setBateaux(worldBuilder.bateauA, worldBuilder.bateauB);
+        renderSys.setBoats(worldBuilder.bateauA, worldBuilder.bateauB);
         timer = TIMER_INIT;
     }
 
@@ -169,10 +168,15 @@ public class MainScreen implements Screen {
      * Fonction de fin de partie
      */
     public void endGame(){
-        EndScreen end = (EndScreen) PARENT.getScreen(Game.END);
-        end.updateLabels();
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                EndScreen end = (EndScreen) PARENT.getScreen(Game.END);
+                end.updateLabels();
 
-        PARENT.switchScreen(Game.END);
+                PARENT.switchScreen(Game.END);
+            }
+        }, 1f);
     }
 
     @Override

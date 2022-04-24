@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.*;
@@ -21,6 +22,7 @@ import corp.redacted.game.IConfig;
 import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.entity.components.BodyComponent;
 import corp.redacted.game.entity.components.ModelComponent;
+import corp.redacted.game.entity.components.StatComponent;
 import corp.redacted.game.entity.components.TypeComponent;
 import corp.redacted.game.loader.Assets;
 import corp.redacted.game.shader.CustomShaderProvider;
@@ -29,10 +31,9 @@ import corp.redacted.game.views.MainScreen;
 public class RenderingSystem extends IteratingSystem {
     private ComponentMapper<ModelComponent> modelMap;
     private ComponentMapper<BodyComponent> bodyMap;
-    private ComponentMapper<TypeComponent> typeMap;
 
     private PerspectiveCamera cam;
-    private float fovV = 80;
+    private float fovV = 67;
 
     private Array<Entity> renderQueue;
     private Environment environment;
@@ -47,7 +48,9 @@ public class RenderingSystem extends IteratingSystem {
     private Entity batG, batD;
 
     private SpriteBatch spriteBatch;
-    private BitmapFont defaultFont, mainFont;
+    private BitmapFont defaultFont;
+
+    private GameHUD hud;
 
     public RenderingSystem() {
         super(Family.all(ModelComponent.class).get());
@@ -55,7 +58,6 @@ public class RenderingSystem extends IteratingSystem {
         // Initialisation des maps
         modelMap = ComponentMapper.getFor(ModelComponent.class);
         bodyMap = ComponentMapper.getFor(BodyComponent.class);
-        typeMap = ComponentMapper.getFor(TypeComponent.class);
 
         // Création de l'environnement 3D
         environment = new Environment();
@@ -98,13 +100,7 @@ public class RenderingSystem extends IteratingSystem {
         spriteBatch = new SpriteBatch();
         defaultFont = new BitmapFont();
 
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Assets.pirateFont));
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 48;
-        fontParameter.borderWidth = 3;
-        fontParameter.borderColor = Color.DARK_GRAY;
-        fontParameter.color = Color.WHITE;
-        mainFont = fontGenerator.generateFont(fontParameter);
+        hud = new GameHUD();
     }
 
     @Override
@@ -117,7 +113,12 @@ public class RenderingSystem extends IteratingSystem {
             globalRender();
         }
 
-        hudRender();
+        Gdx.gl.glViewport(
+                hud.getViewport().getScreenX(), Gdx.graphics.getHeight() - hud.getViewport().getScreenHeight(),
+                hud.getViewport().getScreenWidth(), hud.getViewport().getScreenHeight()
+        );
+        hud.updateLife(batG.getComponent(StatComponent.class).barreVie, batD.getComponent(StatComponent.class).barreVie);
+        hud.render(deltaTime);
 
         if (debugging) {debugRender();}
 
@@ -151,7 +152,8 @@ public class RenderingSystem extends IteratingSystem {
     private void splitRender(){
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        int viewWidth = Gdx.graphics.getWidth();
+        int gap = 25;
+        int viewWidth = Gdx.graphics.getWidth() - gap;
         int viewHeight = Gdx.graphics.getHeight();
 
         BodyComponent bodyBatG = bodyMap.get(batG);
@@ -164,19 +166,35 @@ public class RenderingSystem extends IteratingSystem {
         beginBatchRender();
 
         // Bateau à droite
-        Gdx.gl.glViewport(viewWidth /  2, 0, viewWidth / 2, viewHeight);
+        Gdx.gl.glViewport(viewWidth /  2 + gap, 0, viewWidth / 2, viewHeight);
         updateCamSplit(viewWidth, viewHeight, bodyBatD);
         beginBatchRender();
     }
 
     private void updateCamSplit(int viewWidth, int viewHeight, BodyComponent bodyBat) {
+        float camDistance = 150f;
+        float viewingAngle = 15f;
+        boolean lock = false;
         Vector2 pos;
         cam.viewportWidth = viewWidth / 2f;
         cam.viewportHeight = viewHeight;
 
         pos = bodyBat.body.getPosition();
-        cam.position.set(pos.x, pos.y - 20, 100);
+        Vector3 camPos = new Vector3(0, 0, camDistance);
+        camPos.rotate(new Vector3(1, 0, 0), viewingAngle);
+        if (lock){
+            camPos.rotate(new Vector3(0, 0, 1), (float)Math.toDegrees(bodyBat.body.getAngle()));
+        }
+        camPos.add(new Vector3(pos, 0));
+
+        cam.position.set(camPos);
         cam.lookAt(pos.x, pos.y, 0);
+        cam.up.set(cam.direction);
+        Vector3 tangent = new Vector3(-1, 0, 0);
+        if (lock){
+           tangent.rotate(new Vector3(0, 0, 1), (float)Math.toDegrees(bodyBat.body.getAngle()));
+        }
+        cam.up.crs(tangent);
 
         cam.update();
     }
@@ -199,14 +217,14 @@ public class RenderingSystem extends IteratingSystem {
     }
 
     private void applyBodyTransform(ModelComponent modelComp, BodyComponent bodyComp) {
+        modelComp.model.transform.idt();
         if (bodyComp != null){
             Vector2 pos = bodyComp.body.getWorldCenter();
             float angle = bodyComp.body.getAngle();
-            modelComp.model.transform.idt();
             modelComp.model.transform.translate(new Vector3(pos, 0));
             modelComp.model.transform.rotateRad(new Vector3(0, 0, 1), angle);
-            modelComp.model.transform.mul(modelComp.transform);
         }
+        modelComp.model.transform.mul(modelComp.transform);
     }
 
     private boolean isVisible(ModelComponent model, PerspectiveCamera cam){
@@ -261,17 +279,6 @@ public class RenderingSystem extends IteratingSystem {
         spriteBatch.end();
     }
 
-    private void hudRender(){
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        float timer = Math.max(MainScreen.timer, 0);
-        String time = String.format("%d:%02d", (int) Math.floor(timer / 60), (int) timer % 60);
-
-        spriteBatch.begin();
-        mainFont.draw(spriteBatch, time, 0, Gdx.graphics.getHeight());
-        spriteBatch.end();
-    }
-
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         renderQueue.add(entity);
@@ -302,7 +309,7 @@ public class RenderingSystem extends IteratingSystem {
         }
     }
 
-    public void setBateaux(Entity batG, Entity batD){
+    public void setBoats(Entity batG, Entity batD){
         this.batG = batG;
         this.batD = batD;
     }
@@ -314,5 +321,6 @@ public class RenderingSystem extends IteratingSystem {
         if (!split){
             updateCam(IConfig.LARGEUR_CARTE + 20, IConfig.HAUTEUR_CARTE + 20, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
+        hud.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 }

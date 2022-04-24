@@ -28,8 +28,12 @@ public class WorldBuilder {
     private Engine engine;
     private World world;
     public int niveauCourant = 0;
+
     public Entity bateauA;
     public Entity bateauB;
+
+    public Entity flecheA;
+    public Entity flecheB;
 
     private Assets assets;
 
@@ -55,9 +59,9 @@ public class WorldBuilder {
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
+        createArrows();
         creeMarchandise(0,0);
         createOcean();
-
     }
 
     /** Renvoie une entité bateau
@@ -203,6 +207,9 @@ public class WorldBuilder {
       merchendise.add(colC);
       merchendise.add(modC);
 
+      flecheA.getComponent(DirectionComponent.class).dest = bodyC.body;
+      flecheB.getComponent(DirectionComponent.class).dest = bodyC.body;
+
       engine.addEntity(merchendise);
     }
 
@@ -278,6 +285,9 @@ public class WorldBuilder {
       merchendise.add(typeC);
       merchendise.add(colC);
       merchendise.add(modC);
+
+      flecheA.getComponent(DirectionComponent.class).dest = bodyC.body;
+      flecheB.getComponent(DirectionComponent.class).dest = bodyC.body;
 
       engine.addEntity(merchendise);
       return merchendise;
@@ -401,6 +411,35 @@ public class WorldBuilder {
       ocean.add(modC);
 
       engine.addEntity(ocean);
+    }
+
+    private void createArrows(){
+      flecheA = new Entity();
+      flecheB = new Entity();
+
+      Model flecheMod = assets.manager.get(assets.arrowModel, Model.class);
+      ModelComponent modC = new ModelComponent();
+      DirectionComponent dirC = new DirectionComponent();
+
+      /* Définition du modèle de l'entité */
+      modC.setModel(new ModelInstance(flecheMod));
+      dirC.src = bateauA.getComponent(BodyComponent.class).body;
+
+      flecheA.add(modC);
+      flecheA.add(dirC);
+
+      modC = new ModelComponent();
+      dirC = new DirectionComponent();
+
+      /* Définition du modèle de l'entité */
+      modC.setModel(new ModelInstance(flecheMod));
+      dirC.src = bateauB.getComponent(BodyComponent.class).body;
+
+      flecheB.add(modC);
+      flecheB.add(dirC);
+
+      engine.addEntity(flecheA);
+      engine.addEntity(flecheB);
     }
 
     /** Selection via un aléatoire controlé d'une position sur la carte

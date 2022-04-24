@@ -16,6 +16,7 @@ public class Assets {
     public final String boatBModel = "models/bateauBleu.g3dj";
     public final String boatRModel = "models/bateauRouge.g3dj";
     public final String canonballModel = "models/boulet.g3dj";
+    public final String arrowModel = "models/arrow.g3dj";
 
     // Polices
     public static final String pirateFont = "fonts/TheDarkestPearl.ttf";
@@ -33,6 +34,7 @@ public class Assets {
         manager.load(merchModel, Model.class);
         manager.load(boatBModel, Model.class);
         manager.load(boatRModel, Model.class);
+        manager.load(arrowModel, Model.class);
     }
 
     public void queueAddTextures(){
