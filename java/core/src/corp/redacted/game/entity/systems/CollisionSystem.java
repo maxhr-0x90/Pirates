@@ -85,7 +85,7 @@ public class CollisionSystem extends IteratingSystem{
                 //Verif si pas de morts
                 if(boat.barreVie <= 0){
                   //fin de la manche
-                  world.removeEntite(entite);
+                  //world.removeEntite(entite);
                   for(Fixture fix : bodyA.body.getFixtureList()){
                     bodyA.body.destroyFixture(fix);
                   }
@@ -160,7 +160,7 @@ public class CollisionSystem extends IteratingSystem{
                 //Verif si pas de morts
                 if(boat.barreVie <= 0){
                   //fin de la manche
-                  world.removeEntite(entite);
+                  //world.removeEntite(entite);
                   for(Fixture fix : bodyB.body.getFixtureList()){
                     bodyB.body.destroyFixture(fix);
                   }
@@ -211,7 +211,7 @@ public class CollisionSystem extends IteratingSystem{
                 //Verif si pas de morts
                 if(boatA.barreVie <= 0){
                   //fin de la manche
-                  world.removeEntite(entiteEnCollision);
+                  //world.removeEntite(entiteEnCollision);
                   for(Fixture fix : bodyBoatA.body.getFixtureList()){
                     bodyBoatA.body.destroyFixture(fix);
                   }
@@ -233,7 +233,7 @@ public class CollisionSystem extends IteratingSystem{
                 //Verif si pas de morts
                 if(boatB.barreVie <= 0){
                   //fin de la manche
-                  world.removeEntite(entiteEnCollision);
+                  //world.removeEntite(entiteEnCollision);
                   for(Fixture fix : bodyBoatB.body.getFixtureList()){
                     bodyBoatB.body.destroyFixture(fix);
                   }

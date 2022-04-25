@@ -21,6 +21,7 @@ public class EndScreen implements Screen {
     public static String winningTeam = "???";
     public static int pts = 0;
     public static String victoryType = "par hasard ???";
+    public static boolean draw = false;
 
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
@@ -29,7 +30,7 @@ public class EndScreen implements Screen {
     private Stage stage;
     private Table table;
 
-    private Label winners, points, vicType;
+    private Label winners, ptsIntro, points, vicType;
 
     public EndScreen(Game parent){
         PARENT = parent;
@@ -54,9 +55,17 @@ public class EndScreen implements Screen {
      * Met à jour les labels
      */
     public void updateLabels(){
-        winners.setText("L'equipe " + winningTeam + " sort victorieuse de cet affrontrement !");
-        points.setText("Et ce avec en poche l'equivalent de " + pts + " $ en marchandises");
-        vicType.setText("Victoire " + victoryType);
+        if (draw){
+            winners.setText("Le pouvoir de la camaraderie l'emporte");
+            ptsIntro.setText("Nos equipes repartent mains dans la main avec");
+            points.setText(pts * 1000 + "$ en marchandises");
+            vicType.setText("Egalite");
+        } else {
+            winners.setText("L'equipe " + winningTeam + " sort victorieuse de cet affrontrement !");
+            ptsIntro.setText("Et ce avec en poche l'equivalent de");
+            points.setText(pts * 1000 + " $ en marchandises");
+            vicType.setText("Victoire " + victoryType);
+        }
     }
 
     /**
@@ -67,11 +76,15 @@ public class EndScreen implements Screen {
         //table.setDebug(true);
 
         winners = new Label("", new Label.LabelStyle(font, Color.WHITE));
+        ptsIntro = new Label("", new Label.LabelStyle(font, Color.WHITE));
         points = new Label("", new Label.LabelStyle(font, Color.WHITE));
         vicType = new Label("", new Label.LabelStyle(font, Color.WHITE));
 
-        table.add(winners).fillX().uniformX();
+
+        table.add(winners);
         table.row().pad(0, 0, 25, 0);
+        table.add(ptsIntro);
+        table.row().pad(0, 0, 10, 0);
         table.add(points);
         table.row().pad(0, 0, 25, 0);
         table.add(vicType);

@@ -60,7 +60,6 @@ public class ModelGenerator {
                 new Material(
                         ColorAttribute.createDiffuse(new Color(.05f, .45f, .75f, 1)),
                         ColorAttribute.createSpecular(new Color(1, 1, 1, 1)),
-                        new BlendingAttribute(0.8f),
                         TextureAttribute.createNormal(new Texture(Gdx.files.internal("models/Wave A.png")))
                 ),
                 Usage.Position | Usage.Normal | Usage.TextureCoordinates

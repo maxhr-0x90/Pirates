@@ -6,6 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleEffect;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleEffectLoader;
+import com.badlogic.gdx.graphics.g3d.particles.batches.ParticleBatch;
+import com.badlogic.gdx.graphics.g3d.particles.batches.PointSpriteParticleBatch;
+import com.badlogic.gdx.utils.Array;
 
 public class Assets {
     public final AssetManager manager = new AssetManager();
@@ -24,6 +29,9 @@ public class Assets {
     // Textures
     public static final String sandTexture = "models/TextureSand.png";
 
+    // PFX
+    public final String flamePFX = "pfx/canon_flame.pfx";
+
     /**
      * Charge les modèles 3D
      */
@@ -39,5 +47,10 @@ public class Assets {
 
     public void queueAddTextures(){
         manager.load(sandTexture, Texture.class);
+    }
+
+    public void queueAddPFX(Array<ParticleBatch<?>> batches){
+        ParticleEffectLoader.ParticleEffectLoadParameter parameter = new ParticleEffectLoader.ParticleEffectLoadParameter(batches);
+        manager.load(flamePFX, ParticleEffect.class, parameter);
     }
 }

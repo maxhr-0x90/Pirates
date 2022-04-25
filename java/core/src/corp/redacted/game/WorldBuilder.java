@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleEffect;
+import com.badlogic.gdx.graphics.g3d.particles.batches.ParticleBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -29,15 +31,14 @@ public class WorldBuilder {
     private World world;
     public int niveauCourant = 0;
 
-    public Entity bateauA;
-    public Entity bateauB;
+    public Entity bateauA, bateauB, ocean;
 
     public Entity flecheA;
     public Entity flecheB;
 
     private Assets assets;
 
-    public WorldBuilder(Engine engine, Assets assets){
+    public WorldBuilder(Engine engine, Assets assets, ParticleBatch<?> batch){
         world = new World(new Vector2(0, 0), true);
         this.engine = engine;
         world.setContactListener(new MyContactListener());
@@ -45,6 +46,9 @@ public class WorldBuilder {
 
         assets.queueAdd3DModels();
         assets.queueAddTextures();
+        Array<ParticleBatch<?>> singleton = new Array<>();
+        singleton.add(batch);
+        assets.queueAddPFX(singleton);
         assets.manager.finishLoading();
     }
 
@@ -130,7 +134,6 @@ public class WorldBuilder {
       }
 
       modC.setModel(new ModelInstance(model));
-
 
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);
@@ -305,10 +308,12 @@ public class WorldBuilder {
       TypeComponent typeC =  new TypeComponent();
       CollisionComponent colC = new CollisionComponent();
       ModelComponent modC = new ModelComponent();
+      PFXComponent pfxC = new PFXComponent();
 
       /* Définition du modèle de l'entité */
       modC.setModel(new ModelInstance(assets.manager.get(assets.canonballModel, Model.class)));
-      modC.transform.scale(5, 5, 5);
+      modC.transform.scale(4, 4, 4);
+      modC.transform.translate(0, 0, .5f);
 
       cannonballC.camps = camps;
       /* Définition du corps de l'enité */
@@ -342,12 +347,20 @@ public class WorldBuilder {
 
       bodyC.body.setUserData(cannonball);
 
+      pfxC = new PFXComponent();
+      pfxC.pfx = new ParticleEffect(assets.manager.get(assets.flamePFX, ParticleEffect.class));
+      //pfxC.transform.scale(2, 2, 2);
+
+      pfxC.pfx.init();
+      pfxC.pfx.start();
+
       /*On ajoute les components à l'entité*/
       cannonball.add(cannonballC);
       cannonball.add(bodyC);
       cannonball.add(typeC);
       cannonball.add(colC);
       cannonball.add(modC);
+      cannonball.add(pfxC);
 
       engine.addEntity(cannonball);
 
@@ -411,6 +424,7 @@ public class WorldBuilder {
       ocean.add(modC);
 
       engine.addEntity(ocean);
+      this.ocean = ocean;
     }
 
     private void createArrows(){

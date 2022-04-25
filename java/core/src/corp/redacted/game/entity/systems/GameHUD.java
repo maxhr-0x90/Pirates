@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import corp.redacted.game.loader.Assets;
 import corp.redacted.game.views.MainScreen;
 
@@ -19,7 +17,7 @@ public class GameHUD extends Stage {
     private Label timerLabel;
     private ProgressBar lifeBatG, lifeBatD;
     private Image deadG, deadD;
-    private Skin swag;
+    private Skin skinLife;
 
     public GameHUD(){
         super(new FitViewport(2560, 1440));
@@ -44,13 +42,13 @@ public class GameHUD extends Stage {
         //table.setDebug(true);
         table.top();
 
-        swag = new Skin(Gdx.files.internal("skins/life/life.json"));
+        skinLife = new Skin(Gdx.files.internal("skins/life/life.json"));
 
         timerLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
-        lifeBatG = new ProgressBar(0, 100, 1, true, swag);
-        lifeBatD = new ProgressBar(0, 100, 1, true, swag);
-        deadG = new Image(swag, "skull");
-        deadD = new Image(swag, "skull");
+        lifeBatG = new ProgressBar(0, 100, 1, true, skinLife);
+        lifeBatD = new ProgressBar(0, 100, 1, true, skinLife);
+        deadG = new Image(skinLife, "skull");
+        deadD = new Image(skinLife, "skull");
 
         table.add();
         table.add(timerLabel).expandX();
@@ -74,20 +72,36 @@ public class GameHUD extends Stage {
         draw();
     }
 
+    /**
+     * Met à jour les 2 barres de vies
+     *
+     * @param lifeG Points de vie pour la barre de vie gauche
+     * @param lifeD Points de vie pour la barre de vie droite
+     */
     public void updateLife(int lifeG, int lifeD){
         setLife(lifeBatG, deadG, lifeG);
         setLife(lifeBatD, deadD, lifeD);
     }
 
+    /**
+     * Met à jour une barre de vie
+     *
+     * @param life Barre de vie
+     * @param icon Icon de mort
+     * @param val Points de vie
+     */
     private void setLife(ProgressBar life, Image icon, int val){
         life.setValue(val);
 
         if (val <= 0){
-            icon.setDrawable(swag, "skull_act");
+            icon.setDrawable(skinLife, "skull_act");
             life.setDisabled(true);
         }
     }
 
+    /**
+     * Met à jour le timer
+     */
     private void updateTimer(){
         float timer = Math.max(MainScreen.timer, 0);
         String time = String.format("%d:%02d", (int) Math.floor(timer / 60), (int) timer % 60);
@@ -102,5 +116,15 @@ public class GameHUD extends Stage {
      */
     public void resize(int width, int height){
         getViewport().update(width, height, true);
+    }
+
+    /**
+     * Réinitialise le HUD
+     */
+    public void reset(){
+        deadG.setDrawable(skinLife, "skull");
+        deadD.setDrawable(skinLife, "skull");
+        lifeBatG.setDisabled(false);
+        lifeBatD.setDisabled(false);
     }
 }

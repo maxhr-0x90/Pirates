@@ -13,24 +13,27 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleEffect;
+import com.badlogic.gdx.graphics.g3d.particles.batches.PointSpriteParticleBatch;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import corp.redacted.game.IConfig;
 import corp.redacted.game.WorldBuilder;
-import corp.redacted.game.entity.components.BodyComponent;
-import corp.redacted.game.entity.components.ModelComponent;
-import corp.redacted.game.entity.components.StatComponent;
-import corp.redacted.game.entity.components.TypeComponent;
+import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
 import corp.redacted.game.shader.CustomShaderProvider;
 import corp.redacted.game.views.MainScreen;
 
+import java.util.ArrayList;
+
 public class RenderingSystem extends IteratingSystem {
     private ComponentMapper<ModelComponent> modelMap;
     private ComponentMapper<BodyComponent> bodyMap;
+    private ComponentMapper<PFXComponent> pfxMap;
 
     private PerspectiveCamera cam;
     private float fovV = 67;
@@ -52,12 +55,15 @@ public class RenderingSystem extends IteratingSystem {
 
     private GameHUD hud;
 
+    public PointSpriteParticleBatch particleBatch;
+
     public RenderingSystem() {
         super(Family.all(ModelComponent.class).get());
 
         // Initialisation des maps
         modelMap = ComponentMapper.getFor(ModelComponent.class);
         bodyMap = ComponentMapper.getFor(BodyComponent.class);
+        pfxMap = ComponentMapper.getFor(PFXComponent.class);
 
         // Création de l'environnement 3D
         environment = new Environment();
@@ -101,6 +107,8 @@ public class RenderingSystem extends IteratingSystem {
         defaultFont = new BitmapFont();
 
         hud = new GameHUD();
+
+        particleBatch = new PointSpriteParticleBatch();
     }
 
     @Override
@@ -132,16 +140,32 @@ public class RenderingSystem extends IteratingSystem {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+        Array<ParticleEffect> pfxQueue = new Array<>();
+
         modelBatch.begin(cam);
         for (Entity entity: renderQueue) {
             ModelComponent modelComp = modelMap.get(entity);
             BodyComponent bodyComp = bodyMap.get(entity);
+            PFXComponent pfxComp = pfxMap.get(entity);
+
+            if(pfxComp != null){
+                processPFX(pfxQueue, bodyComp, pfxComp);
+                pfxQueue.add(pfxComp.pfx);
+            }
 
             if(modelComp != null){
                 applyBodyTransform(modelComp, bodyComp);
                 modelBatch.render(modelComp.model, environment);
             }
         }
+
+        particleBatch.setCamera(cam);
+        particleBatch.begin();
+        for (ParticleEffect pfx: pfxQueue) {
+            pfx.draw();
+        }
+        particleBatch.end();
+        modelBatch.render(particleBatch);
 
         modelBatch.end();
     }
@@ -201,19 +225,46 @@ public class RenderingSystem extends IteratingSystem {
 
     private void beginBatchRender(){
         modelBatch.begin(cam);
+
+        Array<ParticleEffect> pfxQueue = new Array<>();
+
         for (Entity entity: renderQueue) {
             ModelComponent modelComp = modelMap.get(entity);
             BodyComponent bodyComp = bodyMap.get(entity);
+            PFXComponent pfxComp = pfxMap.get(entity);
+
+            if(pfxComp != null){
+                Matrix4 transform = processPFX(pfxQueue, bodyComp, pfxComp);
+                if (isVisible(pfxComp.pfx, transform, cam)){ pfxQueue.add(pfxComp.pfx); }
+            }
 
             if(modelComp != null){
                 applyBodyTransform(modelComp, bodyComp);
 
                 if (isVisible(modelComp, cam)){ modelBatch.render(modelComp.model, environment); }
-                //modelBatch.render(modelComp.model, environment);
             }
         }
 
+        particleBatch.setCamera(cam);
+        particleBatch.begin();
+        for (ParticleEffect pfx: pfxQueue) {
+            pfx.draw();
+        }
+        particleBatch.end();
+        modelBatch.render(particleBatch);
+
         modelBatch.end();
+    }
+
+    private Matrix4 processPFX(Array<ParticleEffect> pfxQueue, BodyComponent bodyComp, PFXComponent pfxComp) {
+        Matrix4 transform = new Matrix4();
+        if (bodyComp != null){
+            transform.translate(new Vector3(bodyComp.body.getPosition(), 0));
+            transform.mul(pfxComp.transform);
+            pfxComp.pfx.setTransform(transform);
+        }
+        pfxComp.pfx.update();
+        return transform;
     }
 
     private void applyBodyTransform(ModelComponent modelComp, BodyComponent bodyComp) {
@@ -230,6 +281,11 @@ public class RenderingSystem extends IteratingSystem {
     private boolean isVisible(ModelComponent model, PerspectiveCamera cam){
         BoundingBox bb = new BoundingBox(model.bounds);
         return cam.frustum.boundsInFrustum(bb.mul(model.model.transform));
+    }
+
+    private boolean isVisible(ParticleEffect pfx, Matrix4 transform, PerspectiveCamera cam){
+        BoundingBox bb = new BoundingBox(pfx.getBoundingBox());
+        return  cam.frustum.boundsInFrustum(bb.mul(transform));
     }
 
     /**
@@ -309,9 +365,22 @@ public class RenderingSystem extends IteratingSystem {
         }
     }
 
+    /**
+     * Récupère les entités bateaux
+     *
+     * @param batG Entité du bateau gauche
+     * @param batD Entité du bateau droit
+     */
     public void setBoats(Entity batG, Entity batD){
         this.batG = batG;
         this.batD = batD;
+    }
+
+    /**
+     * Réinitialise le HUD
+     */
+    public void resetHUD(){
+        hud.reset();
     }
 
     /**
