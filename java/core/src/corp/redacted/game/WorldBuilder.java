@@ -134,6 +134,7 @@ public class WorldBuilder {
       }
 
       modC.setModel(new ModelInstance(model));
+      modC.transform.translate(0, 0, 1);
 
       /* On ajoute les components à l'entité */
       bateau.add(bateauC);

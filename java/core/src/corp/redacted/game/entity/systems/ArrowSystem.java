@@ -17,7 +17,7 @@ public class ArrowSystem extends IteratingSystem {
         super(Family.all(DirectionComponent.class).get());
 
         directMap = ComponentMapper.getFor(DirectionComponent.class);
-        modelMap = ComponentMapper.getFor(ModelComponent.class);;
+        modelMap = ComponentMapper.getFor(ModelComponent.class);
     }
 
     @Override

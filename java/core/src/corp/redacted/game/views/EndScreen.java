@@ -5,9 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -30,7 +36,15 @@ public class EndScreen implements Screen {
     private Stage stage;
     private Table table;
 
-    private Label winners, ptsIntro, points, vicType;
+    private Label winners, points, vicType;
+
+    private ModelBatch modelBatch;
+    private PerspectiveCamera camera;
+    private Environment environment;
+    public static ModelInstance MODEL_BAT_BLEU, MODEL_BAT_ROUGE, MODEL_EGAL;
+    public static ModelInstance victoryModel;
+
+    private float angle = 0;
 
     public EndScreen(Game parent){
         PARENT = parent;
@@ -43,12 +57,36 @@ public class EndScreen implements Screen {
         fontParameter.color = Color.WHITE;
         font = fontGenerator.generateFont(fontParameter);
 
-        stage = new Stage(new FitViewport(2560, 1440));
+        stage = new Stage(new FitViewport(768 * 3.5f, 144 * 3.5f));
         table = new Table();
 
         setupTable();
 
         stage.addActor(table);
+
+        modelBatch = new ModelBatch();
+
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.add(new DirectionalLight().set(0.85f, 0.85f, 0.85f, -1f, -0.8f, -0.5f));
+
+        camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.position.set(20f, 0f, 20f);
+        camera.lookAt(0,0,5);
+        camera.up.set(0, 0, 1);
+        camera.near = .1f;
+        camera.far = 300f;
+        camera.update();
+
+        Game.assets.queueAdd3DModels();
+        Game.assets.manager.finishLoading();
+        MODEL_BAT_ROUGE = new ModelInstance(Game.assets.manager.get(Game.assets.boatRModel, Model.class));
+        MODEL_BAT_BLEU = new ModelInstance(Game.assets.manager.get(Game.assets.boatBModel, Model.class));
+        MODEL_EGAL = new ModelInstance(Game.assets.manager.get(Game.assets.shakeModel, Model.class));
+        MODEL_EGAL.transform.scale(2, 2, 2);
+        MODEL_EGAL.transform.translate(0, 0, 5);
+
+        victoryModel = MODEL_EGAL;
     }
 
     /**
@@ -56,14 +94,12 @@ public class EndScreen implements Screen {
      */
     public void updateLabels(){
         if (draw){
-            winners.setText("Le pouvoir de la camaraderie l'emporte");
-            ptsIntro.setText("Nos equipes repartent mains dans la main avec");
-            points.setText(pts * 1000 + "$ en marchandises");
+            winners.setText("Le pouvoir de la camaraderie l'emporte :)");
+            points.setText("Nos equipes repartent avec " + pts * 1000 + "$ en marchandises");
             vicType.setText("Egalite");
         } else {
             winners.setText("L'equipe " + winningTeam + " sort victorieuse de cet affrontrement !");
-            ptsIntro.setText("Et ce avec en poche l'equivalent de");
-            points.setText(pts * 1000 + " $ en marchandises");
+            points.setText("Et ce avec en poche l'equivalent de " + pts * 1000 + " $ en marchandises");
             vicType.setText("Victoire " + victoryType);
         }
     }
@@ -76,15 +112,12 @@ public class EndScreen implements Screen {
         //table.setDebug(true);
 
         winners = new Label("", new Label.LabelStyle(font, Color.WHITE));
-        ptsIntro = new Label("", new Label.LabelStyle(font, Color.WHITE));
         points = new Label("", new Label.LabelStyle(font, Color.WHITE));
         vicType = new Label("", new Label.LabelStyle(font, Color.WHITE));
 
 
         table.add(winners);
         table.row().pad(0, 0, 25, 0);
-        table.add(ptsIntro);
-        table.row().pad(0, 0, 10, 0);
         table.add(points);
         table.row().pad(0, 0, 25, 0);
         table.add(vicType);
@@ -99,9 +132,31 @@ public class EndScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        angle = (angle + delta) % 360;
+        float angluarSpeed = 20f;
 
+        camera.position.set(
+                22 * (float)Math.cos(Math.toRadians(angle * angluarSpeed)),
+                22 * (float)Math.sin(Math.toRadians(angle * angluarSpeed)),
+                22f
+        );
+        camera.lookAt(0,0,6);
+        camera.up.set(0, 0, 1);
+
+        camera.viewportWidth = Gdx.graphics.getWidth();
+        camera.viewportHeight = Gdx.graphics.getHeight() - stage.getViewport().getScreenHeight();
+        camera.update();
+
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - stage.getViewport().getScreenHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        modelBatch.begin(camera);
+        modelBatch.render(victoryModel, environment);
+        modelBatch.end();
+
+        Gdx.gl.glViewport(
+                stage.getViewport().getScreenX(), Gdx.graphics.getHeight() - stage.getViewport().getScreenHeight(),
+                stage.getViewport().getScreenWidth(), stage.getViewport().getScreenHeight()
+        );
         stage.act(delta);
         stage.draw();
 
