@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.SpotLight;
 import com.badlogic.gdx.graphics.g3d.particles.ParticleEffect;
 import com.badlogic.gdx.graphics.g3d.particles.batches.PointSpriteParticleBatch;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
@@ -68,7 +69,8 @@ public class RenderingSystem extends IteratingSystem {
         // Création de l'environnement 3D
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.75f, 0.75f, 0.75f, -1f, 0f, -1f));
+        environment.add(new DirectionalLight().set(0.65f, 0.65f, 0.75f, -1f, -1f,  -1f));
+        //environment.add(new SpotLight().set(0.75f, 0.75f, 0.75f, 0, 0, 1, 0, 0, -1, 1, 10, 1));
 
         // Placement de la camera
         cam = new PerspectiveCamera(fovV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

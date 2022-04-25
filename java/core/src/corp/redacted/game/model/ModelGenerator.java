@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
@@ -58,9 +59,10 @@ public class ModelGenerator {
                 -width/2, height/2, 0,
                 0, 1, 0,
                 new Material(
-                        ColorAttribute.createDiffuse(new Color(.05f, .45f, .75f, 1)),
+                        ColorAttribute.createDiffuse(new Color(.12f, .30f, .60f, 1)),
                         ColorAttribute.createSpecular(new Color(1, 1, 1, 1)),
-                        TextureAttribute.createNormal(new Texture(Gdx.files.internal("models/Wave A.png")))
+                        TextureAttribute.createNormal(new Texture(Gdx.files.internal("models/Wave_A.png"))),
+                        TextureAttribute.createAmbient(new Texture(Gdx.files.internal("models/Wave_B.png")))
                 ),
                 Usage.Position | Usage.Normal | Usage.TextureCoordinates
         );
@@ -91,13 +93,15 @@ public class ModelGenerator {
         node.id = "sand";
 
         TextureAttribute texAttr = TextureAttribute.createDiffuse(Game.assets.manager.get(Assets.sandTexture, Texture.class));
+        texAttr.scaleU = 4;
+        texAttr.scaleV = 4;
 
         meshBuilder = builder.part("sand", GL20.GL_TRIANGLES,
                 Usage.Position | Usage.Normal | Usage.TextureCoordinates,
                 new Material(
                         ColorAttribute.createAmbient(new Color(1, 1, 1, 1)),
                         ColorAttribute.createDiffuse(new Color(0.638190f, 0.486372f, 0.143198f, 1)),
-                        ColorAttribute.createSpecular(new Color(1, 1, 1, 1)),
+                        ColorAttribute.createSpecular(new Color(0.3f, 0.3f, 0.2f, 1)),
                         texAttr
                 )
         );
