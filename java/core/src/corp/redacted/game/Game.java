@@ -42,12 +42,16 @@ public class Game extends com.badlogic.gdx.Game {
 	private void usage(){
 		System.out.println("\n============================================================");
 		System.out.println("Bienvenue sur Pirates!");
+		System.out.println("Entrez Ctrl+X dans l'écran des options pour entrer sur l'écran de départ");
 		System.out.println("Entrez Ctrl+X dans l'écran de départ pour commencer la partie");
+		System.out.println("Entrez Ctrl+R dans l'écran de départ pour revenir à l'écran des options");
 		System.out.println("Pendant que la partie est en cours vous pouvez:");
 		System.out.println("\t - Entrer Ctrl+B pour entrer dans le mode debug");
 		System.out.println("\t - Entrer Ctrl+F pour terminer la partie prématurément");
 		System.out.println("\t - Entrer Ctrl+C pour activer la caméra libre");
 		System.out.println("\t - Entrer Ctrl+T pour voir le timer");
+		System.out.println("\t - Entrer Ctrl+I pour changer entre écran séparé et écran global");
+		System.out.println("\t - Entrer Ctrl+P pour mettre en pause le jeu");
 		System.out.println("Entrez Ctrl+R dans l'écran de fin pour revenir sur l'écran de départ");
 		System.out.println("============================================================\n");
 	}
