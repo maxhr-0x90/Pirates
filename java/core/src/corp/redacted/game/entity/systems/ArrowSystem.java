@@ -29,10 +29,10 @@ public class ArrowSystem extends IteratingSystem {
             Vector2 src = dirC.src.getPosition();
             Vector2 dest = dirC.dest.getPosition();
             Vector2 dir = new Vector2(src).add(new Vector2(dest).sub(src).nor().scl(Math.min(30, src.dst(dest))));
-            float scale = dir.dst(dest) / 10;
+            float scale = Math.max(Math.min(dir.dst(dest) / 10, 10), 1);
 
             modC.transform.idt();
-            modC.transform.translate(new Vector3(dir, 0));
+            modC.transform.translate(new Vector3(dir, 1));
             modC.transform.rotate(new Vector3(0 , 0, 1), new Vector2(dest).sub(src).angleDeg(new Vector2(0, 1)));
             modC.transform.scale(scale, scale, scale);
         }
