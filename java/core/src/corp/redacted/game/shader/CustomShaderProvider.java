@@ -10,20 +10,26 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 public class CustomShaderProvider extends DefaultShaderProvider {
     DefaultShader.Config shadeConf;
 
-    public CustomShaderProvider(DefaultShader.Config defaultConf){
+    public CustomShaderProvider(com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config defaultConf){
         super(defaultConf);
 
         shadeConf = new DefaultShader.Config();
-        shadeConf.vertexShader = Gdx.files.internal("shaders/basic.vertex.glsl").readString();
-        shadeConf.fragmentShader = Gdx.files.internal("shaders/basic.fragment.glsl").readString();
     }
 
     @Override
     protected Shader createShader(Renderable renderable) {
-        if (renderable.material.has(TextureAttribute.Normal)){
+        if (renderable.material.has(TextureAttribute.Ambient) && renderable.material.has(TextureAttribute.Normal)){
+            shadeConf.vertexShader = Gdx.files.internal("shaders/wave.vertex.glsl").readString();
+            shadeConf.fragmentShader = Gdx.files.internal("shaders/wave.fragment.glsl").readString();
+            return new DefaultShader(renderable, shadeConf);
+        } else if (renderable.material.has(TextureAttribute.Normal)){
+            shadeConf.vertexShader = Gdx.files.internal("shaders/basic.vertex.glsl").readString();
+            shadeConf.fragmentShader = Gdx.files.internal("shaders/basic.fragment.glsl").readString();
             return new DefaultShader(renderable, shadeConf);
         } else {
-            return super.createShader(renderable);
+            shadeConf.vertexShader = Gdx.files.internal("shaders/basic.vertex.glsl").readString();
+            shadeConf.fragmentShader = Gdx.files.internal("shaders/basic.fragment.glsl").readString();
+            return new DefaultShader(renderable, shadeConf);
         }
     }
 }
