@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import corp.redacted.game.Game;
 import corp.redacted.game.WorldBuilder;
 import corp.redacted.game.controller.KeyboardController;
+import corp.redacted.game.entity.components.ModelComponent;
 import corp.redacted.game.entity.components.StatComponent;
 import corp.redacted.game.entity.systems.*;
 
@@ -53,6 +55,8 @@ public class MainScreen implements Screen {
 
     private boolean start = true;
     private boolean paused = true;
+
+    private Node couronneA, couronneB;
 
     public MainScreen(Game parent){
         PARENT = parent;
@@ -112,6 +116,9 @@ public class MainScreen implements Screen {
         startTimer = START_TIMER_INIT;
         paused = true;
         start = true;
+
+        couronneA = worldBuilder.bateauA.getComponent(ModelComponent.class).model.getNode("Couronne");
+        couronneB = worldBuilder.bateauB.getComponent(ModelComponent.class).model.getNode("Couronne");
     }
 
     @Override
@@ -127,6 +134,7 @@ public class MainScreen implements Screen {
         endGameCheck();
 
         startTimerUpdate(delta);
+        updateCurrentWinner();
     }
 
     private void startTimerUpdate(float delta){
@@ -140,6 +148,31 @@ public class MainScreen implements Screen {
             timerLabel.setText(Integer.toString((int)Math.ceil(startTimer)));
             stage.act(delta);
             stage.draw();
+        }
+    }
+
+    private void updateCurrentWinner(){
+        StatComponent statA = worldBuilder.bateauA.getComponent(StatComponent.class);
+        StatComponent statB = worldBuilder.bateauB.getComponent(StatComponent.class);
+
+        Node nodeA = worldBuilder.bateauA.getComponent(ModelComponent.class).model.getNode("Bateau");
+        Node nodeB = worldBuilder.bateauB.getComponent(ModelComponent.class).model.getNode("Bateau");
+
+        if (statA.point == 0 && statB.point == 0){
+            couronneA.detach();
+            couronneB.detach();
+            return;
+        }
+
+        if (statA.point > statB.point){
+            couronneA.attachTo(nodeA);
+            couronneB.detach();
+        } else if (statA.point < statB.point){
+            couronneB.attachTo(nodeB);
+            couronneA.detach();
+        } else {
+            couronneA.attachTo(nodeA);
+            couronneB.attachTo(nodeB);
         }
     }
 
@@ -181,7 +214,7 @@ public class MainScreen implements Screen {
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.F)){
                 System.err.println("Partie terminé prématuré");
-                endGame();
+                endGame(0f);
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.T)){
@@ -205,14 +238,16 @@ public class MainScreen implements Screen {
             EndScreen.victoryType = "par destruction !";
             EndScreen.pts = statB.point;
             EndScreen.winningTeam = "bleu";
-            endGame();
+            EndScreen.victoryModel = EndScreen.MODEL_BAT_BLEU;
+            endGame(2f);
         }
 
         if (statB.barreVie <= 0){
             EndScreen.victoryType = "par destruction !";
             EndScreen.pts = statA.point;
             EndScreen.winningTeam = "rouge";
-            endGame();
+            EndScreen.victoryModel = EndScreen.MODEL_BAT_ROUGE;
+            endGame(2f);
         }
 
         if (timer <= 0f){
@@ -221,21 +256,24 @@ public class MainScreen implements Screen {
             if (statA.point > statB.point){
                 EndScreen.pts = statA.point;
                 EndScreen.winningTeam = "rouge";
+                EndScreen.victoryModel = EndScreen.MODEL_BAT_ROUGE;
             } else if (statA.point < statB.point){
                 EndScreen.pts = statB.point;
                 EndScreen.winningTeam = "bleu";
+                EndScreen.victoryModel = EndScreen.MODEL_BAT_BLEU;
             } else {
                 EndScreen.pts = statA.point;
                 EndScreen.draw = true;
+                EndScreen.victoryModel = EndScreen.MODEL_EGAL;
             }
-            endGame();
+            endGame(2f);
         }
     }
 
     /**
      * Fonction de fin de partie
      */
-    public void endGame(){
+    public void endGame(float wait){
         for (Entity e: engine.getEntities()) {
             if (e != worldBuilder.bateauA && e != worldBuilder.bateauB && e != worldBuilder.ocean){
                 engine.removeEntity(e);
@@ -249,7 +287,7 @@ public class MainScreen implements Screen {
 
                 PARENT.switchScreen(Game.END);
             }
-        }, 2f);
+        }, wait);
     }
 
     @Override

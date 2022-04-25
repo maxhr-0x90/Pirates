@@ -109,8 +109,8 @@ void main() {
     vec3 N = normalize(normV + normH);
 
     vec3 g_pos = v_position * 0.01;
-    vec4 lightBlue = vec4(0.075, 0.133, 0.424, 1.0);
-    vec4 darkBlue = vec4(0.141, 0.278, 0.561, 1.0);
+    vec4 darkBlue = vec4(0.075, 0.133, 0.424, 1.0);
+    vec4 lightBlue = vec4(0.141, 0.278, 0.561, 1.0);
     vec4 diffuse = mix(lightBlue, darkBlue, snoise(g_pos));
     vec4 specular = u_specularColor;
 

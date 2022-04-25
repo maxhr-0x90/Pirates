@@ -16,10 +16,10 @@ public class Assets {
     public final AssetManager manager = new AssetManager();
 
     // Modeles 3D
+    public final String shakeModel = "models/shake.g3dj";
     public final String merchModel = "models/tonneau.g3dj";
-    public final String boatModel = "models/bateau.g3dj";
-    public final String boatBModel = "models/bateauBleu.g3dj";
-    public final String boatRModel = "models/bateauRouge.g3dj";
+    public final String boatBModel = "models/bateauV2Bleu.g3dj";
+    public final String boatRModel = "models/bateauV2Rouge.g3dj";
     public final String canonballModel = "models/boulet.g3dj";
     public final String arrowModel = "models/arrow.g3dj";
 
@@ -37,12 +37,12 @@ public class Assets {
      */
     public void queueAdd3DModels(){
         //ModelLoader.ModelParameters mp = new ModelLoader.ModelParameters();
-        manager.load(boatModel, Model.class);
         manager.load(canonballModel, Model.class);
         manager.load(merchModel, Model.class);
         manager.load(boatBModel, Model.class);
         manager.load(boatRModel, Model.class);
         manager.load(arrowModel, Model.class);
+        manager.load(shakeModel, Model.class);
     }
 
     public void queueAddTextures(){
