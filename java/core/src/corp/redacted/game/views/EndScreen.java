@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -83,8 +84,6 @@ public class EndScreen implements Screen {
         MODEL_BAT_ROUGE = new ModelInstance(Game.assets.manager.get(Game.assets.boatRModel, Model.class));
         MODEL_BAT_BLEU = new ModelInstance(Game.assets.manager.get(Game.assets.boatBModel, Model.class));
         MODEL_EGAL = new ModelInstance(Game.assets.manager.get(Game.assets.shakeModel, Model.class));
-        MODEL_EGAL.transform.scale(2, 2, 2);
-        MODEL_EGAL.transform.translate(0, 0, 5);
 
         victoryModel = MODEL_EGAL;
     }
@@ -135,11 +134,7 @@ public class EndScreen implements Screen {
         angle = (angle + delta) % 360;
         float angluarSpeed = 20f;
 
-        camera.position.set(
-                22 * (float)Math.cos(Math.toRadians(angle * angluarSpeed)),
-                22 * (float)Math.sin(Math.toRadians(angle * angluarSpeed)),
-                22f
-        );
+        camera.position.set(22f,  0f,  22f);
         camera.lookAt(0,0,6);
         camera.up.set(0, 0, 1);
 
@@ -150,6 +145,12 @@ public class EndScreen implements Screen {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - stage.getViewport().getScreenHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         modelBatch.begin(camera);
+        victoryModel.transform.idt();
+        if (victoryModel == MODEL_EGAL) {
+            victoryModel.transform.scale(2, 2, 2);
+            victoryModel.transform.translate(0, 0, 5);
+        }
+        victoryModel.transform.rotate(new Vector3(0, 0, 1), angle * angluarSpeed);
         modelBatch.render(victoryModel, environment);
         modelBatch.end();
 
