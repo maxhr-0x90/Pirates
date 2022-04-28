@@ -19,6 +19,9 @@ webSocket.onmessage = function(event) {
   if(event.data === "redirect"){  // Redirection sur la page d'erreur
     document.location.href = "erreur.html";
   }
+  else if(event.data === "finjeu"){ // Redirection de fin de jeu vers le hub
+    document.location.href = "index.html";
+  }
   else if(event.data === "start"){  // Redirection sur la manette
     document.location.href = "manette.html";
   }

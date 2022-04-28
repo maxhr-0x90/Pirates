@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import corp.redacted.game.Game;
 import corp.redacted.game.loader.Assets;
+import corp.redacted.game.serveur.Socket;
 
 public class EndScreen implements Screen {
     private final Game PARENT;
@@ -169,6 +170,7 @@ public class EndScreen implements Screen {
      */
     private void checkCtrl(){
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.R)){
+            Socket.reinit();
             resetGame();
         }
     }

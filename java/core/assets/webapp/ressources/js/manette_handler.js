@@ -13,7 +13,7 @@ function remplissage_barre(barre){
   }
 }
 
-function drop(cote){
+function cooldown(cote){
   // let canon = document.getElementById();
 
   let boutons = document.querySelectorAll("td");
