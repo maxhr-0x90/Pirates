@@ -17,14 +17,14 @@
 		<table>
 			<tr>
 				<td>
-					<button id="rame_gauche" class="image" onclick="left(); couleur_equipe('rouge');"></button>
+					<button id="rame_gauche" class="image" onclick="left();"></button>
 				</td>
 				<td><button id="rame_droite" class="image" onclick="right()"></button></td>
 			</tr>
 			<tr>
-				<td><button id="canon_gauche" class="image" onclick="leftShot(); drop(2);"></button></td>
+				<td><button id="canon_gauche" class="image" onclick="leftShot(); cooldown(2);"></button></td>
 				<td>
-					<button id="canon_droit" class="image" onclick="rightShot(); drop(3);">
+					<button id="canon_droit" class="image" onclick="rightShot(); cooldown(3);">
 					</button>
 				</td>
 			</tr>

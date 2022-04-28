@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class Socket extends WebSocketServer {
 	public final static int PORT = 8889;
-	public final static Boolean DEBUG = true;
+	public final static Boolean DEBUG = false;
 
 	// Stockage des informations globales de déplacement et de tir des rouges
 	public static int numberLeftR = 0;
@@ -146,14 +146,19 @@ public class Socket extends WebSocketServer {
 		// Fermeture de la connexion d'un joueur avec la WebSocket
 
 		String ip = whiteListOut.get(session);
-		if(!whiteListed){
-			whiteListOut.remove(session);
-			if(whiteListIn.get(ip) != null){
-				whiteListIn.remove(ip);
+
+		try{
+			if(!whiteListed){
+				whiteListOut.remove(session);
+				if(whiteListIn.get(ip) != null){
+					whiteListIn.remove(ip);
+				}
+				if(positionWhiteList.get(ip) != null){
+					positionWhiteList.remove(ip);
+				}
 			}
-			if(positionWhiteList.get(ip) != null){
-				positionWhiteList.remove(ip);
-			}
+		}
+		catch(Exception e){
 		}
 
 		if(DEBUG){
@@ -356,4 +361,24 @@ public class Socket extends WebSocketServer {
       ((WebSocket)entry.getValue()).send(message);
     }
 	}
+
+	/**
+		* Fonction de reinitialisation de fin de jeu
+	*/
+  public static void reinit(){
+		// On remet le booleen whiteListed a False
+    whiteListed = false;
+
+		// On redirige tout le monde sur le hub de nouveau
+		envoyerWhiteLists("finjeu");
+
+    // On nettoie les whitelist
+    whiteListIn.clear();
+    positionWhiteList.clear();
+    whiteListBleueG.clear();
+    whiteListBleueD.clear();
+    whiteListRougeG.clear();
+    whiteListRougeD.clear();
+    whiteListOut.clear();
+  }
 }
