@@ -499,10 +499,10 @@ public class WorldBuilder {
       int zoneInt4 = Math.floorMod(zoneB+1, 8); //ZoneB +1
 
       for(int i = 0; i <= 7; i++){
-        if( (i != zoneA) && (i != zoneB) && (i!=zoneInt1) && (i!=zoneInt2) && (i!=zoneInt3) && (i!=zoneInt4) ){
-          zoneCandidate[nbCandidat] = i;
-          nbCandidat++;
-        }
+          if( (i != zoneA) && (i != zoneB) && (i!=zoneInt1) && (i!=zoneInt2) && (i!=zoneInt3) && (i!=zoneInt4) ){
+            zoneCandidate[nbCandidat] = i;
+            nbCandidat++;
+          }
       }
 
 
@@ -516,13 +516,14 @@ public class WorldBuilder {
       m2 = -m1;
 
       /*On tire aléatoire une position qui sera le centre*/
-      ecartTX = IConfig.LARGEUR_CARTE/10;
-      ecartTY = IConfig.HAUTEUR_CARTE/10;
-      moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
+      ecartTX = IConfig.LARGEUR_CARTE/15;
+      ecartTY = IConfig.HAUTEUR_CARTE/20;
+      moyenneX = (IConfig.LARGEUR_CARTE/2)/2;
       int nb_tirX_max= 50; //tirage aléatoire limité
       int nb_tirY_max = 50;
       int nb_tirX = 0;
       int nb_tirY = 0;
+
       switch(zoneM){
         case 0:
             posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
@@ -534,15 +535,15 @@ public class WorldBuilder {
               posx = weight;
             }
 
-            moyenneY = (posx)/2; //Calcule la moyenne de Y
+            moyenneY = (posx)/4; //Calcule la moyenne de Y
             posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-            /*On vérifie que y soit dans le bon intervalle*/
-            if(posy > (m1*posx -weight)){
-              posy = m1*posx - weight;
-            }else if(posy < weight){
-              posy = weight;
-            }
+            // /*On vérifie que y soit dans le bon intervalle*/
+            // if(posy > (m1*posx -weight)){
+            //   posy = m1*posx - weight;
+            // }else if(posy < weight){
+            //   posy = weight;
+            // }
         break;
 
         case 1:
@@ -555,15 +556,15 @@ public class WorldBuilder {
             posx = weight;
           }
 
-          moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/2; //Calcule la moyenne de Y
+          moyenneY = (IConfig.HAUTEUR_CARTE/2 + posx)/3; //Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy < (m1*posx -weight)){
-            posy = m1*posx - weight;
-          }else if(posy > IConfig.HAUTEUR_CARTE/2 - weight){
-            posy = IConfig.HAUTEUR_CARTE/2 - weight;
-          }
+          // /*On vérifie que y soit dans le bon intervalle*/
+          // if(posy < (m1*posx -weight)){
+          //   posy = m1*posx - weight;
+          // }else if(posy > IConfig.HAUTEUR_CARTE/2 - weight){
+          //   posy = IConfig.HAUTEUR_CARTE/2 - weight;
+          // }
         break;
 
         case 2:
@@ -577,15 +578,15 @@ public class WorldBuilder {
             posx = -weight;
           }
 
-          moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/2;//Calcule la moyenne de Y
+          moyenneY = (IConfig.HAUTEUR_CARTE/2 -posx)/3;//Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy < (m2*posx -weight)){
-            posy = m2*posx - weight;
-          }else if(posy > IConfig.HAUTEUR_CARTE/2 -weight){
-            posy = IConfig.HAUTEUR_CARTE/2 - weight;
-          }
+          // /*On vérifie que y soit dans le bon intervalle*/
+          // if(posy < (m2*posx -weight)){
+          //   posy = m2*posx - weight;
+          // }else if(posy > IConfig.HAUTEUR_CARTE/2 -weight){
+          //   posy = IConfig.HAUTEUR_CARTE/2 - weight;
+          // }
         break;
 
         case 3:
@@ -599,15 +600,15 @@ public class WorldBuilder {
             posx = -weight;
           }
 
-          moyenneY = (-posx)/2; //Calcule la moyenne de Y
+          moyenneY = (-posx)/4; //Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy > (m2*posx -weight)){
-            posy = m2*posx - weight;
-          }else if(posy < weight){
-            posy = weight;
-          }
+          // /*On vérifie que y soit dans le bon intervalle*/
+          // if(posy > (m2*posx -weight)){
+          //   posy = m2*posx - weight;
+          // }else if(posy < weight){
+          //   posy = weight;
+          // }
         break;
 
         case 4:
@@ -621,15 +622,9 @@ public class WorldBuilder {
             posx = -weight;
           }
 
-          moyenneY = (posx)/2; //Calcule la moyenne de Y
+          moyenneY = (posx)/4; //Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy > (m1*posx + weight)){
-            posy = m1*posx + weight;
-          }else if(posy > -weight){
-            posy = -weight;
-          }
         break;
 
         case 5:
@@ -643,19 +638,12 @@ public class WorldBuilder {
             posx = -weight;
           }
 
-          moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/2; //Calcule la moyenne de Y
+          moyenneY = (-IConfig.HAUTEUR_CARTE/2 + posx)/4; //Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy < (m1*posx -weight)){
-            posy = m1*posx - weight;
-          }else if(posy > -IConfig.HAUTEUR_CARTE/2 + weight){
-            posy = -IConfig.HAUTEUR_CARTE/2 + weight;
-          }
         break;
 
         case 6:
-          moyenneX = 2*(IConfig.LARGEUR_CARTE/2)/3;
           posx = (float)r.nextGaussian()*(ecartTX) + moyenneX; //On tire x
 
           /*On vérifie que x soit dans le bon intervalle, sinon on tronque*/
@@ -665,15 +653,9 @@ public class WorldBuilder {
             posx = weight;
           }
 
-          moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/2;//Calcule la moyenne de Y
+          moyenneY = (-IConfig.HAUTEUR_CARTE/2 - posx)/4;//Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy < (m2*posx -weight)){
-            posy = m2*posx - weight;
-          }else if(posy > -IConfig.HAUTEUR_CARTE/2 + weight){
-            posy = IConfig.HAUTEUR_CARTE/2 + weight;
-          }
         break;
 
         case 7:
@@ -687,15 +669,9 @@ public class WorldBuilder {
             posx = weight;
           }
 
-          moyenneY = (-posx)/2;//Calcule la moyenne de Y
+          moyenneY = (-posx)/4;//Calcule la moyenne de Y
           posy = (float)r.nextGaussian()*(ecartTY) + moyenneY; //On tir y
 
-          /*On vérifie que y soit dans le bon intervalle*/
-          if(posy > (m2*posx -weight)){
-            posy = m2*posx - weight;
-          }else if(posy < weight){
-            posy = weight;
-          }
         break;
 
         default:
