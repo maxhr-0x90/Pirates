@@ -224,6 +224,10 @@ public class MainScreen implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
                 paused = !paused;
             }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.R)){
+                timer = Math.min(timer, 3.5f);
+            }
         }
     }
 
