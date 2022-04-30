@@ -26,8 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.files.FileHandle;
-
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import corp.redacted.game.serveur.Socket;
+import java.lang.Float;
 
 
 /**
@@ -43,6 +44,7 @@ public class OptionScreen implements Screen {
     private Stage stage;
     private Table table;
     private Skin skin;
+    private TextField timer;
 
     private Label loading;
 
@@ -84,12 +86,14 @@ public class OptionScreen implements Screen {
         fontParameter.color = Color.WHITE;
         font = fontGenerator.generateFont(fontParameter);
 
+        Label labTime = new Label("Timer ", new Label.LabelStyle(font, Color.WHITE));
+        timer = new TextField("", skin);
+
         Label lab = new Label("", new Label.LabelStyle(font, Color.WHITE));
         Label lab2 = new Label("Premiere moitie d'equipe", new Label.LabelStyle(font, Color.WHITE));
         Label lab3 = new Label("Deuxieme moitie d'equipe", new Label.LabelStyle(font, Color.WHITE));
 
         /* CheckBox */
-
         Label cb1L = new Label("Rame droite",new Label.LabelStyle(font, Color.WHITE));
         CheckBox cb1 = new CheckBox(null, skin);
         cb1.setChecked(true);
@@ -176,7 +180,6 @@ public class OptionScreen implements Screen {
           }
         });
 
-
         table.add(lab);
         table.add(invit).fillX().uniformX();
         table.row().pad(0, 0, 200, 0);
@@ -185,6 +188,12 @@ public class OptionScreen implements Screen {
         table.add(loading);
         table.row().pad(0,0,0,0);
 
+        //Option pour le timer
+        table.add(labTime);
+        table.add(timer);
+        table.row().pad(0,0,0,0);
+
+        //Option de modularité des manettes
         table.add(lab2);
         // table.add(lab);
         table.add(lab);
@@ -220,9 +229,6 @@ public class OptionScreen implements Screen {
         table.add(cb3LB);
         table.add(cb3B);
 
-
-
-
     }
 
 
@@ -248,7 +254,14 @@ public class OptionScreen implements Screen {
      */
     private void checkCtrl(){
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.X)){
+          String time = timer.getText();
+          try{
+            MainScreen.TIMER_INIT = Float.parseFloat(time) * 60f;
+          }catch (Exception e) {
+            MainScreen.TIMER_INIT = 4 * 60f;
+          }finally{
             PARENT.switchScreen(Game.START);
+          }
         }
     }
 
