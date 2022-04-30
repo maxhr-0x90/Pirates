@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.math.MathUtils;
 
+import corp.redacted.game.serveur.Socket;
+
 
 public class CollisionSystem extends IteratingSystem{
   ComponentMapper<CollisionComponent> colM;
@@ -71,7 +73,10 @@ public class CollisionSystem extends IteratingSystem{
               for(Fixture fix : bodyMerchendise.body.getFixtureList()){
                 bodyMerchendise.body.destroyFixture(fix);
               }
+              String message = "points:"+boat.point;
+              Socket.envoyerWhiteLists(message, Socket.ROUGE);
               world.creeMarchandise();
+
               colC.collisionEntite = null;
             break;
 
@@ -146,6 +151,8 @@ public class CollisionSystem extends IteratingSystem{
               for(Fixture fix : bodyMerchendise.body.getFixtureList()){
                 bodyMerchendise.body.destroyFixture(fix);
               }
+              String message = "points :"+boat.point;
+              Socket.envoyerWhiteLists(message, Socket.BLEU);
               world.creeMarchandise();
               colC.collisionEntite = null;
             break;

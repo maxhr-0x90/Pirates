@@ -345,6 +345,7 @@ public class Socket extends WebSocketServer {
 	*/
 	public static void envoyerWhiteLists(String message, int couleur){
 		if(couleur == Socket.ROUGE || couleur == -1){
+			System.out.println(message);
 			// Envoi à la moitié gauche des rouges
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
 				((WebSocket)entry.getValue()).send(message);
@@ -355,6 +356,7 @@ public class Socket extends WebSocketServer {
 			}
 		}
 		if(couleur == Socket.BLEU || couleur == -1){
+			System.out.println(message);
 			// Envoi à la moitié gauche des bleus
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
 	      ((WebSocket)entry.getValue()).send(message);
@@ -375,7 +377,7 @@ public class Socket extends WebSocketServer {
     whiteListed = false;
 
 		// On redirige tout le monde sur le hub de nouveau
-		envoyerWhiteLists("finjeu");
+		envoyerWhiteLists("finjeu", -1);
 
     // On nettoie les whitelist
     whiteListIn.clear();

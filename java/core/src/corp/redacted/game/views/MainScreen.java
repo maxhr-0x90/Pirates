@@ -107,6 +107,10 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
+      ComponentMapper<MerchendiseComponent> merchendiseM = ComponentMapper.getFor(MerchendiseComponent.class);
+      MerchendiseComponent merchendise = merchendiseM.get(worldBuilder.firstMerch);
+
+      System.out.println(merchendise.merchendiseType);
         Socket.separation();
         Gdx.input.setInputProcessor(clavier);
         clavier.reset();
@@ -119,6 +123,13 @@ public class MainScreen implements Screen {
 
         couronneA = worldBuilder.bateauA.getComponent(ModelComponent.class).model.getNode("Couronne");
         couronneB = worldBuilder.bateauB.getComponent(ModelComponent.class).model.getNode("Couronne");
+        if(merchendise.merchendiseType == MerchendiseComponent.LITTLE_MERCHENDISE){
+          Socket.envoyerWhiteLists("P", -1);
+        }else if(merchendise.merchendiseType == MerchendiseComponent.CLASSIC_MERCHENDISE){
+          Socket.envoyerWhiteLists("M", -1);
+        }else{
+          Socket.envoyerWhiteLists("G", -1);
+        }
     }
 
     @Override
