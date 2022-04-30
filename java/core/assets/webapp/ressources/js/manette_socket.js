@@ -12,9 +12,11 @@ webSocket = new WebSocket(ws_address);
 // Implémentation des méthodes de communication avec la websocket
 webSocket.onopen = function(event){
   webSocket.send("manette");
+  webSocket.send("merch");
 };
 
 webSocket.onmessage = function(event){
+  console.log(event.data);
   let splitted = event.data.split(":");
   let buttons = document.querySelectorAll("button.image");
   let i;
@@ -28,7 +30,6 @@ webSocket.onmessage = function(event){
   else{
     // Le joueur fait partie d'une équipe
     if(splitted[0] === "rouge" || splitted[0] === "bleu"){
-
       for(i = 0; i < 4; i++){
         if(splitted[1][i] === "0"){
           buttons[i].disabled = true;
@@ -36,8 +37,22 @@ webSocket.onmessage = function(event){
       }
       couleur_equipe(splitted[0]);
     }
-    else{ // Sinon on affiche ce que la websocket à envoyé
-      updateOutput(event.data);
+    else if(splitted[0] === "points"){  // actualisation du nombre de points
+      points.innerHTML = "Points : " + splitted[1];
+    }
+    else if(splitted[0] === "merch"){ // Changement ou demande de marchandise
+      if(splitted[1] === "P"){
+        merch.innerHTML = "Taille de la marchandise : petite";
+      }
+      else if(splitted[1] === "P"){
+        merch.innerHTML = "Taille de la marchandise : moyenne";
+      }
+      else if(splitted[1] === "P"){
+        merch.innerHTML = "Taille de la marchandise : grosse";
+      }
+      else {
+        merch.innerHTML = "Taille de la marchandise : type inconnu";
+      }
     }
   }
 };
@@ -64,11 +79,6 @@ function leftShot(){
 // Fonction permettant de tirer à droite
 function rightShot(){
   webSocket.send("tdroit");
-}
-
-// Fonction de mise à jour du contenu de la boite de message
-function updateOutput(text) {
-  document.querySelector("#msg").innerHTML = text;
 }
 
 // Fonction de différencition visuelle de la manette par rapport à son équipe

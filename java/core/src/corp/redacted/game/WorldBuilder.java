@@ -20,6 +20,7 @@ import corp.redacted.game.entity.components.*;
 import corp.redacted.game.loader.Assets;
 import com.badlogic.gdx.math.MathUtils;
 import corp.redacted.game.model.ModelGenerator;
+import corp.redacted.game.serveur.Socket;
 
 import java.lang.Math;
 
@@ -31,7 +32,7 @@ public class WorldBuilder {
     private World world;
     public int niveauCourant = 0;
 
-    public Entity bateauA, bateauB, ocean;
+    public Entity bateauA, bateauB, ocean, firstMerch;
 
     public Entity flecheA;
     public Entity flecheB;
@@ -167,12 +168,17 @@ public class WorldBuilder {
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
+        Socket.instantMerch = "P";
+        Socket.envoyerWhiteLists("merch:P", -1);
       }else if(weight < MerchendiseComponent.LIMIT_CLASSIC_M){
         merchendiseC.merchendiseType = MerchendiseComponent.CLASSIC_MERCHENDISE;
+        Socket.instantMerch = "M";
+        Socket.envoyerWhiteLists("merch:M", -1);
       }else{
         merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
+        Socket.instantMerch = "G";
+        Socket.envoyerWhiteLists("merch:G", -1);
       }
-
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
@@ -214,6 +220,7 @@ public class WorldBuilder {
       flecheA.getComponent(DirectionComponent.class).dest = bodyC.body;
       flecheB.getComponent(DirectionComponent.class).dest = bodyC.body;
 
+      this.firstMerch = merchendise;
       engine.addEntity(merchendise);
     }
 
@@ -239,10 +246,13 @@ public class WorldBuilder {
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
+        Socket.envoyerWhiteLists("merch:P", -1);
       }else if(weight < MerchendiseComponent.LIMIT_CLASSIC_M){
         merchendiseC.merchendiseType = MerchendiseComponent.CLASSIC_MERCHENDISE;
+        Socket.envoyerWhiteLists("merch:M", -1);
       }else{
         merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
+        Socket.envoyerWhiteLists("merch:G", -1);
       }
 
       /*Définition de la position de la marchandise*/

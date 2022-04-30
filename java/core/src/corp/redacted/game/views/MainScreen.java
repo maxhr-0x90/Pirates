@@ -23,6 +23,8 @@ import corp.redacted.game.controller.KeyboardController;
 import corp.redacted.game.entity.components.ModelComponent;
 import corp.redacted.game.entity.components.StatComponent;
 import corp.redacted.game.entity.systems.*;
+import corp.redacted.game.entity.components.MerchendiseComponent;
+import com.badlogic.ashley.core.ComponentMapper;
 
 import corp.redacted.game.loader.Assets;
 import corp.redacted.game.serveur.Socket;
