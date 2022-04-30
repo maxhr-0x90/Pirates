@@ -45,7 +45,7 @@ public class MainScreen implements Screen {
     private boolean debugging = false;
     private boolean freeCam = false;
 
-    private final float TIMER_INIT = 2 * 60f;
+    public static float TIMER_INIT = 2 * 60f;
     public static float timer;
     private final float START_TIMER_INIT = 3f;
     private static float startTimer;
