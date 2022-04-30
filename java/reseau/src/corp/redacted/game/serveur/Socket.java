@@ -21,6 +21,8 @@ import java.util.Set;
 import java.util.Map;
 
 public class Socket extends WebSocketServer {
+	public final static int ROUGE = 0;
+	public final static int BLEU = 1;
 	public final static int PORT = 8889;
 	public final static Boolean DEBUG = false;
 
@@ -337,29 +339,32 @@ public class Socket extends WebSocketServer {
 	}
 
 	/**
-		* Permet d'envoyer à tous les utilisateurs pendant le jeu
+		* Permet d'envoyer à un camp ou à tous pendant le jeu
 		* @param message Message à envoyer
+		* @param couleur ROUGE, BLEU ou -1 pour tous
 	*/
-	public static void envoyerWhiteLists(String message){
-		// Envoi à la moitié gauche des rouges
-		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
-      ((WebSocket)entry.getValue()).send(message);
-    }
+	public static void envoyerWhiteLists(String message, int couleur){
+		if(couleur == Socket.ROUGE || couleur == -1){
+			// Envoi à la moitié gauche des rouges
+			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
+				((WebSocket)entry.getValue()).send(message);
+			}
+			// Envoi à la moitié droite des rouges
+			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeD.entrySet()){
+				((WebSocket)entry.getValue()).send(message);
+			}
+		}
+		if(couleur == Socket.BLEU || couleur == -1){
+			// Envoi à la moitié gauche des bleus
+			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
+	      ((WebSocket)entry.getValue()).send(message);
+	    }
 
-		// Envoi à la moitié droite des rouges
-		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeD.entrySet()){
-      ((WebSocket)entry.getValue()).send(message);
-    }
-
-		// Envoi à la moitié gauche des bleus
-		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
-      ((WebSocket)entry.getValue()).send(message);
-    }
-
-		// Envoi à la moitié droite des bleus
-		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueD.entrySet()){
-      ((WebSocket)entry.getValue()).send(message);
-    }
+			// Envoi à la moitié droite des bleus
+			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueD.entrySet()){
+	      ((WebSocket)entry.getValue()).send(message);
+	    }
+		}
 	}
 
 	/**
