@@ -10,31 +10,27 @@
 		<title>Manette</title>
 	</head>
 	<body>
-
-		<!-- <button disabled class="" onclick="left()"></button> -->
-
-
-		<table>
-			<tr>
-				<td>
-					<button id="rame_gauche" class="image" onclick="left();"></button>
-				</td>
-				<td><button id="rame_droite" class="image" onclick="right()"></button></td>
-			</tr>
-			<tr>
-				<td><button id="canon_gauche" class="image" onclick="leftShot(); cooldown(2);"></button></td>
-				<td>
-					<button id="canon_droit" class="image" onclick="rightShot(); cooldown(3);">
-					</button>
-				</td>
-			</tr>
-		</table>
-
-		<div id="msgbox">
-			<div id="opacity"></div>
-			<div id="text">
-				<u>Infos :</u>
-				<p id="msg"></p>
+		<div id="manette">
+			<div id="points" class="msgbox">
+				Points : 0
+			</div>
+			<table>
+				<tr>
+					<td>
+						<button id="rame_gauche" class="image" onclick="left();"></button>
+					</td>
+					<td><button id="rame_droite" class="image" onclick="right();"></button></td>
+				</tr>
+				<tr>
+					<td><button id="canon_gauche" class="image" onclick="leftShot(); cooldown(2);"></button></td>
+					<td>
+						<button id="canon_droit" class="image" onclick="rightShot(); cooldown(3);">
+						</button>
+					</td>
+				</tr>
+			</table>
+			<div id="merch" class="msgbox">
+				Marchandise : moyenne
 			</div>
 		</div>
 	</body>

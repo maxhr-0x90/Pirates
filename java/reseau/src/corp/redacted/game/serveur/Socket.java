@@ -53,6 +53,9 @@ public class Socket extends WebSocketServer {
 	public static int tirGaucheD = 1;
 	public static int tirDroiteD = 1;
 
+	// Catégorie de la marchandise actuelle
+	public static String instantMerch = "";
+
 	/* HASHTABLES UTILISEE AVANT LA SEPARATION*/
 	// White list avant séparation
 	public static Hashtable<String, WebSocket> whiteListIn;
@@ -224,6 +227,9 @@ public class Socket extends WebSocketServer {
 				session.send("redirect");
 			}
 		}
+		else if(message.equals("merch")){	// Demande de la marchandise actuelle
+			session.send("merch:"+instantMerch);
+		}
 		else{ // Autre message
 			try{
 				// Si c'est une position on la concerve
@@ -345,7 +351,6 @@ public class Socket extends WebSocketServer {
 	*/
 	public static void envoyerWhiteLists(String message, int couleur){
 		if(couleur == Socket.ROUGE || couleur == -1){
-			System.out.println(message);
 			// Envoi à la moitié gauche des rouges
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
 				((WebSocket)entry.getValue()).send(message);
@@ -356,7 +361,6 @@ public class Socket extends WebSocketServer {
 			}
 		}
 		if(couleur == Socket.BLEU || couleur == -1){
-			System.out.println(message);
 			// Envoi à la moitié gauche des bleus
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
 	      ((WebSocket)entry.getValue()).send(message);

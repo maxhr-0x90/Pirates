@@ -48,7 +48,7 @@ public class DesktopLauncher {
 			Metronome.timer.purge();
 		}
 		catch(Exception e){
-			System.out.println("JE SORSSSSSSSSSSSSs");
+			System.out.println("Quelque chose s'est visiblement mal passé");
 			e.printStackTrace();
 		}
 	}

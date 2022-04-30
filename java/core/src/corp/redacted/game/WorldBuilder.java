@@ -168,17 +168,17 @@ public class WorldBuilder {
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
-        Socket.envoyerWhiteLists("P", -1);
-
+        Socket.instantMerch = "P";
+        Socket.envoyerWhiteLists("merch:P", -1);
       }else if(weight < MerchendiseComponent.LIMIT_CLASSIC_M){
         merchendiseC.merchendiseType = MerchendiseComponent.CLASSIC_MERCHENDISE;
-        Socket.envoyerWhiteLists("M", -1);
+        Socket.instantMerch = "M";
+        Socket.envoyerWhiteLists("merch:M", -1);
       }else{
         merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
-        Socket.envoyerWhiteLists("G", -1);
+        Socket.instantMerch = "G";
+        Socket.envoyerWhiteLists("merch:G", -1);
       }
-
-
 
       /* Définition du corps de l'enité */
       bodyD.type = BodyDef.BodyType.StaticBody;
@@ -246,13 +246,13 @@ public class WorldBuilder {
 
       if(weight < MerchendiseComponent.LIMIT_LITTLE_M){
         merchendiseC.merchendiseType = MerchendiseComponent.LITTLE_MERCHENDISE;
-        Socket.envoyerWhiteLists("P", -1);
+        Socket.envoyerWhiteLists("merch:P", -1);
       }else if(weight < MerchendiseComponent.LIMIT_CLASSIC_M){
         merchendiseC.merchendiseType = MerchendiseComponent.CLASSIC_MERCHENDISE;
-        Socket.envoyerWhiteLists("M", -1);
+        Socket.envoyerWhiteLists("merch:M", -1);
       }else{
         merchendiseC.merchendiseType = MerchendiseComponent.BIG_MERCHENDISE ;
-        Socket.envoyerWhiteLists("G", -1);
+        Socket.envoyerWhiteLists("merch:G", -1);
       }
 
       /*Définition de la position de la marchandise*/

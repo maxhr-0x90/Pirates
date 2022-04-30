@@ -107,7 +107,6 @@ function init_canvas(){
     // On enlève le canvas et le bouton de confirmation
     while(document.querySelector("body").firstChild != null){
       child = document.querySelector("body").firstChild
-      console.log(child);
       document.querySelector("body").removeChild(child);
     }
 
@@ -123,8 +122,6 @@ function init_canvas(){
     text.innerHTML += "Vous pouvez aussi rafraichir pour choisir une ";
     text.innerHTML += "nouvelle position<br/><br/>";
     bouton.innerHTML = "Nouvelle position";
-
-    console.log();
 
     bouton.addEventListener("click", function(){
       document.location.href = "./index.html";

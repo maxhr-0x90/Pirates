@@ -1,8 +1,14 @@
+@font-face {
+  font-family: 'TheDarkestPearl';
+  src: url('../../../fonts/TheDarkestPearl.ttf')
+}
+
 body{
   background-image : url("../img/vague.png");
-  background-size : 20vmin;
+  background-size : 34vmin;
   margin : 4vmin;
-  font-family: sans-serif;
+  font-family: 'TheDarkestPearl', sans-serif;
+  font-size : 8vmin;
   background-color: #75B5FE;
 }
 
@@ -11,17 +17,6 @@ body table td tr div{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-#msgbox{
-  width : 82vmin;
-  height : 70vmin;
-  padding : 5vmin;
-  font-size : 5vmin;
-  background-color : rgba(0, 0, 0, 0.75);
-  position : relative;
-  color : #946439;
-  text-align: center;
 }
 
 .image{
@@ -76,4 +71,20 @@ body table td tr div{
 #refresh{
   margin-left: 0;
   height: 12vmin;
+}
+
+.msgbox{
+  font-size : 6vmin;
+  text-align: center;
+  margin: auto;
+  margin-top: 5vmin;
+  margin-bottom: 5vmin;
+  padding-top: 4vmin;
+  padding-bottom: 4vmin;
+  background-color: rgba(0, 0, 0, 0.75);
+  color : #946439;
+}
+
+#manette{
+  margin-top: 15vmax;
 }

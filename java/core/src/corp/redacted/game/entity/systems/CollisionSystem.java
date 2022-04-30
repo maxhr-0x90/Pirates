@@ -151,7 +151,7 @@ public class CollisionSystem extends IteratingSystem{
               for(Fixture fix : bodyMerchendise.body.getFixtureList()){
                 bodyMerchendise.body.destroyFixture(fix);
               }
-              String message = "points :"+boat.point;
+              String message = "points:"+boat.point;
               Socket.envoyerWhiteLists(message, Socket.BLEU);
               world.creeMarchandise();
               colC.collisionEntite = null;
