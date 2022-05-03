@@ -181,57 +181,57 @@ public class Socket extends WebSocketServer {
 		wsbd = whiteListBleueG.get(ip);
 		wsbg = whiteListBleueD.get(ip);
 
-		if(message.equals("gauche")){	// L'utilisateur rame à gauche
-			session.send("Gauche !");
-			if(wsrg != null || wsrd != null){
-				numberLeftR += 2;
+		try{
+			if(message.equals("gauche")){	// L'utilisateur rame à gauche
+				session.send("Gauche !");
+				if(wsrg != null || wsrd != null){
+					numberLeftR += 2;
+				}
+				else if(wsbg != null || wsbd != null){
+					numberLeftB += 2;
+				}
 			}
-			else if(wsbg != null || wsbd != null){
-				numberLeftB += 2;
+			else if(message.equals("droite")){	// L'utilisateur rame à droite
+				session.send("Droite !");
+				if(wsrg != null || wsrd != null){
+					numberRightR += 2;
+				}
+				else if(wsbg != null || wsbd != null){
+					numberRightB += 2;
+				}
 			}
-		}
-		else if(message.equals("droite")){	// L'utilisateur rame à droite
-			session.send("Droite !");
-			if(wsrg != null || wsrd != null){
-				numberRightR += 2;
+			else if(message.equals("tgauche")){	// L'utilisateur tire à gauche
+				session.send("Tir gauche !");
+				if(wsrg != null || wsrd != null){
+					numberLeftShotR++;
+				}
+				else if(wsbg != null || wsbd != null){
+					numberLeftShotB++;
+				}
 			}
-			else if(wsbg != null || wsbd != null){
-				numberRightB += 2;
+			else if(message.equals("tdroit")){	// L'utilisateur tire à droite
+				session.send("Tir droit !");
+				if(wsrg != null || wsrd != null){
+					numberRightShotR++;
+				}
+				else if(wsbg != null || wsbd != null){
+					numberRightShotB++;
+				}
 			}
-		}
-		else if(message.equals("tgauche")){	// L'utilisateur tire à gauche
-			session.send("Tir gauche !");
-			if(wsrg != null || wsrd != null){
-				numberLeftShotR++;
+			else if(message.equals("manette")){	// L'utilisateur provient de la manette
+				if(!whiteListed){
+					session.send("redirect");
+				}
 			}
-			else if(wsbg != null || wsbd != null){
-				numberLeftShotB++;
+			else if(message.equals("hub")){	// L'utilisateur provient de l'accueil
+				if(whiteListed){
+					session.send("redirect");
+				}
 			}
-		}
-		else if(message.equals("tdroit")){	// L'utilisateur tire à droite
-			session.send("Tir droit !");
-			if(wsrg != null || wsrd != null){
-				numberRightShotR++;
+			else if(message.equals("merch")){	// Demande de la marchandise actuelle
+				session.send("merch:"+instantMerch);
 			}
-			else if(wsbg != null || wsbd != null){
-				numberRightShotB++;
-			}
-		}
-		else if(message.equals("manette")){	// L'utilisateur provient de la manette
-			if(!whiteListed){
-				session.send("redirect");
-			}
-		}
-		else if(message.equals("hub")){	// L'utilisateur provient de l'accueil
-			if(whiteListed){
-				session.send("redirect");
-			}
-		}
-		else if(message.equals("merch")){	// Demande de la marchandise actuelle
-			session.send("merch:"+instantMerch);
-		}
-		else{ // Autre message
-			try{
+			else{ // Autre message
 				// Si c'est une position on la concerve
 				if(message.split(":")[0].equals("position") && !whiteListed){
 					positionWhiteList.put(
@@ -243,9 +243,9 @@ public class Socket extends WebSocketServer {
 					}
 				}
 			}
-			catch(Exception e){
-				System.out.println(e.getMessage());
-			}
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
 		}
 
 		if(DEBUG){
@@ -255,6 +255,7 @@ public class Socket extends WebSocketServer {
 			System.out.println("gaucheB : " + numberLeftB);
 			System.out.println("droiteB : " + numberRightB);
 		}
+
   }
 
   @Override
@@ -291,59 +292,63 @@ public class Socket extends WebSocketServer {
     moitie = listePos.size()/2;	// Milieu de la liste
 		troisQuarts = moitie+quart;	// Troisième quart de la liste
 
-    for(i = 0; i < listePos.size(); i++){
+		try{
+	    for(i = 0; i < listePos.size(); i++){
 
-      ip = reverseWL.get(listePos.get(i));	// On récupère l'IP
-      if(ip != null && whiteListIn.get(ip) != null){
-        if(i < quart){	// Nouveau membre chez les rouges de gauche
-					if(DEBUG){
-	          System.out.println("RougeG : " + ip);
+	      ip = reverseWL.get(listePos.get(i));	// On récupère l'IP
+	      if(ip != null && whiteListIn.get(ip) != null){
+	        if(i < quart){	// Nouveau membre chez les rouges de gauche
+						if(DEBUG){
+		          System.out.println("RougeG : " + ip);
+						}
+	          whiteListRougeG.put(ip, whiteListIn.get(ip));
+	        }
+					else if(i <  moitie){	// Nouveau membre chez les rouges de droite
+						if(DEBUG){
+		          System.out.println("RougeG : " + ip);
+						}
+	          whiteListRougeD.put(ip, whiteListIn.get(ip));
 					}
-          whiteListRougeG.put(ip, whiteListIn.get(ip));
-        }
-				else if(i <  moitie){	// Nouveau membre chez les rouges de droite
-					if(DEBUG){
-	          System.out.println("RougeG : " + ip);
+					else if(i < troisQuarts){	// Nouveau membre chez les bleus de gauche
+						if(DEBUG){
+		          System.out.println("BleuG : " + ip);
+						}
+	          whiteListBleueG.put(ip, whiteListIn.get(ip));
 					}
-          whiteListRougeD.put(ip, whiteListIn.get(ip));
-				}
-				else if(i < troisQuarts){	// Nouveau membre chez les bleus de gauche
-					if(DEBUG){
-	          System.out.println("BleuG : " + ip);
-					}
-          whiteListBleueG.put(ip, whiteListIn.get(ip));
-				}
-        else{	// Nouveau membre chez les bleus de droite
-					if(DEBUG){
-	          System.out.println("BleuD : " + ip);
-					}
-          whiteListBleueD.put(ip, whiteListIn.get(ip));
-        }
-				whiteListIn.get(ip).send("start");
-      }
-    }
-		if(DEBUG){
-			System.out.println("RougesG : " + whiteListRougeG);
-			System.out.println("RougesD : " + whiteListRougeD);
-			System.out.println("BleusG : " + whiteListBleueG);
-			System.out.println("BleusD : " + whiteListBleueD);
-		}
-
-		// Redirection des personnes n'ayant pas renseigné leur localisation
-		for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListIn.entrySet()){
-      ip = (String)entry.getKey();
-      if(whiteListRougeG.get(ip) == null
-			&& whiteListRougeD.get(ip) == null
-			&& whiteListBleueG.get(ip) == null
-			&& whiteListBleueD.get(ip) == null){
-				if(entry.getValue() != null){
-					((WebSocket)entry.getValue()).send("redirect");
-				}
+	        else{	// Nouveau membre chez les bleus de droite
+						if(DEBUG){
+		          System.out.println("BleuD : " + ip);
+						}
+	          whiteListBleueD.put(ip, whiteListIn.get(ip));
+	        }
+					whiteListIn.get(ip).send("start");
+	      }
+	    }
+			if(DEBUG){
+				System.out.println("RougesG : " + whiteListRougeG);
+				System.out.println("RougesD : " + whiteListRougeD);
+				System.out.println("BleusG : " + whiteListBleueG);
+				System.out.println("BleusD : " + whiteListBleueD);
 			}
-    }
 
-		// La partie est désormais whitelistée
-		whiteListed = true;
+			// Redirection des personnes n'ayant pas renseigné leur localisation
+			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListIn.entrySet()){
+	      ip = (String)entry.getKey();
+	      if(whiteListRougeG.get(ip) == null
+				&& whiteListRougeD.get(ip) == null
+				&& whiteListBleueG.get(ip) == null
+				&& whiteListBleueD.get(ip) == null){
+					if(entry.getValue() != null){
+						((WebSocket)entry.getValue()).send("redirect");
+					}
+				}
+	    }
+			// La partie est désormais whitelistée
+			whiteListed = true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -352,34 +357,39 @@ public class Socket extends WebSocketServer {
 		* @param couleur ROUGE, BLEU ou -1 pour tous
 	*/
 	public static void envoyerWhiteLists(String message, int couleur){
-		if(couleur == Socket.ROUGE || couleur == -1){
-			// Envoi à la moitié gauche des rouges
-			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
-				if(entry.getValue() != null){
-					((WebSocket)entry.getValue()).send(message);
+		try{
+			if(couleur == Socket.ROUGE || couleur == -1){
+				// Envoi à la moitié gauche des rouges
+				for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
+					if(entry.getValue() != null){
+						((WebSocket)entry.getValue()).send(message);
+					}
+				}
+				// Envoi à la moitié droite des rouges
+				for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeD.entrySet()){
+					if(entry.getValue() != null){
+						((WebSocket)entry.getValue()).send(message);
+					}
 				}
 			}
-			// Envoi à la moitié droite des rouges
-			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeD.entrySet()){
-				if(entry.getValue() != null){
-					((WebSocket)entry.getValue()).send(message);
-				}
+			if(couleur == Socket.BLEU || couleur == -1){
+				// Envoi à la moitié gauche des bleus
+				for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
+					if(entry.getValue() != null){
+						((WebSocket)entry.getValue()).send(message);
+					}
+		    }
+
+				// Envoi à la moitié droite des bleus
+				for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueD.entrySet()){
+					if(entry.getValue() != null){
+						((WebSocket)entry.getValue()).send(message);
+					}
+		    }
 			}
 		}
-		if(couleur == Socket.BLEU || couleur == -1){
-			// Envoi à la moitié gauche des bleus
-			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
-				if(entry.getValue() != null){
-					((WebSocket)entry.getValue()).send(message);
-				}
-	    }
-
-			// Envoi à la moitié droite des bleus
-			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueD.entrySet()){
-				if(entry.getValue() != null){
-					((WebSocket)entry.getValue()).send(message);
-				}
-	    }
+		catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
@@ -401,13 +411,5 @@ public class Socket extends WebSocketServer {
     whiteListRougeG.clear();
     whiteListRougeD.clear();
     whiteListOut.clear();
-
-		System.out.println(whiteListIn);
-    System.out.println(positionWhiteList);
-    System.out.println(whiteListBleueG);
-    System.out.println(whiteListBleueD);
-    System.out.println(whiteListRougeG);
-    System.out.println(whiteListRougeD);
-    System.out.println(whiteListOut);
   }
 }

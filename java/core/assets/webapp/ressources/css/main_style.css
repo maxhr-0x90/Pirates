@@ -88,3 +88,14 @@ body table td tr div{
 #manette{
   margin-top: 15vmax;
 }
+
+#msgbox{
+  width : 82vmin;
+  height : 70vmin;
+  padding : 5vmin;
+  font-size : 5vmin;
+  background-color : rgba(0, 0, 0, 0.75);
+  position : relative;
+  color : #946439;
+  text-align: center;
+}
