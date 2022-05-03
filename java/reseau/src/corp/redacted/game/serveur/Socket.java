@@ -184,19 +184,19 @@ public class Socket extends WebSocketServer {
 		if(message.equals("gauche")){	// L'utilisateur rame à gauche
 			session.send("Gauche !");
 			if(wsrg != null || wsrd != null){
-				numberLeftR++;
+				numberLeftR += 2;
 			}
 			else if(wsbg != null || wsbd != null){
-				numberLeftB++;
+				numberLeftB += 2;
 			}
 		}
 		else if(message.equals("droite")){	// L'utilisateur rame à droite
 			session.send("Droite !");
 			if(wsrg != null || wsrd != null){
-				numberRightR++;
+				numberRightR += 2;
 			}
 			else if(wsbg != null || wsbd != null){
-				numberRightB++;
+				numberRightB += 2;
 			}
 		}
 		else if(message.equals("tgauche")){	// L'utilisateur tire à gauche
@@ -294,7 +294,7 @@ public class Socket extends WebSocketServer {
     for(i = 0; i < listePos.size(); i++){
 
       ip = reverseWL.get(listePos.get(i));	// On récupère l'IP
-      if(ip != null){
+      if(ip != null && whiteListIn.get(ip) != null){
         if(i < quart){	// Nouveau membre chez les rouges de gauche
 					if(DEBUG){
 	          System.out.println("RougeG : " + ip);
@@ -336,7 +336,9 @@ public class Socket extends WebSocketServer {
 			&& whiteListRougeD.get(ip) == null
 			&& whiteListBleueG.get(ip) == null
 			&& whiteListBleueD.get(ip) == null){
-				((WebSocket)entry.getValue()).send("redirect");
+				if(entry.getValue() != null){
+					((WebSocket)entry.getValue()).send("redirect");
+				}
 			}
     }
 
@@ -353,22 +355,30 @@ public class Socket extends WebSocketServer {
 		if(couleur == Socket.ROUGE || couleur == -1){
 			// Envoi à la moitié gauche des rouges
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeG.entrySet()){
-				((WebSocket)entry.getValue()).send(message);
+				if(entry.getValue() != null){
+					((WebSocket)entry.getValue()).send(message);
+				}
 			}
 			// Envoi à la moitié droite des rouges
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListRougeD.entrySet()){
-				((WebSocket)entry.getValue()).send(message);
+				if(entry.getValue() != null){
+					((WebSocket)entry.getValue()).send(message);
+				}
 			}
 		}
 		if(couleur == Socket.BLEU || couleur == -1){
 			// Envoi à la moitié gauche des bleus
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueG.entrySet()){
-	      ((WebSocket)entry.getValue()).send(message);
+				if(entry.getValue() != null){
+					((WebSocket)entry.getValue()).send(message);
+				}
 	    }
 
 			// Envoi à la moitié droite des bleus
 			for(Map.Entry entry : (Set<Map.Entry<String, WebSocket>>)whiteListBleueD.entrySet()){
-	      ((WebSocket)entry.getValue()).send(message);
+				if(entry.getValue() != null){
+					((WebSocket)entry.getValue()).send(message);
+				}
 	    }
 		}
 	}
@@ -391,5 +401,13 @@ public class Socket extends WebSocketServer {
     whiteListRougeG.clear();
     whiteListRougeD.clear();
     whiteListOut.clear();
+
+		System.out.println(whiteListIn);
+    System.out.println(positionWhiteList);
+    System.out.println(whiteListBleueG);
+    System.out.println(whiteListBleueD);
+    System.out.println(whiteListRougeG);
+    System.out.println(whiteListRougeD);
+    System.out.println(whiteListOut);
   }
 }
