@@ -20,8 +20,8 @@ check-on
   index: -1
 mediumT
   rotate: false
-  xy: 0, 70
-  size: 200, 100
-  orig: 200, 100
+  xy: 50, 50
+  size: 80, 80
+  orig: 80, 80
   offset: 0, 0
   index: -1
