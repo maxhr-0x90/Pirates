@@ -44,10 +44,10 @@ webSocket.onmessage = function(event){
       if(splitted[1] === "P"){
         merch.innerHTML = "Taille de la marchandise : petite";
       }
-      else if(splitted[1] === "P"){
+      else if(splitted[1] === "M"){
         merch.innerHTML = "Taille de la marchandise : moyenne";
       }
-      else if(splitted[1] === "P"){
+      else if(splitted[1] === "G"){
         merch.innerHTML = "Taille de la marchandise : grosse";
       }
       else {
