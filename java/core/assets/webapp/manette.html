@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="./ressources/css/main_style.css">
+		<link rel="stylesheet" href="./ressources/css/anim.css">
+    <link rel="icon" href="./ressources/img/favicon.ico"/>
+		<script src="./ressources/js/manette_socket.js"></script>
+		<script src="./ressources/js/manette_handler.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Manette</title>
+	</head>
+	<body>
+		<div id="manette">
+			<div id="points" class="msgbox">
+				Points : 0
+			</div>
+			<table>
+				<tr>
+					<td>
+						<button id="rame_gauche" class="image" onclick="left();"></button>
+					</td>
+					<td><button id="rame_droite" class="image" onclick="right();"></button></td>
+				</tr>
+				<tr>
+					<td><button id="canon_gauche" class="image" onclick="leftShot(); cooldown(2);"></button></td>
+					<td>
+						<button id="canon_droit" class="image" onclick="rightShot(); cooldown(3);">
+						</button>
+					</td>
+				</tr>
+			</table>
+			<div id="merch" class="msgbox">
+				Marchandise : moyenne
+			</div>
+		</div>
+	</body>
+</html>

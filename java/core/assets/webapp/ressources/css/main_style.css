@@ -1,0 +1,101 @@
+@font-face {
+  font-family: 'TheDarkestPearl';
+  src: url('../../../fonts/TheDarkestPearl.ttf')
+}
+
+body{
+  background-image : url("../img/vague.png");
+  background-size : 34vmin;
+  margin : 4vmin;
+  font-family: 'TheDarkestPearl', sans-serif;
+  font-size : 8vmin;
+  background-color: #75B5FE;
+}
+
+body table td tr div{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.image{
+  touch-action: manipulation;
+  width : 45vmin;
+  height : 45vmin;
+  background-size : 45vmin;
+  cursor : pointer;
+}
+
+
+
+.progression{
+  margin-left: 2vmin;
+  margin-right: 2vmin;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 100%;
+  height: 8vmin;
+  background-color: grey;
+}
+
+.barre{
+  width: 0%;
+  height: 8vmin;
+  background-color: black;
+}
+
+.chargement{
+  width : 45vmin;
+  height : 45vmin;
+  background-color: white;
+  display: flex;
+}
+
+.bouton{
+  background-color: black;
+  color: white;
+  font-size: 4vmin;
+  font-family: sans-serif;
+  height: 8vmin;
+  width: 30vmin;
+  border-radius: 0;
+  margin-left: 32vmin;
+}
+
+#confirmation:disabled{
+  background-color: grey;
+  color: white;
+}
+
+#refresh{
+  margin-left: 0;
+  height: 12vmin;
+}
+
+.msgbox{
+  font-size : 6vmin;
+  text-align: center;
+  margin: auto;
+  margin-top: 5vmin;
+  margin-bottom: 5vmin;
+  padding-top: 4vmin;
+  padding-bottom: 4vmin;
+  background-color: rgba(0, 0, 0, 0.75);
+  color : #946439;
+}
+
+#manette{
+  margin-top: 15vmax;
+}
+
+#msgbox{
+  width : 82vmin;
+  height : 70vmin;
+  padding : 5vmin;
+  font-size : 5vmin;
+  background-color : rgba(0, 0, 0, 0.75);
+  position : relative;
+  color : #946439;
+  text-align: center;
+}

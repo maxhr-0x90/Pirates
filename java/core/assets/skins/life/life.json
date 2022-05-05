@@ -1,0 +1,11 @@
+{
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-vertical: {
+		background: bg_life
+		knob: knob_life
+		disabledKnob: knob_life_deact
+		knobBefore: knob_life
+		disabledKnobBefore: knob_life_deact
+	}
+}
+}
