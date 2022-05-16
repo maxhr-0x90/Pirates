@@ -9,6 +9,9 @@ import corp.redacted.game.views.OptionScreen;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.Gdx;
+
 /**
  * Classe principale du jeu
  */
@@ -31,6 +34,11 @@ public class Game extends com.badlogic.gdx.Game {
 		screens.put(START, new StartScreen(this));
 		screens.put(END, new EndScreen(this));
 		screens.put(OPT, new OptionScreen(this));
+
+		Music vagues = Gdx.audio.newMusic(Gdx.files.internal("sounds/waves.mp3"));
+		vagues.setVolume(0.008f);
+		vagues.setLooping(true);
+		vagues.play();
 
 		setScreen(screens.get(OPT));
 		usage();

@@ -29,6 +29,8 @@ import com.badlogic.ashley.core.ComponentMapper;
 import corp.redacted.game.loader.Assets;
 import corp.redacted.game.serveur.Socket;
 
+import com.badlogic.gdx.audio.Music;
+
 /**
  * Écran principal de jeu. Là où le jeu, à proprement parlé, se déroule
  */
@@ -59,6 +61,8 @@ public class MainScreen implements Screen {
     private boolean paused = true;
 
     private Node couronneA, couronneB;
+
+    private Music musique = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
 
     public MainScreen(Game parent){
         PARENT = parent;
@@ -121,6 +125,10 @@ public class MainScreen implements Screen {
 
         couronneA = worldBuilder.bateauA.getComponent(ModelComponent.class).model.getNode("Couronne");
         couronneB = worldBuilder.bateauB.getComponent(ModelComponent.class).model.getNode("Couronne");
+
+        musique.setVolume(0.02f);
+    		musique.setLooping(true);
+    		musique.play();
     }
 
     @Override
@@ -294,6 +302,8 @@ public class MainScreen implements Screen {
                 PARENT.switchScreen(Game.END);
             }
         }, wait);
+
+        musique.stop();
     }
 
     @Override
