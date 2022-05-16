@@ -56,11 +56,11 @@ public class WorldBuilder {
     /** Genère un monde
     */
     public void generateWorld(){
-        Entity batA = creeBateau(-100,20,'A');
+        Entity batA = creeBateau(-180,-110,'A');
         this.bateauA = batA;
         engine.addEntity(bateauA);
 
-        Entity batB = creeBateau(100,-20,'B');
+        Entity batB = creeBateau(180,110,'B');
         this.bateauB = batB;
         engine.addEntity(bateauB);
 
@@ -115,10 +115,18 @@ public class WorldBuilder {
         fixDef.filter.categoryBits = CollisionComponent.CATEGORY_BOAT_A;
         fixDef.filter.maskBits = CollisionComponent.MASK_BOAT_A;
         typeC.type = TypeComponent.BATEAU_A;
+
+        /*On tourne le bateau*/
+        bodyC.body.setTransform(bodyC.body.getPosition(), (float)(-Math.PI/3.0f));
+
+
       }else if(camps == 'B'){
         fixDef.filter.categoryBits = CollisionComponent.CATEGORY_BOAT_B;
         fixDef.filter.maskBits = CollisionComponent.MASK_BOAT_B;
         typeC.type = TypeComponent.BATEAU_B;
+
+        /*On tourne le bateau*/
+        bodyC.body.setTransform(bodyC.body.getPosition(), (float)(2*Math.PI/3.0f));
       }
 
       bodyC.body.createFixture(fixDef);
